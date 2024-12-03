@@ -1,0 +1,215 @@
+/*!**************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[1].use[1]!./assets/styles/app.css ***!
+  \**************************************************************************************************************/
+.logo{
+    color: #033E79;
+    font-family: "Literata", serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body{
+    font-family: "Mulish", sans-serif;
+}
+
+h6{
+    font-family: "Literata", serif;
+}
+
+.action{
+    color:black;
+    cursor: pointer;
+}
+
+.hover-text {
+    display: none; /* Masque le texte supplémentaire par défaut */
+    position: absolute; /* Positionnement absolu pour le placer à côté du lien */
+    background-color: #f0f0f0; /* Couleur de fond du texte supplémentaire */
+    padding: 5px; /* Espace intérieur du texte supplémentaire */
+    border: 1px solid #ccc; /* Bordure du texte supplémentaire */
+    font-size: 13px;
+    z-index: 2;
+}
+
+.action:hover + .hover-text {
+    display: block; /* Affiche le texte supplémentaire lorsque le lien est survolé */
+}
+
+.sidebar {
+    position: fixed; /* Fixe la bande de couleur à la fenêtre du navigateur */
+    top: 0; /* Positionne la bande de couleur au sommet de la fenêtre */
+    left: 0; /* Positionne la bande de couleur sur le côté gauche de la fenêtre */
+    height: 100%; /* Définit la hauteur de la bande de couleur à 100% de la fenêtre */
+    width: 100px; /* Définit la largeur de la bande de couleur */
+    background-color:  #97C6F2; /* Couleur de la bande de couleur */
+    z-index: 999; /* Assure que la bande de couleur est superposée au contenu de la page */
+}
+
+.app-title{
+    height: 25px;
+    overflow:auto;
+}
+.marge{
+    margin-left: 50px;
+}
+
+.operational{
+    background-color: #C2EBA1;
+    color: #004D00;
+    position: relative;
+}
+
+.operational svg{
+    position: absolute; /* Position absolue pour positionner l'élément SVG */
+    top: 10%; /* Éloigner l'élément SVG de 10px du haut de la div */
+    left: 10%;
+}
+
+.unavailable{
+    background-color:#F8957F;
+    color: #530000;
+    position: relative;
+}
+
+.unavailable svg{
+    position: absolute; /* Position absolue pour positionner l'élément SVG */
+    top: 10%; /* Éloigner l'élément SVG de 10px du haut de la div */
+    left: 10%;
+}
+
+.perturbed{
+    background-color:#F8CE8E;
+    color: #3C1F00;
+    position: relative;
+}
+.perturbed svg{
+    position: absolute; /* Position absolue pour positionner l'élément SVG */
+    top: 10%; /* Éloigner l'élément SVG de 10px du haut de la div */
+    left: 10%;
+}
+
+.operational-maintenance{
+    color: green;
+}
+
+.perturbed-maintenance{
+    color: orange;
+}
+
+.unavailable-maintenance{
+    color: red;
+}
+
+.default{
+    color:#112E58;
+    position: relative;
+}
+.default svg{
+    position: absolute; /* Position absolue pour positionner l'élément SVG */
+    top: 10%; /* Éloigner l'élément SVG de 10px du haut de la div */
+    left: 10%;
+}
+
+.lien{
+    text-decoration: none
+}
+
+/* CSS POP UP */
+.dialog-box{
+    background-color: #FBF4EC;
+    width: 40%;
+    margin:auto;
+    position: relative;
+    top: 50%;
+    transform: perspective(1px) translateY(-50%);
+    border-radius: 10px;
+    padding: 10px 20px 20px 20px;
+}
+
+.close-button{
+    font-size: 18px;
+    font-weight: bold;
+    /* default CSS properties to remove */
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+    text-align: inherit;
+    border-radius: 0;
+    appearance: none; // Just in case we missed anything.
+}
+
+.meteo-icon{
+    margin: auto 10px auto auto;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    display: flex; /* Utilisation de flexbox */
+    align-items: center; /* Centrage vertical */
+    justify-content: center; /* Centrage horizontal */
+    background-color: lightgrey; /* par défaut */
+}
+
+.sun{
+    background-color: #C2EBA1;
+}
+
+.cloud{
+    background-color: #F8CE8E;
+}
+
+.lightning{
+    background-color: #F8957F;
+}
+
+.pop-up-title{
+    font-family: Inter, sans-serif;
+    font-size: 18px;
+    font-weight: bolder;
+    margin:auto;
+    color:#033E79;
+}
+
+.pop-up-text
+{
+    font-family: Inter, sans-serif;
+    color: #473F39;
+    font-size: 18px;
+    text-align: center;
+    height: 100px;
+    overflow:auto;
+}
+
+.maintenance-text{
+    font-size: 18px;
+    text-align: center;
+}
+
+.next-maintenances
+{
+    width: 90%;
+    margin: auto;
+}
+
+.save{
+    background-color: #B3D6F7 ;
+    border: none;
+    color:#033E79;
+    padding: 10px 20px; /* Rembourrage (padding) */
+    text-align: center;
+    border-radius: 28px;
+}
+
+.droite{
+    text-align: right;
+}
+
+.superpose{
+    text-align: center;
+}
+
+a.disabled {
+    cursor: default;
+}
+
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYXBwLmNzcyIsIm1hcHBpbmdzIjoiOzs7QUFBQTtJQUNJLDJCQUEyQjtBQUMvQiIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2Fzc2V0cy9zdHlsZXMvYXBwLmNzcyJdLCJzb3VyY2VzQ29udGVudCI6WyJib2R5IHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiBsaWdodGdyYXk7XG59XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=*/
