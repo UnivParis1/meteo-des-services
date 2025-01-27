@@ -49,12 +49,13 @@ class MeteoController extends AbstractController
         $debut = ($page * $limit) - $limit;
         $applicationsPaginate = array_slice($applications, $debut, $limit);
 
+        $role = 'admin';
         return $this->render('meteo/index.html.twig', [
             'applications' => $applicationsPaginate,
             'form' => $form->createView(),
             'page' => $page,
             'nbPage' => $nbPage,
-            'role' => $this->getParameter('global_variable')
+            'role' => $role
         ]);
     }
 
