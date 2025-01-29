@@ -67,4 +67,10 @@ class MeteoController extends AbstractController
             'application' => $this->applicationService->convertToDTO($application)
         ]));
     }
+
+    #[Route('/', name: 'homepage')]
+    public function homepage()
+    {
+        return $this->redirectToRoute("app_meteo", ['page' => 1]);
+    }
 }
