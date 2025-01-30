@@ -1,3 +1,7 @@
+# Meteo up1
+
+/*.lock
+
 # Cache and logs (Symfony2)
 /app/cache/*
 /app/logs/*
@@ -75,3 +79,8 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
