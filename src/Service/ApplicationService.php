@@ -13,7 +13,6 @@ class ApplicationService
 {
 
     public function __construct(public ApplicationRepository        $applicationRepository,
-                                public ApplicationJsonProvider      $applicationJsonProvider,
                                 public ApplicationHistoryRepository $applicationHistoryRepository,
                                 public MaintenanceService           $maintenanceService)
     {
@@ -30,17 +29,9 @@ class ApplicationService
     {
         // Tableau sous format DTO
         $applications = new ArrayCollection();
-        // FROM JSON => Tableau d'entités
-        $applicationsFromJson = $this->applicationJsonProvider->getApplicationInfosFromJsonFile();
-        foreach ($applicationsFromJson as $applicationJson) {
-            // Récupération entité
-            if (($applicationEntity = $this->getApplicationByFnameProperty($applicationJson[0])) != null) {
-                $applications->add($this->convertToDTO($applicationEntity, $applicationJson[1]));
-            }
-        }
-        // FROM METEO DES SERVICES (sous format entity)
-        $applicationsCreatedByMeteo = $this->getApplicationsCreatedByMeteo();
-        foreach ($applicationsCreatedByMeteo as $application) {
+
+        $allApplications = $this->applicationRepository->findAll();
+        foreach ($allApplications as $application) {
             $applications->add($this->convertToDTO($application));
         }
         return $applications->toArray();
@@ -109,6 +100,7 @@ class ApplicationService
      */
     private function getApplicationsCreatedByMeteo(): ArrayCollection
     {
+        $this->applicationRepository->findAll();
         $applications = $this->applicationRepository->findBy([
             'isFromJson' => false,
             'isArchived' => false]);

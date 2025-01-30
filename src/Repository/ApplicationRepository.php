@@ -68,26 +68,16 @@ class ApplicationRepository extends ServiceEntityRepository
     public function findBySearchAndState(string $searchTerm, string $stateFilter): array
     {
         $query = $this->createQueryBuilder('a')
-            ->andWhere('a.title LIKE :substring')
-            ->setParameter('substring', '%' . $searchTerm . '%')
-            ->andWhere('a.isArchived = :is_archived')
-            ->setParameter('is_archived', false);
-        if ($stateFilter != null && $stateFilter != 'all' && $stateFilter != '') {
-            $query->andWhere('a.state = :state')
-                ->setParameter('state', $stateFilter);
-        }
+            ->where('a.isArchived = 0');
+
+        if (strlen($searchTerm) > 0)
+            $query->andWhere("a.title LIKE '%$searchTerm%'");
+
+        if ($stateFilter != null && $stateFilter != 'all' && $stateFilter != '')
+            $query->andWhere("a.state = '$stateFilter'");
+
         return $query->orderBy('a.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
-
-//    public function findOneBySomeField($value): ?Application
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

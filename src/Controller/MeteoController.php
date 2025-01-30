@@ -22,14 +22,12 @@ class MeteoController extends AbstractController
     #[Route('/meteo/{page}', name: 'app_meteo')]
     public function index(int $page = null, Request $request): Response
     {
-        $application = new ArrayCollection();
-
         //Barre de recherche
         $searchApplication = new SearchApplication();
         $form = $this->createForm(SearchFormType::class, $searchApplication);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $page = 1;
             $applications = $this->applicationService->getApplicationByFilters($searchApplication->searchTerm, $searchApplication->selectedState);
         } //Pas de recherche
         else {
@@ -37,12 +35,12 @@ class MeteoController extends AbstractController
         }
 
         $applications = $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
+        $nbApplications = count($applications);
 
-        //Pagination
-        $limit = 10;
+        $limit = $searchApplication->limit ?? $nbApplications;
         $nbPage = ceil(count($applications) / $limit);
 
-        if ($page === null or $page < 1 or $page > $nbPage and $nbPage != 0) {
+        if ($page === null) {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
 

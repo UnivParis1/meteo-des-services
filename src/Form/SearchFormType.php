@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Model\SearchApplication;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceValue;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,6 +31,9 @@ class SearchFormType extends AbstractType
                     'Opérationnel' => 'Operational',
                     'Non renseigné' => 'default'
                 ]
+            ])->add('limit', ChoiceType::class, [
+                'required' => true,
+                'choices' => ['Tous' => null,'10'=> 10,'20' => 20, '30' => 30]
             ]);
     }
 
