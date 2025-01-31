@@ -10,13 +10,13 @@ class ApplicationsSorter
     public function sortApplicationsByStateAndLastUpdate(array $applications): array
     {
         usort($applications,
-            function ($app1, $app2) {
+            function ($app1, $app2): int {
                 return $this->compare($app1, $app2);
             });
         return $applications;
     }
 
-    private function compare(ApplicationDTO $app1, ApplicationDTO $app2): bool
+    private function compare(ApplicationDTO $app1, ApplicationDTO $app2): int 
     {
         $state_app1 = $app1->getState();
         $state_app2 = $app2->getState();
@@ -24,20 +24,20 @@ class ApplicationsSorter
             if ($app1->getNextMaintenance() == null
                 && $app2->getNextMaintenance() == null) {
                 // Critère 2 : modification la plus récente
-                return $app1->getLastUpdate() < $app2->getLastUpdate();
+                return ($app1->getLastUpdate() < $app2->getLastUpdate()) ? 1 : -1;
             } else {
                 if ($app1->getNextMaintenance() == null) {
-                    return true;
+                    return 1;
                 } elseif ($app2->getNextMaintenance() == null) {
-                    return false;
+                    return -1;
                 } else {
                     // Critère 3 : maintenance la plus récente
-                    return $app1->getNextMaintenance()->getStartingDate() > $app2->getNextMaintenance()->getStartingDate();
+                    return ($app1->getNextMaintenance()->getStartingDate() > $app2->getNextMaintenance()->getStartingDate()) ? 1 : -1;
                 }
             }
         } else {
             // Critère 1 : tri en fonction des états
-            return $this->getOrderRankFromState($state_app1) < $this->getOrderRankFromState($state_app2);
+            return ($this->getOrderRankFromState($state_app1) < $this->getOrderRankFromState($state_app2)) ? 1 : -1;
         }
     }
 
