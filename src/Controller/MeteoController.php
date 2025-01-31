@@ -20,7 +20,7 @@ class MeteoController extends AbstractController
     }
 
     #[Route('/meteo/{page}', name: 'app_meteo')]
-    public function index(int $page = null, Request $request): Response
+    public function index(?int $page, Request $request): Response
     {
         $session = $request->getSession();
 

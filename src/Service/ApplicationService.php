@@ -54,7 +54,7 @@ class ApplicationService
         return array_combine($names, $names);
     }
 
-    public function convertToDTO(Application $application, string $title = null): ApplicationDTO
+    public function convertToDTO(Application $application, ?string $title): ApplicationDTO
     {
         $dto = new ApplicationDTO(
             $application->getId(),
@@ -72,7 +72,7 @@ class ApplicationService
     {
         $dtos = new ArrayCollection();
         foreach ($this->applicationRepository->findBySearchAndState($searchTerm, $stateFilter) as $application) {
-            $dtos->add($this->convertToDTO($application));
+            $dtos->add($this->convertToDTO($application, null));
         }
         return $dtos->toArray();
     }
