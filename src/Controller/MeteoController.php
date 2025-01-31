@@ -74,7 +74,7 @@ class MeteoController extends AbstractController
     {
         $application = $this->applicationService->getApplicationById($id);
         return new Response($this->renderView('meteo/pop-ups/details.html.twig', [
-            'application' => $this->applicationService->convertToDTO($application)
+            'application' => $this->applicationService->convertToDTO($application, null)
         ]));
     }
 
