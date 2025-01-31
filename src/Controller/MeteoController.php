@@ -22,25 +22,37 @@ class MeteoController extends AbstractController
     #[Route('/meteo/{page}', name: 'app_meteo')]
     public function index(int $page = null, Request $request): Response
     {
-        //Barre de recherche
-        $searchApplication = new SearchApplication();
-        $form = $this->createForm(SearchFormType::class, $searchApplication);
-        $form->handleRequest($request);
+        $session = $request->getSession();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $applications = $this->applicationService->getApplicationByFilters($searchApplication->searchTerm, $searchApplication->selectedState);
-        } //Pas de recherche
-        else {
-            $applications = $this->applicationService->getAllApplications();
+        if ($session->has('searchApplication'))
+            $searchApplication = $session->get('searchApplication');
+        else
+            $searchApplication = new SearchApplication();
+
+        $form = $this->createForm(SearchFormType::class, $searchApplication);
+
+        if (! $session->has('searchApplication') || $request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $session->set('searchApplication', $searchApplication);
+            }
         }
 
+        $applications = $this->applicationService->getApplicationByFilters($searchApplication->searchTerm, $searchApplication->selectedState);
         $applications = $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
+
         $nbApplications = count($applications);
 
-        $limit = $searchApplication->limit ?? $nbApplications;
+        if ($nbApplications != 0)
+            $limit = $searchApplication->limit ?? $nbApplications;
+        else
+            $limit = 1;
+
         $nbPage = ceil(count($applications) / $limit);
 
         if ($page === null) {
+            $session->remove('searchApplication');
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
 
