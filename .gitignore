@@ -1,5 +1,7 @@
 # Meteo up1
 
+/composer.lock
+/symfony.lock
 /*.lock
 
 # Cache and logs (Symfony2)
