@@ -22,7 +22,7 @@ class ApplicationController extends AbstractController
     public function add(Request $request): Response
     {
         //Vérification du role = admin
-        if ($this->getParameter('global_variable') != 'admin') {
+        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
         $application = new Application();
@@ -43,7 +43,7 @@ class ApplicationController extends AbstractController
     public function edit(Request $request, int $id): Response
     {
         //Vérification du role = admin
-        if ($this->getParameter('global_variable') != 'admin') {
+        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
         $application = $this->applicationService->getApplicationById($id);
@@ -65,10 +65,10 @@ class ApplicationController extends AbstractController
     }
 
     #[Route('/delete/application/{id}', name: 'app_delete_application')]
-    public function delete(int $id): Response
+    public function delete(int $id, Request $request): Response
     {
         //Vérification du role = admin
-        if ($this->getParameter('global_variable') != 'admin') {
+        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
         $application = $this->applicationService->getApplicationById($id);

@@ -21,7 +21,7 @@ class NotifyProblemController extends AbstractController
     public function index(Request $request, MailerInterface $mailer): Response
     {
         //Vérification du role = user
-        if ($this->getParameter('global_variable') != 'user') {
+        if ($request->server->get('GLOBAL_VARIABLE') != 'user') {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
 

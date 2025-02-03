@@ -22,7 +22,7 @@ class MaintenanceController extends AbstractController
     public function index(Request $request, Application $application): Response
     {
         //Vérification du role = admin
-        if ($this->getParameter('global_variable') != 'admin') {
+        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
 
@@ -45,7 +45,7 @@ class MaintenanceController extends AbstractController
     {
 
         //Vérification du role = admin
-        if ($this->getParameter('global_variable') != 'admin') {
+        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
 
@@ -64,10 +64,10 @@ class MaintenanceController extends AbstractController
     }
 
     #[Route('/delete/maintenance/{id}', name: 'app_delete_maintenance')]
-    public function delete(int $id): Response
+    public function delete(Request $request, int $id): Response
     {
         //Vérification du role = admin
-        if ($this->getParameter('global_variable') != 'admin') {
+        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
         $maintenance = $this->maintenanceService->getMaintenanceById($id);

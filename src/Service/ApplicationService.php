@@ -32,7 +32,7 @@ class ApplicationService
 
         $allApplications = $this->applicationRepository->findAll();
         foreach ($allApplications as $application) {
-            $applications->add($this->convertToDTO($application));
+            $applications->add($this->convertToDTO($application, null));
         }
         return $applications->toArray();
     }
