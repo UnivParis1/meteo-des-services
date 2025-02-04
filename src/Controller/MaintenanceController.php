@@ -21,11 +21,6 @@ class MaintenanceController extends AbstractController
     #[Route('/maintenance/add/{application}', name: 'app_add_maintenance')]
     public function index(Request $request, Application $application): Response
     {
-        //Vérification du role = admin
-        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
-        }
-
         $maintenance = $this->maintenanceService->initMaintenance($application);
         $form = $this->createForm(MaintenanceType::class, $maintenance);
         $form->handleRequest($request);
@@ -43,11 +38,6 @@ class MaintenanceController extends AbstractController
     #[Route('/maintenance/edit/{id}', name: 'app_edit_maintenance')]
     public function edit(Request $request, int $id): Response
     {
-        //Vérification du role = admin
-        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
-        }
-
         $maintenance = $this->maintenanceService->getMaintenanceById($id);
         $form = $this->createForm(MaintenanceType::class, $maintenance);
         $form->handleRequest($request);
@@ -65,10 +55,6 @@ class MaintenanceController extends AbstractController
     #[Route('/maintenance/delete/{id}', name: 'app_delete_maintenance')]
     public function delete(Request $request, int $id): Response
     {
-        //Vérification du role = admin
-        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
-        }
         $maintenance = $this->maintenanceService->getMaintenanceById($id);
         $appId = $maintenance->getApplication()->getId();
         if ($maintenance != null) {

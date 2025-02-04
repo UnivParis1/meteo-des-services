@@ -21,10 +21,6 @@ class ApplicationController extends AbstractController
     #[Route('/application/add', name: 'app_add_application')]
     public function add(Request $request): Response
     {
-        //Vérification du role = admin
-        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
-        }
         $application = new Application();
         $form = $this->createForm(AddApplicationFormType::class, $application);
         $form->handleRequest($request);
@@ -42,10 +38,6 @@ class ApplicationController extends AbstractController
     #[Route('/application/edit/{id}', name: 'app_edit_application')]
     public function edit(Request $request, int $id): Response
     {
-        //Vérification du role = admin
-        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
-        }
         $application = $this->applicationService->getApplicationById($id);
         $maintenances = $this->maintenanceService->getNextMaintenancesFromApplication($id);
         $form = $this->createForm(AddApplicationFormType::class, $application);
@@ -67,10 +59,6 @@ class ApplicationController extends AbstractController
     #[Route('/application/delete/{id}', name: 'app_delete_application')]
     public function delete(int $id, Request $request): Response
     {
-        //Vérification du role = admin
-        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
-        }
         $application = $this->applicationService->getApplicationById($id);
         if ($application != null) {
             $this->applicationService->deleteApplication($application);
