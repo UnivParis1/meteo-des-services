@@ -18,11 +18,11 @@ class ApplicationController extends AbstractController
     {
     }
 
-    #[Route('/add/application', name: 'app_add_application')]
+    #[Route('/application/add', name: 'app_add_application')]
     public function add(Request $request): Response
     {
         //Vérification du role = admin
-        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
+        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
         $application = new Application();
@@ -39,11 +39,11 @@ class ApplicationController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/application/{id}', name: 'app_edit_application')]
+    #[Route('/application/edit/{id}', name: 'app_edit_application')]
     public function edit(Request $request, int $id): Response
     {
         //Vérification du role = admin
-        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
+        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
         $application = $this->applicationService->getApplicationById($id);
@@ -64,11 +64,11 @@ class ApplicationController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/application/{id}', name: 'app_delete_application')]
+    #[Route('/application/delete/{id}', name: 'app_delete_application')]
     public function delete(int $id, Request $request): Response
     {
         //Vérification du role = admin
-        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
+        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
         $application = $this->applicationService->getApplicationById($id);

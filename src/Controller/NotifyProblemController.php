@@ -20,11 +20,6 @@ class NotifyProblemController extends AbstractController
     #[Route('/signaler', name: 'app_notify_problem')]
     public function index(Request $request, MailerInterface $mailer): Response
     {
-        //Vérification du role = user
-        if ($request->server->get('GLOBAL_VARIABLE') != 'user') {
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
-        }
-
         $problem = new NotifyProblem();
         $form = $this->createForm(NotifyProblemFormType::class, $problem);
         $form->handleRequest($request);

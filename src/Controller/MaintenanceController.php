@@ -18,11 +18,11 @@ class MaintenanceController extends AbstractController
     {
     }
 
-    #[Route('/add/maintenance/{application}', name: 'app_add_maintenance')]
+    #[Route('/maintenance/add/{application}', name: 'app_add_maintenance')]
     public function index(Request $request, Application $application): Response
     {
         //Vérification du role = admin
-        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
+        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
 
@@ -40,12 +40,11 @@ class MaintenanceController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/maintenance/{id}', name: 'app_edit_maintenance')]
+    #[Route('/maintenance/edit/{id}', name: 'app_edit_maintenance')]
     public function edit(Request $request, int $id): Response
     {
-
         //Vérification du role = admin
-        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
+        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
 
@@ -63,11 +62,11 @@ class MaintenanceController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/maintenance/{id}', name: 'app_delete_maintenance')]
+    #[Route('/maintenance/delete/{id}', name: 'app_delete_maintenance')]
     public function delete(Request $request, int $id): Response
     {
         //Vérification du role = admin
-        if ($request->server->get('GLOBAL_VARIABLE') != 'admin') {
+        if ($this->getUser()->getRoles()[0] != "ROLE_ADMIN") {
             return $this->redirectToRoute('app_meteo', ['page' => 1]);
         }
         $maintenance = $this->maintenanceService->getMaintenanceById($id);
