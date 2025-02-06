@@ -6,7 +6,7 @@ security:
             memory:
                 users:
                 # mettre l'uid cas du testeur todo: faire le lien avec la bdd
-                    uidcasuser:  { roles: [ 'ROLE_USER' ] }
+                    uidcasuser:  { roles: [ 'ROLE_ADMIN' ] }
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -20,7 +20,7 @@ security:
                     - security.access_token_extractor.cas
             entry_point: App\Security\CasAuthenticatorEntryPoint
     access_control:
-         - { path: ^/meteo, roles: 'ROLE_USER' }
-         - { path: ^/signaler, roles: 'ROLE_USER' }
+         - { path: ^/meteo, roles: ['ROLE_USER', 'ROLE_ADMIN'] }
+         - { path: ^/signaler, roles: ['ROLE_USER', 'ROLE_ADMIN'] }
          - { path: ^/application, roles: 'ROLE_ADMIN' }
          - { path: ^/maintenance, roles: 'ROLE_ADMIN' }
