@@ -1,23 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AddApplicationController!{% endblock %}
-
 {% block body %}
-    <div class="sidebar"></div>
-    <div class="marge" id="main-block">
-        <div class="container mt-5">
-            <div class="row mt-3">
-                <div class="col-12">
-                    <a class="lien" href="{{ path('app_meteo', { 'page' : 1}) }}">
-                        <h2 class="mb-5">
-                            <img width="50" height="50"
-                                 src="https://img.icons8.com/ios-filled/50/partly-cloudy-day--v1.png"
-                                 alt="partly-cloudy-day--v1"/>
-                            <span class="logo">Météo des services</span>
-                        </h2>
-                    </a>
-                </div>
-            </div>
             {{ form_start(form) }}
             <div class="row mt-3">
                 <div class="col-3">
