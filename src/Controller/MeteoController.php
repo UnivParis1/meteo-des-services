@@ -19,8 +19,8 @@ class MeteoController extends AbstractController
     {
     }
 
-    #[Route('/meteo/{page}', name: 'app_meteo')]
-    public function index(?int $page, Request $request): Response
+    #[Route('/meteo/{page<\d+>?1}', name: 'app_meteo')]
+    public function index(int $page, Request $request): Response
     {
         $session = $request->getSession();
 
@@ -53,7 +53,7 @@ class MeteoController extends AbstractController
 
         if ($page === null) {
             $session->remove('searchApplication');
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
+            return $this->redirectToRoute('app_meteo');
         }
 
         $debut = ($page * $limit) - $limit;
@@ -79,6 +79,6 @@ class MeteoController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function homepage()
     {
-        return $this->redirectToRoute("app_meteo", ['page' => 1]);
+        return $this->redirectToRoute("app_meteo");
     }
 }

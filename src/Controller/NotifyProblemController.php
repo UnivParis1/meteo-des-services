@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NotifyProblemController extends AbstractController
@@ -30,9 +31,9 @@ class NotifyProblemController extends AbstractController
                 $text = '" ' . $problem->message . ' "';
             }
             $email = (new TemplatedEmail())
-                ->from('projetjava95@gmail.com')
-                ->to('lagadic@univ-paris1.fr')
-                ->subject('Nouveau signalement')
+                ->from(new Address('no-reply@univ-paris1.fr', 'Méteo des Services TEST'))
+                ->to('Etienne.Bohm@univ-paris1.fr')
+                ->subject('Méteo des services : signalement')
                 ->htmlTemplate('emails/email_template.html.twig')
                 ->context([
                     'subject' => 'Signalement d\'un problème avec l\'application ' . $problem->title,
@@ -42,9 +43,10 @@ class NotifyProblemController extends AbstractController
             try {
                 $mailer->send($email);
                 $this->addFlash('success', 'Problème signalé avec succès');
-                return $this->redirectToRoute('app_meteo', ['page' => 1]);
+                return $this->redirectToRoute('app_meteo');
             } catch (TransportExceptionInterface $e) {
                 $this->addFlash('error', 'Erreur lors de la transmission de votre signalement');
+                return $this->redirectToRoute('app_meteo');
             }
         }
 

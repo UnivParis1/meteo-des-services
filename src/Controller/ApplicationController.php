@@ -27,7 +27,7 @@ class ApplicationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->applicationService->createApplicationFromMeteoDesServices($application);
             $this->addFlash('success', 'Application ajoutée avec succès');
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
+            return $this->redirectToRoute('app_meteo');
         }
 
         return $this->render('application_form/index.html.twig', [
@@ -45,7 +45,7 @@ class ApplicationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->applicationService->updateApplication($application);
             $this->addFlash('success', 'Modification effectuée avec succès');
-            return $this->redirectToRoute('app_meteo', ['page' => 1]);
+            return $this->redirectToRoute('app_meteo');
         }
 
         return $this->render('application_form/index.html.twig', [
@@ -67,6 +67,6 @@ class ApplicationController extends AbstractController
             $this->addFlash('error', 'Application non trouvée');
         }
 
-        return $this->redirectToRoute('app_meteo', ['page' => 1]);
+        return $this->redirectToRoute('app_meteo');
     }
 }

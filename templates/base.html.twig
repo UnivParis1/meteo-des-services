@@ -29,10 +29,12 @@
     {% endblock %}
 </head>
 <body>
-{% for message in app.flashes('success') %}
-    <div class="alert alert-success superpose ml-auto">
+{% for type, messages in app.flashes() %}
+    {% for message in messages %}
+    <div class="alert alert-{{type == 'error' ? 'danger' : 'success'}} superpose ml-auto">
         {{ message }}
     </div>
+    {% endfor %}
 {% endfor %}
 
     <div class="sidebar"></div>
@@ -40,7 +42,7 @@
         <div class="container mt-5">
             <div class="row mt-3">
                 <div class="col-12">
-                    <a class="lien" href="{{ path('app_meteo', { 'page' : 1}) }}">
+                    <a class="lien" href="{{ path('app_meteo') }}">
                         <h2 class="mb-5">
                             <img width="50" height="50"
                                 src="https://img.icons8.com/ios-filled/50/partly-cloudy-day--v1.png"

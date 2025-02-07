@@ -214,10 +214,10 @@
                             {% endif %}
                             {% if page == 2 %}
                         <li class="page-item"><a class="page-link text-dark"
-                                                 href="{{ path('app_meteo', {'page': 1}) }}">1</a></li>
+                                                 href="{{ path('app_meteo') }}">1</a></li>
                         {% elseif page > 2 %}
                             <li class="page-item"><a class="page-link text-dark"
-                                                     href="{{ path('app_meteo', {'page': 1}) }}">1</a></li>
+                                                     href="{{ path('app_meteo') }}">1</a></li>
                             <li class="page-item disabled">
                                 <span class="page-link">...</span>
                             </li>
