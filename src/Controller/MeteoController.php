@@ -59,9 +59,9 @@ class MeteoController extends AbstractController
         $debut = ($page * $limit) - $limit;
         $applicationsPaginate = array_slice($applications, $debut, $limit);
 
-        $role = array_search('ROLE_ADMIN', $this->getUser()->getRoles()) ? "admin" : "user";
+        $role = (array_search('ROLE_ADMIN', $this->getUser()->getRoles()) != false) ? "admin" : "user";
 
-        $isSuperAdmin = array_search('ROLE_SUPER_ADMIN',$this->getUser()->getRoles()) ? true : false;
+        $isSuperAdmin = (array_search('ROLE_SUPER_ADMIN',$this->getUser()->getRoles()) !== false) ? true : false;
 
         return $this->render('meteo/index.html.twig', [
             'applications' => $applicationsPaginate,
