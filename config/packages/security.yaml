@@ -24,3 +24,4 @@ security:
          - { path: ^/signaler, roles: ['ROLE_USER', 'ROLE_ADMIN'] }
          - { path: ^/application, roles: 'ROLE_ADMIN' }
          - { path: ^/maintenance, roles: 'ROLE_ADMIN' }
+         - { path: ^/user, roles: 'ROLE_SUPER_ADMIN' }
