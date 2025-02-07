@@ -17,6 +17,11 @@
                         </h2>
                     </a>
                 </div>
+                {% if isSuperAdmin %}
+                <div class="d-inline">
+                    <a class="link-primary" href="{{ path('app_user_index') }}"> Administrations roles Users </a>
+                </div>
+                {% endif %}
             </div>
             <div class="row mt-3">
                 <div class="d-flex flex-row">
