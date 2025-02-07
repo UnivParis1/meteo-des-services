@@ -19,9 +19,12 @@ security:
                 token_extractors:
                     - security.access_token_extractor.cas
             entry_point: App\Security\CasAuthenticatorEntryPoint
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
     access_control:
-         - { path: ^/meteo, roles: ['ROLE_USER', 'ROLE_ADMIN'] }
-         - { path: ^/signaler, roles: ['ROLE_USER', 'ROLE_ADMIN'] }
+         - { path: ^/meteo, roles: 'ROLE_USER' }
+         - { path: ^/signaler, roles: 'ROLE_USER' }
          - { path: ^/application, roles: 'ROLE_ADMIN' }
          - { path: ^/maintenance, roles: 'ROLE_ADMIN' }
          - { path: ^/user, roles: 'ROLE_SUPER_ADMIN' }

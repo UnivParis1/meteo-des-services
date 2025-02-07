@@ -2,7 +2,7 @@
 
 {% block body %}
             <div class="row mt-3">
-                {% if isSuperAdmin %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <div class="d-inline">
                     <a class="link-primary" href="{{ path('app_user_index') }}"> Administrations roles Users </a>
                 </div>
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    {% if role=='user' %}
+                    {% if is_granted('ROLE_USER') %}
                         <div style="margin-left: auto">
                             <div class="d-flex justify-content-end">
                                 <a href="{{ path('app_notify_problem') }}">
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     {% endif %}
-                    {% if role=='admin' %}
+                    {% if is_granted('ROLE_ADMIN') %}
                         <div style="margin-left: auto">
                             <div class="d-flex justify-content-end">
                                 <a href="{{ path('app_add_application') }}">
@@ -73,7 +73,7 @@
                 <div class="col-2 text-center"><h6>ÉTAT COURANT</h6></div>
                 <div class="col-3 text-center"><h6>DERNIÈRE MISE À JOUR</h6></div>
                 <div class="col-1 text-center"></div>
-                {% if role=='admin' %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <div class="col-1 text-center"></div>
                     <div class="col-1 text-center"></div>
                 {% endif %}
@@ -175,7 +175,7 @@
                             </a>
                             <span class="hover-text rounded">Afficher les détails</span>
                         </div>
-                        {% if role=='admin' %}
+                        {% if is_granted('ROLE_ADMIN') %}
                             <div class="col-1">
                                 <a class="action" href="{{ path('app_edit_application', { 'id' : application.id}) }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
