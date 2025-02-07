@@ -22,9 +22,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+    <a class="h4 link-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
 
     {{ include('user/_delete_form.html.twig') }}
+
+        <a class="h4 link-primary d-block mt-2"href="{{ path('app_user_index') }}">back to list</a>
 {% endblock %}
