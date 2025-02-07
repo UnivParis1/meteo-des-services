@@ -8,6 +8,7 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class UserType extends AbstractType
 {
@@ -15,8 +16,14 @@ class UserType extends AbstractType
     {
         $builder
             ->add('uuid', TextType::class)
-            ->add('roles', TextType::class)
-        ;
+            ->add('roles', ChoiceType::class, [
+               'required' => true,
+               'choices' => [
+                    'ROLE_USER' => 'ROLE_USER',
+                    'ROLE_ADMIN' => 'ROLE_ADMIN',
+                    'ROLE_SUPER_ADMIN' => "ROLE_SUPER_ADMIN"
+               ]
+            ]);
 
         $builder->get('roles')->addModelTransformer(new CallbackTransformer(
             fn ($rolesAsArray) => count($rolesAsArray) ? implode(',', $rolesAsArray): null,
