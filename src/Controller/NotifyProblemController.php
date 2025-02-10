@@ -31,14 +31,24 @@ class NotifyProblemController extends AbstractController
                 $text = '" ' . $problem->message . ' "';
             }
             $email = (new TemplatedEmail())
-                ->from(new Address('no-reply@univ-paris1.fr', 'Méteo des Services TEST'))
-                ->to('Etienne.Bohm@univ-paris1.fr')
                 ->subject('Méteo des services : signalement')
                 ->htmlTemplate('emails/email_template.html.twig')
                 ->context([
                     'subject' => 'Signalement d\'un problème avec l\'application ' . $problem->title,
                     'message' => $text,
                 ]);
+
+            $env = $this->getParameter('kernel.environment');
+            switch ($env) {
+                case "dev":
+                    $email->from(new Address('ebohm@univ-paris1.fr', 'Méteo des Services DEV'));
+                    $email->to('Etienne.Bohm@univ-paris1.fr');
+                    break;
+                case "test":
+                    $email->from(new Address('no-reply@univ-paris1.fr', 'Méteo des Services TEST'));
+                    $email->to("Marc-Olivier.Lagadic@univ-paris1.fr");
+                    break;
+            }
 
             try {
                 $mailer->send($email);
