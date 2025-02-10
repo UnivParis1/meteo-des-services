@@ -17,7 +17,7 @@ class CasAuthenticatorEntryPoint implements AuthenticationEntryPointInterface
         $this->casUrl = $casUrl;
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): Response
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         $currentUrl = $request->getUri();
         $redirectUrl = sprintf('%s?service=%s', $this->casUrl, urlencode($currentUrl));
