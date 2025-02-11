@@ -25,44 +25,53 @@ class NotifyProblemController extends AbstractController
         $form = $this->createForm(NotifyProblemFormType::class, $problem);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($problem->message == '') {
-                $text = "Problème signalé sur l'application" . " " . $problem->title;
-            } else {
-                $text = '" ' . $problem->message . ' "';
-            }
+
+            $text = "Problème signalé sur l'application" . " " . $problem->title . PHP_EOL;
+            $text .= ($problem->message == '') ? "Aucune description renseignée" : $problem->message . PHP_EOL;
+
+            $subject = "Méteo des services - équipe PAS - " . $problem->title;
+
             $email = (new TemplatedEmail())
-                ->subject('Méteo des services : signalement')
+                ->subject($subject)
                 ->htmlTemplate('emails/email_template.html.twig')
                 ->context([
-                    'subject' => 'Signalement d\'un problème avec l\'application ' . $problem->title,
-                    'message' => $text,
+                    'subject' => $subject,
+                    'message' => $text
                 ]);
 
+            $toSend = false;
             $env = $this->getParameter('kernel.environment');
-            switch ($env) {
-                case "dev":
-                    $email->from(new Address('ebohm@univ-paris1.fr', 'Méteo des Services DEV'));
-                    $email->to('Etienne.Bohm@univ-paris1.fr');
-                    break;
-                case "test":
-                    $email->from(new Address('no-reply@univ-paris1.fr', 'Méteo des Services TEST'));
-                    $email->to("Marc-Olivier.Lagadic@univ-paris1.fr");
-                    break;
+
+            if ($env == "dev" || $env == "test") {
+                $from = $this->getUser()->getUserIdentifier() ."@univ-paris1.fr";
+
+                $email->from(new Address($from, "Méteo des Services " . strtoupper($env)));
+
+                if ($this->isGranted('ROLE_SUPER_ADMIN')) {
+                    $toSend = true;
+                    $email->to($from);
+                } else {
+                    $this->addFlash("error", "Application en test pas d'envoi de mails");
+                }
+            } else {
+                throw new \Exception("Environnement autre que dev/test non configurés");
             }
 
-            try {
-                $mailer->send($email);
-                $this->addFlash('success', 'Problème signalé avec succès');
-                return $this->redirectToRoute('app_meteo');
-            } catch (TransportExceptionInterface $e) {
-                $this->addFlash('error', 'Erreur lors de la transmission de votre signalement');
-                return $this->redirectToRoute('app_meteo');
+            if ($toSend) {
+                try {
+                    $mailer->send($email);
+                    $this->addFlash('success', 'Problème signalé avec succès');
+                }
+                catch (TransportExceptionInterface $e) {
+                    $this->addFlash('error', 'Erreur lors de la transmission de votre signalement : ' . $e->getMessage());
+                }
             }
+            return $this->redirectToRoute('app_meteo');
+        } else {
+            return $this->render('notify_problem/index.html.twig', [
+                'controller_name' => 'NotifyProblemController',
+                'form' => $form->createView()
+            ]);
         }
-
-        return $this->render('notify_problem/index.html.twig', [
-            'controller_name' => 'NotifyProblemController',
-            'form' => $form->createView()
-        ]);
     }
 }
