@@ -24,10 +24,7 @@ class MeteoController extends AbstractController
     {
         $session = $request->getSession();
 
-        if ($session->has('searchApplication'))
-            $searchApplication = $session->get('searchApplication');
-        else
-            $searchApplication = new SearchApplication();
+        $searchApplication = $session->get('searchApplication') ?? new SearchApplication();
 
         $form = $this->createForm(SearchFormType::class, $searchApplication);
 
@@ -44,10 +41,7 @@ class MeteoController extends AbstractController
 
         $nbApplications = count($applications);
 
-        if ($nbApplications != 0)
-            $limit = $searchApplication->limit ?? $nbApplications;
-        else
-            $limit = 1;
+        $limit = $nbApplications > 0 ? $searchApplication->limit ?? $nbApplications : 1;
 
         $nbPage = ceil(count($applications) / $limit);
 
@@ -56,7 +50,7 @@ class MeteoController extends AbstractController
             return $this->redirectToRoute('app_meteo');
         }
 
-        $debut = ($page * $limit) - $limit;
+        $debut = $page * $limit - $limit;
         $applicationsPaginate = array_slice($applications, $debut, $limit);
 
         return $this->render('meteo/index.html.twig', [

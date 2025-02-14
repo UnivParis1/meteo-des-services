@@ -17,13 +17,7 @@ class Application
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fname = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
-
-    #[ORM\Column]
-    private ?bool $isFromJson = null;
 
     #[ORM\Column(length: 255)]
     private ?string $state = null;
@@ -51,18 +45,6 @@ class Application
         return $this->id;
     }
 
-    public function getFname(): ?string
-    {
-        return $this->fname;
-    }
-
-    public function setFname(?string $fname): static
-    {
-        $this->fname = $fname;
-
-        return $this;
-    }
-
     public function getTitle(): ?string
     {
         return $this->title;
@@ -71,18 +53,6 @@ class Application
     public function setTitle(?string $title): static
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function isIsFromJson(): ?bool
-    {
-        return $this->isFromJson;
-    }
-
-    public function setIsFromJson(bool $isFromJson): static
-    {
-        $this->isFromJson = $isFromJson;
 
         return $this;
     }

@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Application;
 use App\Entity\ApplicationHistory;
-use App\Entity\ViewMaintenanceEnCours;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,17 +22,6 @@ class ApplicationRepository extends ServiceEntityRepository
                                 private EntityManagerInterface $em)
     {
         parent::__construct($registry, Application::class);
-    }
-
-    public function insertApplicationWithFname(string $fname): Application
-    {
-        $application = new Application();
-        $application->setFname($fname);
-        $application->setIsFromJson(true);
-        $application->setState("default");
-        $this->em->persist($application);
-        $this->em->flush();
-        return $application;
     }
 
     public function createHistory(ApplicationHistory $history): ApplicationHistory

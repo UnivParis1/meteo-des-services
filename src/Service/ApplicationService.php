@@ -20,7 +20,6 @@ class ApplicationService
 
     public function createApplicationFromMeteoDesServices(Application $application): void
     {
-        $application->setIsFromJson(false);
         $this->applicationRepository->createApplication($application);
         $this->updateHistory($application, "creation");
     }
@@ -77,19 +76,6 @@ class ApplicationService
         return $dtos->toArray();
     }
 
-    private function getApplicationByFnameProperty(string $fname): Application|null
-    {
-        $application = $this->applicationRepository->findOneBy(['fname' => $fname]); // fname fait le lien entre JSon et BDD
-        if ($application == null) {
-            // Cas de JSon dynamique : Appli du JSon non référencée dans la BDD donc création d'une nouvelle appli
-            $application = $this->applicationRepository->insertApplicationWithFname($fname);
-            $this->updateHistory($application, "creation");
-        } else if ($application->isIsArchived()) {
-            return null;
-        }
-        return $application;
-    }
-
     public function getApplicationById(int $id): Application
     {
         return $this->applicationRepository->findOneBy(['id' => $id]);
@@ -102,7 +88,6 @@ class ApplicationService
     {
         $this->applicationRepository->findAll();
         $applications = $this->applicationRepository->findBy([
-            'isFromJson' => false,
             'isArchived' => false]);
         return new ArrayCollection($applications);
     }
