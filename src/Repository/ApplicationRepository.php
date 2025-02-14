@@ -73,12 +73,12 @@ class ApplicationRepository extends ServiceEntityRepository
             ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::WITH, 'a.id = m.application')
             ->where('a.isArchived = 0');
 
-        if (strlen($searchTerm) > 0)
-            $query->andWhere("a.title LIKE '%$searchTerm%'");
-
         if ($stateFilter != null && $stateFilter != 'all' && $stateFilter != '') {
             $query->andWhere("a.state = '$stateFilter'")->orWhere("m.applicationState = '$stateFilter'");
         }
+
+        if (strlen($searchTerm) > 0)
+            $query->andWhere("a.title LIKE '%$searchTerm%'");
 
         $dql = $query->orderBy('a.id', 'ASC')
             ->getQuery();
