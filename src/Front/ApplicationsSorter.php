@@ -13,6 +13,15 @@ class ApplicationsSorter
             function ($app1, $app2): int {
                 return $this->compare($app1, $app2);
             });
+
+        for ($i = 0; $i < count($applications); $i++) {
+            $app = $applications[$i];
+
+            if ($app->isInMaintenance()) {
+                $app->setState($app->getNextMaintenance()->getState());
+                $applications[$i] = $app;
+            }
+        }
         return $applications;
     }
 

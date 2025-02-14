@@ -115,5 +115,13 @@ class ApplicationDTO
         $this->nextMaintenances = $nextMaintenances;
     }
 
+    /**
+     * @param  string $state
+     */
+    public function setState(string $state): void
+    {
+        $this->state = $state;
+    }
+
 
 }
