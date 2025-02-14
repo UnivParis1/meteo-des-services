@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Application;
 use App\Entity\ApplicationHistory;
+use App\Entity\ViewMaintenanceEnCours;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -67,17 +68,23 @@ class ApplicationRepository extends ServiceEntityRepository
 //     */
     public function findBySearchAndState(string $searchTerm, string $stateFilter): array
     {
-        $query = $this->createQueryBuilder('a')
+        $query = $this->getEntityManager()->createQueryBuilder()->select('a')
+            ->from('App\Entity\Application', 'a')
+            ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::WITH, 'a.id = m.application')
             ->where('a.isArchived = 0');
 
         if (strlen($searchTerm) > 0)
             $query->andWhere("a.title LIKE '%$searchTerm%'");
 
-        if ($stateFilter != null && $stateFilter != 'all' && $stateFilter != '')
-            $query->andWhere("a.state = '$stateFilter'");
+        if ($stateFilter != null && $stateFilter != 'all' && $stateFilter != '') {
+            $query->andWhere("a.state = '$stateFilter'")->orWhere("m.applicationState = '$stateFilter'");
+        }
 
-        return $query->orderBy('a.id', 'ASC')
-            ->getQuery()
-            ->getResult();
+        $dql = $query->orderBy('a.id', 'ASC')
+            ->getQuery();
+
+        $results = $dql->getResult();
+
+        return $results;
     }
 }
