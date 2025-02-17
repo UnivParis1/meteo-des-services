@@ -39,18 +39,21 @@ class MaintenanceService
         $now = new \DateTime();
         $maxNbOfMaintenances = 3;
         $nextMaintenances = $this->maintenanceRepository->findNextMaintenancesFromApplication($application->getId(), $maxNbOfMaintenances);
-        if (count($nextMaintenances) > 0) {
-            $nextMaintenance = $this->convertToDTO($nextMaintenances[0]);
-            $application->setNextMaintenance($nextMaintenance);
-            if ($nextMaintenance->getStartingDate() < $now && $nextMaintenance->getEndingDate() > $now) {
+        if (count($nextMaintenances) === 0) {
+            return $application;
+        }
+
+        $maintenances = [];
+        foreach ($nextMaintenances as $nextMaintenanceEntity) {
+            $nextMaintenanceDTO = $this->convertToDTO($nextMaintenanceEntity);
+
+            $application->setNextMaintenance($nextMaintenanceDTO);
+            if ($nextMaintenanceDTO->getStartingDate() < $now && $nextMaintenanceDTO->getEndingDate() > $now) {
                 $application->setIsInMaintenance(true);
             }
-            $maintenances = array($nextMaintenance);
-            for ($i = 1; $i < count($nextMaintenances); $i++) {
-                array_push($maintenances, $this->convertToDTO($nextMaintenances[$i]));
-            }
-            $application->setNextMaintenances($maintenances);
+            $maintenances[] = $nextMaintenanceDTO;
         }
+        $application->setNextMaintenances($maintenances);
         return $application;
     }
 

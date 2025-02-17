@@ -82,17 +82,6 @@ class ApplicationService
     }
 
     /*
-     * Retourne les applications stockées en bdd
-     */
-    private function getApplicationsCreatedByMeteo(): ArrayCollection
-    {
-        $this->applicationRepository->findAll();
-        $applications = $this->applicationRepository->findBy([
-            'isArchived' => false]);
-        return new ArrayCollection($applications);
-    }
-
-    /*
      * historise une nouvelle modification (création, modif, supp) sur une app
      */
     private function updateHistory(Application $application, string $historyType): void
