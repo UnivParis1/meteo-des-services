@@ -9,7 +9,7 @@ security:
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+            security: true
         main:
             provider: app_user_provider
             access_token:
@@ -28,3 +28,4 @@ security:
          - { path: ^/application, roles: 'ROLE_ADMIN' }
          - { path: ^/maintenance, roles: 'ROLE_ADMIN' }
          - { path: ^/user, roles: 'ROLE_SUPER_ADMIN' }
+         - { path: ^/_profiler, roles: 'ROLE_SUPER_ADMIN' }
