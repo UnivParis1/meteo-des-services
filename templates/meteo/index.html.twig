@@ -166,7 +166,7 @@
                         <div class="col-3 text-center">{{ application.lastUpdate|date('d-m-Y H:i') }}</div>
                         <div class="col-1">
                             <a class="action" data-toggle="modal" data-target="#details-modal"
-                               onclick="showDetails('{{ application.id }}')">
+                               onclick="$.fn.showDetails('{{ application.id }}')">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                      class="bi bi-eye-fill" viewBox="0 0 16 16">
                                     <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
@@ -187,7 +187,7 @@
                             </div>
                             <div class="col-1">
                                 <a class="action" href="{{ path('app_delete_application', { 'id' : application.id }) }}"
-                                   onclick="confirmDeletion(event, this.href, 'application')">
+                                   onclick="$.fn.confirmDeletion(event, this.href, 'application')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                          class="bi bi-trash-fill" viewBox="0 0 16 16">
                                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>

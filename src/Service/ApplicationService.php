@@ -24,12 +24,12 @@ class ApplicationService
         $this->updateHistory($application, "creation");
     }
 
-    public function getAllApplications(): array
+    public function getAllApplications(bool $archived = false): array
     {
         // Tableau sous format DTO
         $applications = new ArrayCollection();
 
-        $allApplications = $this->applicationRepository->findAll();
+        $allApplications = $archived ? $this->applicationRepository->findAll() : $this->applicationRepository->findAllNotArchived();
         foreach ($allApplications as $application) {
             $applications->add($this->convertToDTO($application, null));
         }
@@ -38,19 +38,14 @@ class ApplicationService
 
     public function getApplicationNamesArrayForForm(): array
     {
-        $applications = $this->getAllApplications();
+        $applications = $this->getAllApplications(archived: false);
 
-        //récupération des noms
-        $names = array_map(function ($application) {
-            return $application->getTitle();
-        }, $applications);
-
-        //ordre alphabétique
-
-        sort($names);
-
-        //mapper clé valeur
-        return array_combine($names, $names);
+        $array = ['' => ''];
+        foreach ($applications as $application) {
+            $title = $application->getTitle();
+            $array[$title] = $title;
+        }
+        return $array;
     }
 
     public function convertToDTO(Application $application, ?string $title): ApplicationDTO

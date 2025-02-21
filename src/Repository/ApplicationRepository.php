@@ -75,4 +75,9 @@ class ApplicationRepository extends ServiceEntityRepository
 
         return $results;
     }
+
+    public function findAllNotArchived() : array
+    {
+        return $this->createQueryBuilder('a')->where('a.isArchived = 0')->orderBy('a.id', 'ASC')->getQuery()->getResult();
+    }
 }

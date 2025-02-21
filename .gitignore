@@ -1,8 +1,13 @@
-# Meteo up1
+# Meteo up1 : fichiers .lock ignorés
 
 /composer.lock
 /symfony.lock
 /*.lock
+/*-lock.json
+
+# UP1 : protections csrf ignorés
+/assets/controllers/csrf_protection_controller.js
+/config/packages/csrf.yaml
 
 # Cache and logs (Symfony2)
 /app/cache/*

@@ -19,9 +19,13 @@ class NotifyProblemFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', ChoiceType::class, ['required' => true,
-                'choices' => $this->applicationService->getApplicationNamesArrayForForm()
-            ])
+            ->add('title', ChoiceType::class,
+                ['required' => true,
+                'choices' =>  $this->applicationService->getApplicationNamesArrayForForm(),
+                'autocomplete' => true,
+                'empty_data' => '',
+                'tom_select_options' => ['closeAfterSelect' => true]
+                ])
             ->add('message', TextareaType::class, ['required' => true, 'empty_data' => '']);
     }
 

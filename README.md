@@ -31,5 +31,10 @@ La structure de la base de données a été conservée dans les migrations du pr
 ## Partie visuelle
 Parmi les librairies de style, le projet utilise <b>Bootstrap</b>.
 
+### Commande frontend compilation dans public/build
+
+- yarn run build || npm run build
+
+En dev pour debugger dans un browser: npm run watch
 
 
