@@ -7,6 +7,7 @@ parameters:
     cas_url: '%env(CAS_URL)%'
     cas_validate_url: '%cas_url%%env(CAS_VALIDATE_PATH)%'
     cas_login_url: '%cas_url%%env(CAS_LOGIN_PATH)%'
+    urlwsgroup_user_infos: '%env(URLWSGROUP_USER_INFOS)%'
 services:
     # default configuration for services in *this* file
     _defaults:

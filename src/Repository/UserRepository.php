@@ -16,20 +16,14 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    public function findOneBy(array $criteria, array|null $orderBy = null): object|null {
-        $obj = parent::findOneBy($criteria);
-
-        // creation du user si il n'est pas trouvé en bdd suite à requête cas, pas la méthode la plus élegante mais ... simple
-        if (is_string($_REQUEST['ticket']) && str_contains($_REQUEST['ticket'], 'cas')  && $obj == null && count($criteria) == 1 && array_key_exists("uuid", $criteria)) {
+    public function createUser(string $uid): User {
             $u = new User();
-            $u->setUuid($criteria['uuid']);
+            $u->setUuid($uid);
             $em = $this->getEntityManager();
             $em->persist($u);
             $em->flush();
 
-            $obj = $u;
-        }
-        return $obj;
+        return $u;
     }
 
     //    /**
