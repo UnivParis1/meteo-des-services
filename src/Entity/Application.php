@@ -31,6 +31,10 @@ class Application
     #[ORM\OneToMany(targetEntity: Maintenance::class, mappedBy: 'application')]
     private Collection $maintenances;
 
+    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    private User $user;
+
     #[ORM\Column]
     private ?bool $isArchived = false;
 
@@ -164,4 +168,23 @@ class Application
         return $this;
     }
 
+    /**
+     * Get the value of user
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @return  self
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }
