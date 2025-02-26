@@ -12,8 +12,7 @@
 
 namespace App\EventSubscriber;
 
-use App\Repository\UserRepository;
-use Exception;
+use App\Service\UserService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\PreAuthenticatedUserBadge;
@@ -24,12 +23,10 @@ use Symfony\Component\Security\Http\Event\CheckPassportEvent;
  */
 class MeteoCheckerListener implements EventSubscriberInterface
 {
-    private UserCheckerInterface $userChecker;
-    private UserRepository $userRepository;
-
-    public function __construct(UserCheckerInterface $userChecker, UserRepository $userRepository) {
-        $this->userChecker = $userChecker;
-        $this->userRepository = $userRepository;
+    public function __construct(
+        private UserCheckerInterface $userChecker,
+        private UserService $userService,
+        ) {
     }
 
     public function preCheckCredentials(CheckPassportEvent $event): void
@@ -41,13 +38,13 @@ class MeteoCheckerListener implements EventSubscriberInterface
 
         try {
             $user = $passport->getUser();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $user = null;
         }
 
         if ($user === null) {
             $uid = (array_values($passport->getBadges())[0])->getUserIdentifier();
-            $user = $this->userRepository->createUser($uid);
+            $user = $this->userService->createUser($uid);
         }
         $this->userChecker->checkPreAuth($user);
     }

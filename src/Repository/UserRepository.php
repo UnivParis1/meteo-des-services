@@ -16,9 +16,14 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    public function createUser(string $uid): User {
+    public function createUser(string $uid, ?string $displayName, ?string $mail): User
+    {
             $u = new User();
             $u->setUuid($uid);
+
+            $displayName === null ?: $u->setDisplayName($displayName);
+            $mail === null ?: $u->setMail($mail);
+
             $em = $this->getEntityManager();
             $em->persist($u);
             $em->flush();
