@@ -4,7 +4,7 @@
             <div class="row mt-3">
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <div class="d-inline">
-                    <a class="link-primary" href="{{ path('app_user_index') }}"> Administrations roles Users </a>
+                    <a class="link-primary" href="{{ path('admin_user_index') }}"> Administrations roles Users </a>
                 </div>
                 {% endif %}
                 <div class="d-flex flex-row">

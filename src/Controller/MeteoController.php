@@ -6,6 +6,7 @@ use App\Form\SearchFormType;
 use App\Front\ApplicationsSorter;
 use App\Model\SearchApplication;
 use App\Service\ApplicationService;
+use App\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
