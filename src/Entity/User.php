@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['uuid'])]
@@ -29,6 +31,13 @@ class User implements UserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mail = null;
+
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'user')]
+    private Collection $applications;
+
+    public function __construct() {
+        $this->applications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -113,6 +122,26 @@ class User implements UserInterface
     public function setMail(?string $mail): static
     {
         $this->mail = $mail;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of applications
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * Set the value of applications
+     *
+     * @return  self
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
 
         return $this;
     }

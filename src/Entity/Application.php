@@ -31,9 +31,9 @@ class Application
     #[ORM\OneToMany(targetEntity: Maintenance::class, mappedBy: 'application')]
     private Collection $maintenances;
 
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    private User $user;
+    private User|null $user = null;
 
     #[ORM\Column]
     private ?bool $isArchived = false;
