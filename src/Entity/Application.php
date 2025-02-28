@@ -32,7 +32,7 @@ class Application
     private Collection $maintenances;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications')]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: "SET NULL" )]
     private User|null $user = null;
 
     #[ORM\Column]

@@ -145,4 +145,16 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function addApplication(Application $application)
+    {
+        $this->applications->add($application);
+        return $this;
+    }
+
+    public function removeApplication(Application $application)
+    {
+        $this->applications->remove($application);
+        return $this;
+    }
 }

@@ -2,28 +2,16 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Application;
 use App\Entity\User;
-use App\Repository\ApplicationRepository;
-use Doctrine\DBAL\Query\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 #[IsGranted('ROLE_SUPER_ADMIN')]
 class UserCrudController extends AbstractCrudController
 {
-    public function __construct(
-        private ApplicationRepository $applicationRepository,
-        private RequestStack $requestStack)
-    {}
-
     public static function getEntityFqcn(): string
     {
         return User::class;
@@ -39,5 +27,27 @@ class UserCrudController extends AbstractCrudController
                             ->setFormTypeOption('placeholder', 'No applications managed')
                             ->setFormTypeOption('required', false);
     }
+
+    private function _saveApplicationsUser(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance)
+    {
+        if ($entityInstance->getApplications()->count() > 0) {
+            foreach ($entityInstance->getApplications() as $application) {
+                $application->setUser($entityInstance);
+                $entityManager->persist($application);
+            }
+            $entityManager->flush();
+        }
+    }
+
+    public function updateEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $this->_saveApplicationsUser($entityManager, $entityInstance);
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    public function persistEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        parent::persistEntity($entityManager, $entityInstance);
+        $this->_saveApplicationsUser($entityManager, $entityInstance);
+    }
 }
-    
