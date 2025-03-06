@@ -14,17 +14,21 @@ class MaintenanceDTO
 
     private string $totalTime;
 
+    private ?string $message;
+
     public function __construct(
         int                $id,
         string             $state,
         \DateTimeInterface $startingDate,
-        \DateTimeInterface $endingDate
+        \DateTimeInterface $endingDate,
+        ?string             $message
     )
     {
         $this->id = $id;
         $this->state = $state;
         $this->startingDate = $startingDate;
         $this->endingDate = $endingDate;
+        $this->message = $message;
 
         $days = $startingDate->diff($endingDate)->days;
         if ($days > 1) {
@@ -74,6 +78,11 @@ class MaintenanceDTO
     public function getTotalTime(): string
     {
         return $this->totalTime;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
     }
 
 

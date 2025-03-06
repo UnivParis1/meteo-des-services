@@ -36,6 +36,8 @@ class MaintenanceHistory
     #[ORM\Column]
     private ?\DateTimeImmutable $date = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $message = null;
     public function __construct()
     {
         $this->date = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
@@ -126,6 +128,18 @@ class MaintenanceHistory
     public function setDate(\DateTimeImmutable $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): static
+    {
+        $this->message = $message;
 
         return $this;
     }

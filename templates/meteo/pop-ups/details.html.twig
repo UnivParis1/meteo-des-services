@@ -68,6 +68,7 @@
                                 <td style="text-align: center; font-weight: bolder; color: #473F39;">Date</td>
                                 <td style="text-align: center; font-weight: bolder; color: #473F39;">Durée</td>
                                 <td style="text-align: center; font-weight: bolder; color: #473F39;">Etat</td>
+                                <td style="text-align: center; font-weight: bolder; color: #473F39;">Message</td>
                             </tr>
                             {% for maintenance in application.nextMaintenances %}
                                 <tr>
@@ -87,6 +88,9 @@
                                         {% else %}
                                             Opérationnel
                                         {% endif %}
+                                    </td>
+                                    <td class="maintenance-text" style="text-align: center; color: #473F39;">
+                                        {{ maintenance.message }}
                                     </td>
                                 </tr>
                             {% endfor %}

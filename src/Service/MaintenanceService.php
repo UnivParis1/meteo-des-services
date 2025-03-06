@@ -73,7 +73,8 @@ class MaintenanceService
             $maintenance->getId(),
             $maintenance->getApplicationState(),
             $maintenance->getStartingDate(),
-            $maintenance->getEndingDate()
+            $maintenance->getEndingDate(),
+            $maintenance->getMessage()
         );
     }
 
@@ -87,6 +88,10 @@ class MaintenanceService
         $history->setType($historyType);
         // Date créée automatiquement par le constructeur
         $history->setAuthor("ADMIN"); // TO CHANGE
+
+        if (strlen($maintenance->getMessage()) > 0)
+            $history->setMessage($maintenance->getMessage());
+
         $this->maintenanceRepository->createHistory($history);
     }
 

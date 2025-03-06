@@ -35,6 +35,9 @@ class Maintenance
     #[ORM\OneToMany(targetEntity: MaintenanceHistory::class, mappedBy: 'Maintenance')]
     private Collection $maintenanceHistories;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Message = null;
+
     public function __construct()
     {
         $this->maintenanceHistories = new ArrayCollection();
@@ -131,6 +134,18 @@ class Maintenance
                 $maintenanceHistory->setMaintenance(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->Message;
+    }
+
+    public function setMessage(?string $Message): static
+    {
+        $this->Message = $Message;
 
         return $this;
     }
