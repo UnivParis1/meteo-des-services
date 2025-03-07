@@ -12,6 +12,14 @@
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
+
+    <script>
+        window.prolongation_ENT_args = {
+            current: "{{ ent_name }}",
+            delegateAuth: true
+        };
+    </script>
+    <script src="{{ prolongation_ent_js }}"></script>
 </head>
 <body>
 {% for type, messages in app.flashes() %}
