@@ -8,6 +8,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 #[IsGranted('ROLE_SUPER_ADMIN')]
 class UserCrudController extends AbstractCrudController
@@ -15,6 +16,15 @@ class UserCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return User::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud = parent::configureCrud($crud);
+
+        $crud->setHelp("edit", "Pour le champs applications, on peut rajouter des applications à l'utilisateur mais non lui en enlever. Pour enlever des applications, le seul moyen (bug), c'est de supprimer complétement l'utilisateur");
+
+        return $crud;
     }
 
     public function configureFields(string $pageName): iterable
