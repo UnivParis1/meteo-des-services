@@ -19,6 +19,28 @@ Un seul rôle est attribué aux users, les droits sont hérités du rôle préce
 - <i>Application.state, Maintenance.ApplicationState</i> : {"operational", "pertubed", "unavailable", "default"}
 - <i>ApplicationHistory.historyType, MaintenanceHistory.historyType</i> : {"creation", "update", "deletion"}
 
+### Vue MySQL hors doctrine
+
+Une vue MySQL en bdd est indispensable pour sélectionner les applications en maintenance (Erreur sur l'index si elle n'est pas présente).
+Celle ci est hors fichier de configuration
+
+```
+CREATE
+VIEW view_maintenance_encours AS
+    SELECT
+        maintenance.id AS id,
+        maintenance.application_id AS application_id,
+        maintenance.starting_date AS starting_date,
+        maintenance.ending_date AS ending_date,
+        maintenance.application_state AS application_state,
+        maintenance.is_archived AS is_archived
+    FROM
+        maintenance
+    WHERE
+        maintenance.starting_date <= CURRENT_TIMESTAMP()
+            AND maintenance.ending_date >= CURRENT_TIMESTAMP()
+```
+
 ### Import des données json
 
 - Import json des applications ent avec EsupUserApps/admin/config-apps.tml (projet github EsupUserApps)
