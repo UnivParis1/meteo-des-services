@@ -38,6 +38,21 @@ class Application
     #[ORM\Column]
     private ?bool $isArchived = false;
 
+    #[ORM\Column(length: 255)]
+    private ?string $fname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $Categorie = null;
+
+    #[ORM\Column]
+    private ?bool $isFromJson = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $url = null;
+
     public function __construct()
     {
         $this->histories = new ArrayCollection();
@@ -145,10 +160,15 @@ class Application
         return $this;
     }
 
-    public function getLastUpdate(): \DateTimeInterface
+    public function getLastUpdate(): ?\DateTimeInterface
     {
-        $lastUpdate = $this->getHistories()[0]->getDate();
-        foreach ($this->getHistories() as $history) {
+        $histories = $this->getHistories();
+
+        if (sizeof($histories) == 0)
+            return null;
+
+        $lastUpdate = $histories[0]->getDate();
+        foreach ($histories as $history) {
             if ($lastUpdate == null || $history->getDate() > $lastUpdate) {
                 $lastUpdate = $history->getDate();
             }
@@ -191,5 +211,65 @@ class Application
     public function __toString()
     {
         return $this->title;
+    }
+
+    public function getFname(): ?string
+    {
+        return $this->fname;
+    }
+
+    public function setFname(string $fname): static
+    {
+        $this->fname = $fname;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?string
+    {
+        return $this->Categorie;
+    }
+
+    public function setCategorie(string $Categorie): static
+    {
+        $this->Categorie = $Categorie;
+
+        return $this;
+    }
+
+    public function isFromJson(): ?bool
+    {
+        return $this->isFromJson;
+    }
+
+    public function setIsFromJson(bool $isFromJson): static
+    {
+        $this->isFromJson = $isFromJson;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): static
+    {
+        $this->url = $url;
+
+        return $this;
     }
 }

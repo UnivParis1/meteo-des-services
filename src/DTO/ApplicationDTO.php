@@ -12,7 +12,7 @@ class ApplicationDTO
 
     private string $message;
 
-    private \DateTimeInterface $lastUpdate;
+    private ?\DateTimeInterface $lastUpdate;
 
     private bool $isInMaintenance = false;
 
@@ -24,7 +24,7 @@ class ApplicationDTO
                                 string             $title,
                                 string             $state,
                                 string             $message,
-                                \DateTimeInterface $lastUpdate)
+                                ?\DateTimeInterface $lastUpdate)
     {
         $this->id = $id;
         $this->title = $title;
@@ -68,7 +68,7 @@ class ApplicationDTO
     /**
      * @return \DateTime
      */
-    public function getLastUpdate(): \DateTimeInterface
+    public function getLastUpdate(): ?\DateTimeInterface
     {
         return $this->lastUpdate;
     }
