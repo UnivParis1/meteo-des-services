@@ -35,6 +35,9 @@ class User implements UserInterface
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'user')]
     private Collection $applications;
 
+    #[ORM\Column]
+    private bool $recevoirMail = false;
+
     public function __construct() {
         $this->applications = new ArrayCollection();
     }
@@ -155,6 +158,18 @@ class User implements UserInterface
     public function removeApplication(Application $application)
     {
         $this->applications->remove($application);
+        return $this;
+    }
+
+    public function isRecevoirMail(): bool
+    {
+        return $this->recevoirMail;
+    }
+
+    public function setRecevoirMail(bool $recevoirMail): static
+    {
+        $this->recevoirMail = $recevoirMail;
+
         return $this;
     }
 }

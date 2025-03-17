@@ -8,6 +8,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 #[IsGranted('ROLE_SUPER_ADMIN')]
@@ -33,6 +34,7 @@ class UserCrudController extends AbstractCrudController
         yield ArrayField::new('roles');
         yield TextField::new('displayName');
         yield TextField::new('mail');
+        yield BooleanField::new('recevoirMail');
         yield AssociationField::new('applications')
                             ->setFormTypeOption('placeholder', 'No applications managed')
                             ->setFormTypeOption('required', false);

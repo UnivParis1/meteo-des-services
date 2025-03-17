@@ -52,10 +52,10 @@ class NotifyProblemController extends AbstractController
                     'message' => $text,
                 ]);
 
-            if ($notifyUser)
-                $email->to($notifyUser->getMail());
-            else
-                $email->to('assistance-dsiun@univ-paris1.fr');
+            if ($notifyUser && $notifyUser->isRecevoirMail()) {
+                $email->cc($notifyUser->getMail());
+            }
+            $email->to('assistance-dsiun@univ-paris1.fr');
 
             $mailer->send($email);
             $this->addFlash('success', 'Problème signalé avec succès');
