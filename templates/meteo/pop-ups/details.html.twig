@@ -68,7 +68,15 @@
                                 <td style="text-align: center; font-weight: bolder; color: #473F39;">Date</td>
                                 <td style="text-align: center; font-weight: bolder; color: #473F39;">Durée</td>
                                 <td style="text-align: center; font-weight: bolder; color: #473F39;">Etat</td>
-                                <td style="text-align: center; font-weight: bolder; color: #473F39;">Message</td>
+
+                                {# affiche le header Message dans le détail si une maintenance a un message #}
+                                {% set breakfor = false %}
+                                {% for maintenance in application.nextMaintenances %}
+                                    {% if maintenance.message is not empty and not breakfor %}
+                                        {% set breakfor = true %}
+                                        <td style="text-align: center; font-weight: bolder; color: #473F39;">Message</td>
+                                    {% endif %}
+                                {% endfor %}
                             </tr>
                             {% for maintenance in application.nextMaintenances %}
                                 <tr>
