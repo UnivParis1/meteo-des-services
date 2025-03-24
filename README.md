@@ -45,7 +45,7 @@ VIEW view_maintenance_encours AS
 
 - Import json des applications ent avec EsupUserApps/admin/config-apps.tml (projet github EsupUserApps)
 
-- Commande Symfony: bin/console app:import-json config-apps.json
+- Commande Symfony: `bin/console app:import-json config-apps.json`
 
 ### Précisions techniques
 La suppression d'une application depuis la météo des services ne supprime pas l'application en base de données mais l'archive avec la propriété <i>isArchived</i> (pour conserver son historique).<br>
@@ -58,11 +58,13 @@ Parmi les librairies de style, le projet utilise <b>Bootstrap</b>.
 
 ### Commande frontend compilation dans public/build
 
-- yarn run build || npm run build
+- `yarn run build` ou `npm run build`
 
-En dev pour debugger dans un browser: npm run watch
+En dev pour debugger dans un browser:
+
+- `npm run watch`
 
 - Necéssite de faire un rsync pour mettre à jour public/build (ce repertoire est ignoré par git)
 
-ex: rsync -avn public/build/ USER@HOST:~/www/public/build/
+ex : `rsync --dry-run -av public/build/ USER@HOST:~/www/public/build/`
 

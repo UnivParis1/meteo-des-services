@@ -163,7 +163,7 @@
                                 <b>Non renseigné</b>
                             </div>
                         {% endif %}
-                        <div class="col-3 text-center">{{ application.lastUpdate|date('d-m-Y H:i') }}</div>
+                        <div class="col-3 text-center">{{ application.lastUpdate is null ? "" : application.lastUpdate|date('d-m-Y H:i') }}</div>
                         <div class="col-1">
                             <a class="action" data-toggle="modal" data-target="#details-modal"
                                onclick="$.fn.showDetails('{{ application.id }}')">

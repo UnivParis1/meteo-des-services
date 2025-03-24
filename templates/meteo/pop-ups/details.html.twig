@@ -36,6 +36,7 @@
                     </div>
                 {% endif %}
                 <div>
+                    {% if application.lastUpdate is not null %}
                     <table style="width: 80%; margin: auto auto 20px;">
                         <tr>
                             <td class="pop-up-title" style="text-align: center">Dernière mise à jour</td>
@@ -45,6 +46,7 @@
                             </td>
                         </tr>
                     </table>
+                    {% endif %}
                     <div class="pop-up-title" style="width: 100%; margin-bottom: 5px; text-align: center">
                         Prochaines maintenances
                     </div>

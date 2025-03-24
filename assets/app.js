@@ -27,7 +27,7 @@ $(function() {
             method: 'GET',
             success: function(response) {
                 $('#details-content').html(response);
-                disableHomepageActions('main-block');
+                $.fn.disableHomepageActions('main-block');
             },
             error: function(xhr, status, error) {
                 console.error(error);
@@ -47,7 +47,7 @@ $(function() {
 
     $.fn.hideContent = function(contentId) {
         document.getElementById(contentId).style.display = "none";
-        enableHomepageActions("main-block");
+        $.fn.enableHomepageActions("main-block");
     }
 
     // ACTIONS SUR LA PAGE D'ACCUEIL
