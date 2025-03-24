@@ -34,16 +34,6 @@ h6{
     display: block; /* Affiche le texte supplémentaire lorsque le lien est survolé */
 }
 
-.sidebar {
-    position: fixed; /* Fixe la bande de couleur à la fenêtre du navigateur */
-    top: 0; /* Positionne la bande de couleur au sommet de la fenêtre */
-    left: 0; /* Positionne la bande de couleur sur le côté gauche de la fenêtre */
-    height: 100%; /* Définit la hauteur de la bande de couleur à 100% de la fenêtre */
-    width: 100px; /* Définit la largeur de la bande de couleur */
-    background-color:  #97C6F2; /* Couleur de la bande de couleur */
-    z-index: 999; /* Assure que la bande de couleur est superposée au contenu de la page */
-}
-
 .app-title{
     height: 25px;
     overflow:auto;
