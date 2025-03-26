@@ -33,7 +33,8 @@ class SearchFormType extends AbstractType
                 ]
             ])->add('limit', ChoiceType::class, [
                 'required' => true,
-                'choices' => ['Tous' => null,'10'=> 10,'20' => 20, '30' => 30]
+                'choices' => ['Tous' => null,'10'=> 10,'20' => 20, '30' => 30],
+                'empty_data' => '30'
             ]);
     }
 
