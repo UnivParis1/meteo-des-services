@@ -10,10 +10,12 @@ use App\Entity\MaintenanceHistory;
 use App\Repository\MaintenanceRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class MaintenanceService
 {
-    public function __construct(public MaintenanceRepository $maintenanceRepository)
+    public function __construct(public  MaintenanceRepository $maintenanceRepository,
+                                private Security              $security)
     {
     }
 
@@ -87,7 +89,7 @@ class MaintenanceService
         $history->setApplicationState($maintenance->getApplicationState());
         $history->setType($historyType);
         // Date créée automatiquement par le constructeur
-        $history->setAuthor("ADMIN"); // TO CHANGE
+        $history->setAuthor($this->security->getUser()->getUserIdentifier());
 
         if (strlen($maintenance->getMessage()) > 0)
             $history->setMessage($maintenance->getMessage());

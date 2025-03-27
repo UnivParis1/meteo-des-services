@@ -8,13 +8,15 @@ use App\Entity\ApplicationHistory;
 use App\Repository\ApplicationHistoryRepository;
 use App\Repository\ApplicationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Symfony\Bundle\SecurityBundle\Security;
 class ApplicationService
 {
 
-    public function __construct(public ApplicationRepository        $applicationRepository,
-                                public ApplicationHistoryRepository $applicationHistoryRepository,
-                                public MaintenanceService           $maintenanceService)
+    public function __construct(public  ApplicationRepository        $applicationRepository,
+                                public  ApplicationHistoryRepository $applicationHistoryRepository,
+                                public  MaintenanceService           $maintenanceService,
+                                private Security                     $security
+                                )
     {
     }
 
@@ -89,7 +91,7 @@ class ApplicationService
         }
         $history->setType($historyType);
         // Date créée automatiquement par le constructeur
-        $history->setAuthor("ADMIN"); // TO CHANGE
+        $history->setAuthor($this->security->getUser()->getUserIdentifier());
         $this->applicationRepository->createHistory($history);
     }
 
