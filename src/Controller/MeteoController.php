@@ -6,11 +6,10 @@ use App\Form\SearchFormType;
 use App\Front\ApplicationsSorter;
 use App\Model\SearchApplication;
 use App\Service\ApplicationService;
-use App\Service\UserService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MeteoController extends AbstractController
@@ -22,6 +21,18 @@ class MeteoController extends AbstractController
     public function __construct(public ApplicationService $applicationService,
                                 public ApplicationsSorter $applicationsSorter)
     {
+    }
+
+    #[Route('/meteo/api', name: 'api_meteo', format: 'json')]
+    public function api_index(Request $request): JsonResponse
+    {
+        $fname = $request->get('fname', '');
+        $selectedState = $request->get('state', '');
+
+        $applications = $this->applicationService->getApplicationByFilters($fname, $selectedState);
+        $applications = $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
+
+        return new JsonResponse($applications);
     }
 
     #[Route('/meteo/{page<\d+>?1}', name: 'app_meteo')]

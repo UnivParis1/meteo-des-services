@@ -4,17 +4,17 @@ namespace App\DTO;
 
 class MaintenanceDTO
 {
-    private int $id;
+    public int $id;
 
-    private string $state;
+    public string $state;
 
-    private \DateTimeInterface $startingDate;
+    public \DateTimeInterface $startingDate;
 
-    private \DateTimeInterface $endingDate;
+    public \DateTimeInterface $endingDate;
 
-    private string $totalTime;
+    public string $totalTime;
 
-    private ?string $message;
+    public ?string $message;
 
     public function __construct(
         int                $id,

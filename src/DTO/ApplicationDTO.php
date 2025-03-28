@@ -4,21 +4,21 @@ namespace App\DTO;
 
 class ApplicationDTO
 {
-    private int $id;
+    public int $id;
 
-    private string $title;
+    public string $title;
 
-    private string $state;
+    public string $state;
 
-    private string $message;
+    public string $message;
 
-    private ?\DateTimeInterface $lastUpdate;
+    public ?\DateTimeInterface $lastUpdate;
 
-    private bool $isInMaintenance = false;
+    public bool $isInMaintenance = false;
 
-    private ?MaintenanceDTO $nextMaintenance = null;
+    public ?MaintenanceDTO $nextMaintenance = null;
 
-    private array $nextMaintenances = array();
+    public array $nextMaintenances = [];
 
     public function __construct(int                $id,
                                 string             $title,

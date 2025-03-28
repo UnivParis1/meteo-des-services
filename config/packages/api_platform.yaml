@@ -1,8 +1,0 @@
-api_platform:
-    title: Meteo-services REST API 
-    version: 1.0.0
-    defaults:
-        pagination_enabled: false
-        stateless: false 
-        cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']

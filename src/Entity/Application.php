@@ -2,19 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\ApplicationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource]
-#[GetCollection]
-#[ApiFilter(SearchFilter::class, properties: ['fname'])]
 #[ORM\Entity(repositoryClass: ApplicationRepository::class)]
 class Application
 {
