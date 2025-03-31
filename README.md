@@ -68,3 +68,20 @@ En dev pour debugger dans un browser:
 
 ex : `rsync --dry-run -av public/build/ USER@HOST:~/www/public/build/`
 
+## Api : webservice pour récupérer l'état d'une application
+
+### Path / Chemin d'accès
+
+L'api est cassifiée, elle reprend la présentation similaire à l'index web de l'application.
+
+  * sur : /meteo/api : récupération de l'état des applications
+
+### Filtre
+
+Paramètres de filtre pour selectionner les applications :
+
+  * fname : filtre sur le fname des applications ex: /meteo/api?fname=Ibis
+  * state : filre le statut ex: /meteo/api?fname=Ibis&state=unavailable
+
+ 
+
