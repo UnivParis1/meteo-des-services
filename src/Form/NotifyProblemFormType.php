@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use AlmaviaCX\Bundle\CaptchEtat\Form\Type\CaptchEtatType;
 
 class NotifyProblemFormType extends AbstractType
 {
@@ -28,7 +29,10 @@ class NotifyProblemFormType extends AbstractType
                     'data-controller' => 'custom-autocomplete',
                     ],
                 ])
-            ->add('message', TextareaType::class, ['required' => true, 'empty_data' => '']);
+            ->add('message', TextareaType::class, ['required' => true, 'empty_data' => ''])
+            ->add("captcha", CaptchEtatType::class, [
+                'label' => 'customform.show.captcha'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -55,9 +55,14 @@ class NotifyProblemController extends AbstractController
             if ($notifyUser && $notifyUser->isRecevoirMail()) {
                 $email->cc($notifyUser->getMail());
             }
-            $email->to('assistance-dsiun@univ-paris1.fr');
 
-            $mailer->send($email);
+            if ($this->getParameter('kernel.environment') == "prod") {
+                $email->to('assistance-dsiun@univ-paris1.fr');
+                $mailer->send($email);
+            } else {
+                $this->addFlash("error","dev, message non envoyé");
+            }
+
             $this->addFlash('success', 'Problème signalé avec succès');
             return $this->redirectToRoute('app_meteo');
         } else {

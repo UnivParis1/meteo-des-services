@@ -16,9 +16,14 @@ import './bootstrap';
 
 import $ from 'jquery';
 
+import CaptchaEtat from '../public/bundles/almaviacxcaptchetat/js/captchetat-widget.js';
+
 global.$ = global.jQuery = $;
 
 $(function() {
+
+    CaptchaEtat.init();
+    console.log("init app js");
 
     $.fn.showDetails = function(applicationId) {
         // Affecte les éléments de la pop

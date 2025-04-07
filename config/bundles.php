@@ -18,4 +18,6 @@ return [
     EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle::class => ['all' => true],
     Survos\CommandBundle\SurvosCommandBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
+    AlmaviaCX\Bundle\CaptchEtatBundle\AlmaviaCXCaptchEtatBundle::class => ['all' => true],
+    JMS\TranslationBundle\JMSTranslationBundle::class => ['all' => true],
 ];
