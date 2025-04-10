@@ -49,7 +49,7 @@ class ImportJsonCommand extends Command
             if ($categorie == "__hidden__" || $categorie === null)
                 continue;
 
-            $application = $this->applicationRepository->findOneBy(['fname' => $fname]);
+            $application = $this->applicationRepository->findOneBy(['title' => $appArray['title'] ]);
 
             $isUpdate = $application === null ? false : true;
 
