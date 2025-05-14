@@ -32,15 +32,10 @@ class User implements UserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mail = null;
 
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'user')]
-    private Collection $applications;
-
     #[ORM\Column]
     private bool $recevoirMail = false;
 
-    public function __construct() {
-        $this->applications = new ArrayCollection();
-    }
+    public function __construct() {}
 
     public function getId(): ?int
     {
@@ -126,38 +121,6 @@ class User implements UserInterface
     {
         $this->mail = $mail;
 
-        return $this;
-    }
-
-    /**
-     * Get the value of applications
-     */
-    public function getApplications()
-    {
-        return $this->applications;
-    }
-
-    /**
-     * Set the value of applications
-     *
-     * @return  self
-     */
-    public function setApplications($applications)
-    {
-        $this->applications = $applications;
-
-        return $this;
-    }
-
-    public function addApplication(Application $application)
-    {
-        $this->applications->add($application);
-        return $this;
-    }
-
-    public function removeApplication(Application $application)
-    {
-        $this->applications->remove($application);
         return $this;
     }
 

@@ -31,10 +31,6 @@ class Application
     #[ORM\OneToMany(targetEntity: Maintenance::class, mappedBy: 'application')]
     private Collection $maintenances;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications')]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: "SET NULL" )]
-    private User|null $user = null;
-
     #[ORM\Column]
     private ?bool $isArchived = false;
 
@@ -184,26 +180,6 @@ class Application
     public function setIsArchived(bool $isArchived): static
     {
         $this->isArchived = $isArchived;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of user
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Set the value of user
-     *
-     * @return  self
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
 
         return $this;
     }
