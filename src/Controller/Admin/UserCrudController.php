@@ -32,7 +32,7 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('uuid');
+        yield TextField::new('uid');
         yield ChoiceField::new('roles')->setFormType(ChoiceType::class)
                                        ->setFormTypeOption("expanded", false)
                                        ->setFormTypeOption("multiple", true)

@@ -3,7 +3,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: uuid
+                property: uid
     firewalls:
         main:
             provider: app_user_provider

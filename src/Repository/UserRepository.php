@@ -19,7 +19,7 @@ class UserRepository extends ServiceEntityRepository
     public function createUser(string $uid, ?string $displayName, ?string $mail): User
     {
             $u = new User();
-            $u->setUuid($uid);
+            $u->setUid($uid);
 
             $displayName === null ?: $u->setDisplayName($displayName);
             $mail === null ?: $u->setMail($mail);

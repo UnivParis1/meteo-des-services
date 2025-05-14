@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['uuid'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_uid', fields: ['uid'])]
 class User implements UserInterface
 {
     #[ORM\Id]
@@ -18,7 +18,7 @@ class User implements UserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    private ?string $uuid = null;
+    private ?string $uid = null;
 
     /**
      * @var list<string> The user roles
@@ -42,14 +42,14 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getUuid(): ?string
+    public function getUid(): ?string
     {
-        return $this->uuid;
+        return $this->uid;
     }
 
-    public function setUuid(string $uuid): static
+    public function setUid(string $uid): static
     {
-        $this->uuid = $uuid;
+        $this->uid = $uid;
 
         return $this;
     }
@@ -61,7 +61,7 @@ class User implements UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->uuid;
+        return (string) $this->uid;
     }
 
     /**
