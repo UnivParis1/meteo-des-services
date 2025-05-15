@@ -35,8 +35,20 @@ class User implements UserInterface
     #[ORM\Column]
     private bool $recevoirMail = false;
 
-    public function __construct() {}
+    /**
+     * @var Collection<int, Application>
+     */
+    #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'users')]
+    private Collection $applications;
 
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
+
+    public function __toString(): string {
+        return $this->uid;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -132,6 +144,33 @@ class User implements UserInterface
     public function setRecevoirMail(bool $recevoirMail): static
     {
         $this->recevoirMail = $recevoirMail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            $application->removeUser($this);
+        }
 
         return $this;
     }

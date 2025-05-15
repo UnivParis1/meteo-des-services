@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use App\Form\UserType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -41,31 +42,5 @@ class UserCrudController extends AbstractCrudController
         yield TextField::new('displayName');
         yield TextField::new('mail');
         yield BooleanField::new('recevoirMail');
-        yield AssociationField::new('applications')
-                            ->setFormTypeOption('placeholder', 'No applications managed')
-                            ->setFormTypeOption('required', false);
-    }
-
-    private function _saveApplicationsUser(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance)
-    {
-        if ($entityInstance->getApplications()->count() > 0) {
-            foreach ($entityInstance->getApplications() as $application) {
-                $application->setUser($entityInstance);
-                $entityManager->persist($application);
-            }
-            $entityManager->flush();
-        }
-    }
-
-    public function updateEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $this->_saveApplicationsUser($entityManager, $entityInstance);
-        parent::updateEntity($entityManager, $entityInstance);
-    }
-
-    public function persistEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        parent::persistEntity($entityManager, $entityInstance);
-        $this->_saveApplicationsUser($entityManager, $entityInstance);
     }
 }
