@@ -68,7 +68,7 @@ class ApplicationRepository extends ServiceEntityRepository
         if (strlen($searchTerm) > 0)
             $query->andWhere("a.title LIKE '%$searchTerm%'");
 
-        $dql = $query->orderBy('a.id', 'ASC')
+        $dql = $query->orderBy('a.title', 'ASC')
             ->getQuery();
 
         $results = $dql->getResult();
@@ -78,6 +78,6 @@ class ApplicationRepository extends ServiceEntityRepository
 
     public function findAllNotArchived() : array
     {
-        return $this->createQueryBuilder('a')->where('a.isArchived = 0')->orderBy('a.id', 'ASC')->getQuery()->getResult();
+        return $this->createQueryBuilder('a')->where('a.isArchived = 0')->orderBy('a.title', 'ASC')->getQuery()->getResult();
     }
 }
