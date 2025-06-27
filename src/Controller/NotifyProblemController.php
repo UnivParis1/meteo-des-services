@@ -36,7 +36,7 @@ class NotifyProblemController extends AbstractController
             if ($application == null)
                 throw new Exception("Veuillez contacter la DSIUN-PAS, l'application n'existe pas en Base de données");
 
-            $notifyUser = $application->getUser();
+            $notifyUser = false; // $application->getUser();
 
             $text = "L'utilisateur ayant pour identifiant: " . $this->getUser()->getUserIdentifier() . " a signalé un disfonctionnement sur l'application : " . $problem->title . PHP_EOL . PHP_EOL;
             $text .= "Description renseignée par l'utilisateur : ". PHP_EOL . $problem->message . PHP_EOL;
