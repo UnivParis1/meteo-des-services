@@ -7,18 +7,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['uid'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_uid', fields: ['uid'])]
 class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
-    #[ORM\Column(length: 180)]
-    private ?string $uid = null;
+    #[ORM\Column(length: 180, unique: true)]
+    private string $uid;
 
     /**
      * @var list<string> The user roles
