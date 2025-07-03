@@ -30,6 +30,6 @@ class UserCrudController extends AbstractCrudController
         yield TextField::new('displayName');
         yield TextField::new('mail');
         yield BooleanField::new('recevoirMail');
-        yield ChoiceField::new('eduPersonPrimaryAffiliation')->setChoices(array_slice(UserType::$choix, 0, -2));
+        yield ChoiceField::new('eduPersonPrimaryAffiliation')->setChoices(UserType::$easyAdminEduPrincipalAffiliationDisplay);
     }
 }
