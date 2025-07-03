@@ -36,7 +36,7 @@ class MaintenanceHistory
     #[ORM\Column]
     private ?\DateTimeImmutable $date = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $message = null;
     public function __construct()
     {
