@@ -14,7 +14,6 @@ class UserType extends AbstractType
 {
     public static array $choix = ["student" => "ROLE_STUDENT", "teacher" => "ROLE_TEACHER", "staff" => 'ROLE_STAFF', "admin" => 'ROLE_ADMIN', 'super_admin' => "ROLE_SUPER_ADMIN"];
     public static array $easyAdminEduPrincipalAffiliationDisplay = ["student" => "student", "teacher" => "teacher", "staff" => 'staff'];
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
