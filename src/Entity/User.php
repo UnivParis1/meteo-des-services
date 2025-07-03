@@ -43,6 +43,9 @@ class User implements UserInterface
     #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'users')]
     private Collection $applications;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $eduPersonPrimaryAffiliation = null;
+
     public function __construct()
     {
         $this->applications = new ArrayCollection();
@@ -88,8 +91,8 @@ class User implements UserInterface
         $roles = $this->roles;
 
         if (count($roles) == 0) {
-            // guarantee every user at least has ROLE_USER
-            $roles[] = 'ROLE_USER';
+            // guarantee every user at least has ROLE_STUDENT
+            $roles[] = 'ROLE_STUDENT';
         }
 
         return array_unique($roles);
@@ -173,6 +176,18 @@ class User implements UserInterface
         if ($this->applications->removeElement($application)) {
             $application->removeUser($this);
         }
+
+        return $this;
+    }
+
+    public function getEduPersonPrimaryAffiliation(): ?string
+    {
+        return $this->eduPersonPrimaryAffiliation;
+    }
+
+    public function setEduPersonPrimaryAffiliation(?string $eduPersonPrimaryAffiliation): static
+    {
+        $this->eduPersonPrimaryAffiliation = $eduPersonPrimaryAffiliation;
 
         return $this;
     }

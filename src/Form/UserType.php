@@ -12,17 +12,14 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class UserType extends AbstractType
 {
+    public static array $choix = ["student" => "ROLE_STUDENT", "teacher" => "ROLE_TEACHER", "staff" => 'ROLE_STAFF', "admin" => 'ROLE_ADMIN', 'super_admin' => "ROLE_SUPER_ADMIN"];
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('uid', TextType::class)
             ->add('roles', ChoiceType::class, [
                'required' => true,
-               'choices' => [
-                    'ROLE_USER' => 'ROLE_USER',
-                    'ROLE_ADMIN' => 'ROLE_ADMIN',
-                    'ROLE_SUPER_ADMIN' => "ROLE_SUPER_ADMIN"
-               ]
+               'choices' => self::$choix
             ]);
 
         $builder->get('roles')->addModelTransformer(new CallbackTransformer(

@@ -57,6 +57,12 @@ class Application
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'applications')]
     private Collection $users;
 
+     /**
+     * @var list<string> The roles authorized
+     */
+    #[ORM\Column]
+    private array $roles = ["ROLE_STUDENT"];
+
     public function __construct()
     {
         $this->histories = new ArrayCollection();
@@ -278,6 +284,30 @@ class Application
     public function removeUser(User $user): static
     {
         $this->users->removeElement($user);
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        if (count($roles) == 0) {
+            // guarantee every user at least has ROLE_STUDENT
+            $roles[] = 'ROLE_STUDENT';
+        }
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }

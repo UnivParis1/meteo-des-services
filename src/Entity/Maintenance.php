@@ -35,7 +35,7 @@ class Maintenance
     #[ORM\OneToMany(targetEntity: MaintenanceHistory::class, mappedBy: 'Maintenance')]
     private Collection $maintenanceHistories;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $Message = null;
 
     public function __construct()

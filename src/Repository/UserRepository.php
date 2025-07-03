@@ -5,24 +5,27 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private ManagerRegistry $registry,
+                               private EntityManagerInterface $em)
     {
         parent::__construct($registry, User::class);
     }
 
-    public function createUser(string $uid, ?string $displayName, ?string $mail): User
+    public function createUser(string $uid, ?string $displayName, ?string $mail, ?string $eduPersonPrimaryAffiliation): User
     {
             $u = new User();
             $u->setUid($uid);
 
-            $displayName === null ?: $u->setDisplayName($displayName);
-            $mail === null ?: $u->setMail($mail);
+            $u->setMail($mail);
+            $u->setDisplayName($displayName);
+            $u->setEduPersonPrimaryAffiliation($eduPersonPrimaryAffiliation);
 
             $em = $this->getEntityManager();
             $em->persist($u);
@@ -30,6 +33,12 @@ class UserRepository extends ServiceEntityRepository
 
         return $u;
     }
+    public function updateUser(User $user): User
+    {
+        $this->em->flush();
+        return $user;
+    }
+
 
     //    /**
     //     * @return User[] Returns an array of User objects

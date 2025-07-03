@@ -7,6 +7,7 @@ use App\Entity\ApplicationHistory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Application>
@@ -19,7 +20,8 @@ use Doctrine\Persistence\ManagerRegistry;
 class ApplicationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry                $registry,
-                                private EntityManagerInterface $em)
+                                private EntityManagerInterface $em,
+                                private Security $security)
     {
         parent::__construct($registry, Application::class);
     }
@@ -67,6 +69,10 @@ class ApplicationRepository extends ServiceEntityRepository
 
         if (strlen($searchTerm) > 0)
             $query->andWhere("a.title LIKE '%$searchTerm%'");
+
+        // Les droits étant hierarchiques, si permission inférieure à ROLE_TEACHER on est sur ROLE_STUDENT donc filtre sur les applications
+        if ( ! $this->security->isGranted('ROLE_TEACHER') )
+            $query->andWhere("a.roles LIKE '[]' OR a.roles LIKE '%ROLE_STUDENT%'");
 
         $dql = $query->orderBy('a.title', 'ASC')
             ->getQuery();
