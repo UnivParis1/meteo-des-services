@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    {% if is_granted('ROLE_USER') %}
+                    {% if is_granted('ROLE_TEACHER') %}
                         <div style="margin-left: auto">
                             <div class="d-flex justify-content-end">
                                 <a href="{{ path('app_notify_problem') }}">
