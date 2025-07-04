@@ -6,12 +6,24 @@ Les échanges avec la base de données sont effectuées par l'ORM <b>Doctrine</b
 Javascript a été utilisé pour l'affichage de la pop-up de Détail dans la page principale.
 
 ## Rôles
-Pour la gestion utilisateur, Le projet distingue trois rôles avec héritage:
-- <b>ROLE_USER</b> : n'accède à la météo des services qu'en lecture
+
+### Gestion utilisateurs
+
+Pour la gestion utilisateur, Le projet distingue 4 rôles avec héritage:
+
+- <b>ROLE_STUDENT</b> : rôle de base, assigné automatiquement si aucun rôle associé à l'utilisateur 
+- <b>ROLE_TEACHER</b> : correspond à enseignant
+- <b>ROLE_STAFF</b> : personnel de l'université (remplace le précédent ROlE_USER)
 - <b>ROLE_ADMIN</b> : accède à la météo des services en lecture et en écriture (ajout/modification/suppression d'application et maintenance)
-- <b>ROLE_SUPER_ADMIN</b> : attribue les droits
+- <b>ROLE_SUPER_ADMIN</b> : attribue les droits utilisateurs, accède au back-office
 
 Un seul rôle est attribué aux users, les droits sont hérités du rôle précedent (ROLE_SUPER_ADMIN hérite de ROLE_ADMIN, gestion standard Symfony)
+
+### Gestion droits des Applications
+
+Dans la partie back-office, il est possible de restreindre l'affichage d'une application en séléctionnant le profil de droit minimum.
+
+Exemple: si on séléctionne ROLE_STAFF, seul les personnes assignés à ROLE_STAFF, ROLE_ADMIN et ROLE_SUPER_ADMIN verront l'application dans l'index
 
 ## Structure technique
 ### Diagramme de classe
