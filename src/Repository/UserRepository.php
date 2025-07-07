@@ -39,6 +39,18 @@ class UserRepository extends ServiceEntityRepository
         return $user;
     }
 
+    /**
+     * @param User $user
+     * @return User|null
+     */
+    public function findOne(User $user): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
     //    /**
     //     * @return User[] Returns an array of User objects
