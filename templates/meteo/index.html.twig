@@ -7,51 +7,47 @@
                     <a class="link-primary" href="{{ path('admin_user_index') }}"> Administrations roles Users </a>
                 </div>
                 {% endif %}
-                <div class="d-flex flex-row">
-                    <div style="width: 80%">
-                        <div class="d-flex justify-content-around">
-                            <div>
-                                {{ form_start(form) }}
-                                {{ form_widget(form.searchTerm, {'attr': {'class': 'form-control rounded', 'style': 'width: 250px;'}}) }}
-                            </div>
-                            <div>
-                                {{ form_widget(form.selectedState, {'attr': {'class': 'form-select rounded', 'style': 'width: 200px;'}}) }}
-                            </div>
-                            <div>
-                                <p class='d-inline fw-light'>Résultats :</p>
-                                {{ form_widget(form.limit, {'attr': {'class': 'd-inline form-select rounded', 'style': 'width: 100px;'}}) }}
-                            </div>
-                            <div>
-                                <button class="btn btn-light" type="submit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                         class="bi bi-search" viewBox="0 0 16 16">
-                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                    </svg>
-                                </button>
-                                {{ form_end(form) }}
-                            </div>
-                        </div>
+                <div class="row">
+                    <div class="col-3 offset-2">
+                        {{ form_start(form) }}
+                        {{ form_widget(form.searchTerm, {'attr': {'class': 'form-control rounded'}}) }}
                     </div>
-                    {% if is_granted('ROLE_TEACHER') %}
-                        <div style="margin-left: auto">
-                            <div class="d-flex justify-content-end">
-                                <a href="{{ path('app_notify_problem') }}">
-                                    <button class="btn btn-light">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                             fill="currentColor"
-                                             class="bi bi-exclamation-circle" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                        </svg>
-                                        Signaler un problème
-                                    </button>
-                                </a>
-                            </div>
+                    <div class="col-1">
+                        {{ form_widget(form.selectedState, {'attr': {'class': 'form-select rounded'}}) }}
+                    </div>
+                    <div class="col-1 p-0 d-flex justify-content-end">
+                        <label class='fw-light pt-2'>Résultats :</label>
+                    </div>
+                    <div class="col-1">
+                        {{ form_widget(form.limit, {'attr': {'class': 'form-select rounded'}}) }}
+                    </div>
+                    <div class="col-1 d-flex justify-content-center">
+                        <button class="btn btn-light p-0" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                 class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </button>
+                        {{ form_end(form) }}
+                    </div>
+                    {% if is_granted('ROLE_USER') %}
+                        <div class="col-2 p-0">
+                            <a href="{{ path('app_notify_problem') }}">
+                                <button class="btn btn-light">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor"
+                                         class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                    </svg>
+                                    Signaler un problème
+                                </button>
+                            </a>
                         </div>
                     {% endif %}
                     {% if false %}
                         <div style="margin-left: auto">
-                            <div class="d-flex justify-content-end">
+                            <div class="col-1">
                                 <a href="{{ path('app_add_application') }}">
                                     <button class="btn btn-light">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
