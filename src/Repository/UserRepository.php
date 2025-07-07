@@ -5,13 +5,15 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,
+                                private EntityManagerInterface $em)
     {
         parent::__construct($registry, User::class);
     }
@@ -29,6 +31,24 @@ class UserRepository extends ServiceEntityRepository
             $em->flush();
 
         return $u;
+    }
+    public function updateUser(User $user): User
+    {
+        $this->em->flush();
+        return $user;
+    }
+
+    /**
+     * @param User $user
+     * @return User|null
+     */
+    public function findOne(User $user): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     //    /**
