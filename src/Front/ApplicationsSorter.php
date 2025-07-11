@@ -30,6 +30,16 @@ class ApplicationsSorter
             fn ($app1, $app2): int => self::getOrderRankFromState($app2->getState()) <=> self::getOrderRankFromState($app1->getState())
         );
 
+        // ajoute une comparaison pour avoir les applications qui seront en maintenance en premier
+        usort(
+            $applications,
+            function ($app1, $app2): int {
+                if (! ($app1->getNextMaintenance() &&  $app2->getNextMaintenance()))
+                    return $app2->getNextMaintenance() <=> $app1->getNextMaintenance();
+
+                return $app1->getNextMaintenance()->getStartingDate() <=> $app2->getNextMaintenance()->getStartingDate();
+            }
+        );
         return $applications;
     }
     private static function getOrderRankFromState(string $state): int
