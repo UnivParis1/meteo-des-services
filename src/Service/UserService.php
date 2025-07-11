@@ -21,7 +21,7 @@ class UserService
         if ($infos === null) {
             $user = $this->userRepository->createUser($uid, null, null, null);
         } else {
-            $user = $this->userRepository->createUser($uid, $infos->displayName, $infos->mail, $infos->eduPersonPrimaryAffiliation);
+            $user = $this->userRepository->createUser($uid, $infos->displayName, $infos->mail, $infos->eduPersonAffiliation);
         }
 
         return $user;
@@ -36,18 +36,26 @@ class UserService
         $infos->displayName == null ?: $user->setDisplayName($infos->displayName);
         !(isset($infos->mail) && $infos->mail !== null) ?: $user->setMail($infos->mail);
 
-        if ( ! (isset($infos->eduPersonPrimaryAffiliation) && $infos->eduPersonPrimaryAffiliation !== null) )
+        if ( ! (isset($infos->eduPersonAffiliation) && $infos->eduPersonAffiliation !== null) )
             return $user;
 
-        $user->setEduPersonPrimaryAffiliation($infos->eduPersonPrimaryAffiliation);
+        $user->setEduPersonAffiliations($infos->eduPersonAffiliation);
 
-        if (! $this->securizer->isGranted($user, UserType::$choix[$infos->eduPersonPrimaryAffiliation]))
-            $user->setRoles([UserType::$choix[$infos->eduPersonPrimaryAffiliation]]);
+        foreach ($infos->eduPersonAffiliation as $affiliation) {
+            if (!isset(UserType::$choix[$affiliation]))
+                continue;
+
+            if (! $this->securizer->isGranted($user, UserType::$choix[$affiliation])) {
+                die(var_dump($affiliation));
+                $user->setRoles([UserType::$choix[$infos->eduPersonAffiliation]]);
+                break;
+            }
+        }
 
         return $user;
     }
 
-    private function requestUidInfo(string $uid, $attrs = ['uid', 'displayName', 'mail', 'eduPersonPrimaryAffiliation']): ?stdClass {
+    private function requestUidInfo(string $uid, $attrs = ['uid', 'displayName', 'mail', 'eduPersonAffiliation']): ?stdClass {
         $urlwsgroup = $this->params->get('urlwsgroup_user_infos');
 
         $url = "$urlwsgroup?token=$uid&maxRows=1&attrs=". implode(',', $attrs);
@@ -58,6 +66,8 @@ class UserService
 
         // hack : remplace emeritus par teacher pour éviter de rajouter une catégorie supplémentaire de droits
         $ajaxReturn = str_replace('emeritus', 'teacher', $ajaxReturn);
+        $ajaxReturn = str_replace('researcher', 'teacher', $ajaxReturn);
+
         $arrayReturn = json_decode($ajaxReturn);
 
         if (count($arrayReturn) > 0) {

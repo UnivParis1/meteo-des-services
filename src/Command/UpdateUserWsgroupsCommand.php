@@ -23,14 +23,24 @@ class UpdateUserWsgroupsCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this->addArgument('uid', InputArgument::OPTIONAL, 'utilisateur à mettre à jour');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $users = $this->userRepository->findAll();
+        $uid = $input->getArgument('uid');
+
+        if ($uid)
+          $users = [$this->userRepository->findOneBy(['uid' => $uid])];
+        else 
+          $users = $this->userRepository->findAll();
 
         foreach ($users as $user) {
-          if ($user->getEduPersonPrimaryAffiliation() === NULL) {
+          if ($user->getEduPersonAffiliations() === NULL) {
             $output->writeln("Mise à jour de {$user->getUid()}");
             $this->userRepository->updateUser($this->userService->updateUser($user));
           }
