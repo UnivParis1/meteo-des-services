@@ -52,23 +52,9 @@ class ViewMaintenanceEnCours
         return $this->application;
     }
 
-    public function setApplication(?Application $application): static
-    {
-        $this->application = $application;
-
-        return $this;
-    }
-
     public function getStartingDate(): ?\DateTimeInterface
     {
         return $this->startingDate;
-    }
-
-    public function setStartingDate(\DateTimeInterface $startingDate): static
-    {
-        $this->startingDate = $startingDate;
-
-        return $this;
     }
 
     public function getEndingDate(): ?\DateTimeInterface
@@ -76,35 +62,14 @@ class ViewMaintenanceEnCours
         return $this->endingDate;
     }
 
-    public function setEndingDate(\DateTimeInterface $endingDate): static
-    {
-        $this->endingDate = $endingDate;
-
-        return $this;
-    }
-
     public function getApplicationState(): ?string
     {
         return $this->applicationState;
     }
 
-    public function setApplicationState(string $applicationState): static
-    {
-        $this->applicationState = $applicationState;
-
-        return $this;
-    }
-
     public function isIsArchived(): ?bool
     {
         return $this->isArchived;
-    }
-
-    public function setIsArchived(bool $isArchived): static
-    {
-        $this->isArchived = $isArchived;
-
-        return $this;
     }
 
     /**
@@ -113,27 +78,5 @@ class ViewMaintenanceEnCours
     public function getMaintenanceHistories(): Collection
     {
         return $this->maintenanceHistories;
-    }
-
-    public function addMaintenanceHistory(MaintenanceHistory $maintenanceHistory): static
-    {
-        if (!$this->maintenanceHistories->contains($maintenanceHistory)) {
-            $this->maintenanceHistories->add($maintenanceHistory);
-            $maintenanceHistory->setMaintenance($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMaintenanceHistory(MaintenanceHistory $maintenanceHistory): static
-    {
-        if ($this->maintenanceHistories->removeElement($maintenanceHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($maintenanceHistory->getMaintenance() === $this) {
-                $maintenanceHistory->setMaintenance(null);
-            }
-        }
-
-        return $this;
     }
 }
