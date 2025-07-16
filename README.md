@@ -7,7 +7,7 @@ Javascript a été utilisé pour l'affichage de la pop-up de Détail dans la pag
 
 ## Rôles
 
-### Gestion utilisateurs
+### Gestion utilisateurs et permission/droits ACL
 
 Pour la gestion utilisateur, Le projet distingue 4 rôles avec héritage:
 
@@ -19,11 +19,19 @@ Pour la gestion utilisateur, Le projet distingue 4 rôles avec héritage:
 
 Un seul rôle est attribué aux users, les droits sont hérités du rôle précedent (ROLE_SUPER_ADMIN hérite de ROLE_ADMIN, gestion standard Symfony)
 
-### Gestion droits des Applications
+#### Gestion droits des Applications
 
 Dans la partie back-office, il est possible de restreindre l'affichage d'une application en séléctionnant le profil de droit minimum.
 
 Exemple: si on séléctionne ROLE_STAFF, seul les personnes assignés à ROLE_STAFF, ROLE_ADMIN et ROLE_SUPER_ADMIN verront l'application dans l'index
+
+##### Tâche de maintenance
+
+Pour assigner les rôles aux utilisateurs en fonction de l'attribut LDAP eduAffiliations automatiquement aux utilisateurs existant, on peut lancer la commande:
+
+- <code>bin/console app:update-user-wsgroups</code>
+
+Cette commande assignera les roles en fonction des affiliations et mettra à jour l'utilisateur si celui-ci n'a pas les permissions liées à son groupe.
 
 ## Structure technique
 ### Diagramme de classe

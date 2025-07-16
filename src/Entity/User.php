@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\EntityListeners([UserListener::class])]
 #[UniqueEntity(fields: ['uid'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_uid', fields: ['uid'])]
 class User implements UserInterface
@@ -45,8 +44,11 @@ class User implements UserInterface
     #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'users')]
     private Collection $applications;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $eduPersonPrimaryAffiliation = null;
+    /**
+    * @var list<string> The user eduPersonAffiliations
+    */
+    #[ORM\Column]
+    private array $eduPersonAffiliations = ['student'];
 
     public function __construct()
     {
@@ -182,14 +184,32 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getEduPersonPrimaryAffiliation(): ?string
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getEduPersonAffiliations(): ?array
     {
-        return $this->eduPersonPrimaryAffiliation;
+        if ( ! isset($this->eduPersonAffiliations))
+           return null;
+
+        $eduPersonAffiliations = $this->eduPersonAffiliations;
+
+        if (count($eduPersonAffiliations) == 0) {
+            // guarantee every user at least has eduPersonAffiliation_STUDENT
+            $eduPersonAffiliations[] = 'student';
+        }
+
+        return array_unique($eduPersonAffiliations);
     }
 
-    public function setEduPersonPrimaryAffiliation(?string $eduPersonPrimaryAffiliation): static
+    /**
+     * @param list<string> $eduPersonAffiliations
+     */
+    public function setEduPersonAffiliations(array $eduPersonAffiliations): static
     {
-        $this->eduPersonPrimaryAffiliation = $eduPersonPrimaryAffiliation;
+        $this->eduPersonAffiliations = $eduPersonAffiliations;
 
         return $this;
     }
