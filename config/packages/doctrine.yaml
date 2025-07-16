@@ -28,6 +28,9 @@ doctrine:
             - App\Entity\ViewMaintenanceEnCours
         controller_resolver:
             auto_mapping: false
+        dql:
+            string_functions:
+                cast: DoctrineExtensions\Query\Mysql\Cast
 
 when@test:
     doctrine:
