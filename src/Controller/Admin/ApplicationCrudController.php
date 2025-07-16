@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Application;
 use App\Form\UserType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -14,6 +15,18 @@ class ApplicationCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Application::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud = parent::configureCrud($crud);
+
+        $msg = "Pour roles, si l'application est visible de tous les utilisateurs, assigner ROLE_STUDENT pour ce champs";
+
+        $crud->setHelp("edit", $msg);
+        $crud->setHelp("new", $msg);
+
+        return $crud;
     }
 
     public function configureFields(string $pageName): iterable
