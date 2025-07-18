@@ -24,7 +24,7 @@
 <body>
 {% for type, messages in app.flashes() %}
     {% for message in messages %}
-    <div class="alert alert-{{type == 'error' ? 'danger' : 'success'}} superpose ml-auto">
+    <div class="alert alert-{{type == 'error' ? 'danger' : 'success'}} superpose ml-auto text-center">
         {{ message }}
     </div>
     {% endfor %}

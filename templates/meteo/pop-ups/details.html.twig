@@ -1,12 +1,12 @@
 {% if application.title is defined %} <!-- Permet de ne pas charger la pop-up si elle n'a pas été activée -->
-    <div class="fixed-top" style="display: block; height:100%" id="details-modal" aria-hidden="true" tabindex="-1"
+    <div class="fixed-top h-100" id="details-modal" aria-hidden="true" tabindex="-1"
          role="dialog" aria-labelledby="details-header">
-        <div class="dialog-box">
-            <div class="d-flex flex-column" style="padding-bottom: 5px">
+        <div id="dialog-box" class="position-absolute top-50 start-50 w-50 mx-5 translate-middle rounded-2 p-2">
+            <div class="d-flex flex-column pb-1">
                 <div class="d-flex flex-row-reverse">
-                    <button class="close-button" onclick="$.fn.hideContent('details-modal')">x</button>
+                    <button id="close-button" class="fs-5 fw-bold m-0 p-0 border-0" onclick="$.fn.hideContent('details-modal')">x</button>
                 </div>
-                <div class="d-flex justify-content-around" style="padding-bottom: 30px">
+                <div class="d-flex justify-content-around pb-4">
                     <div class="d-flex flex-row">
                         {% if application.isInMaintenance %}
                             {% set maintenance = application.nextMaintenance %}
@@ -19,64 +19,55 @@
                         {% set size = iconsName[state][1] %}
                         {% set pathD = iconsName[state][2] %}
 
-                        <div class="meteo-icon {{ meteoIcone }}">
+                        <div id="meteo-icon" class="m-auto me-3 rounded-circle d-flex align-items-center justify-content-center {{ meteoIcone }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="currentColor"
                                     class="bi bi-brightness-high-fill" viewBox="0 0 {{ size }} {{ size }}">
                                 <path d="{{ pathD }}"/>
                             </svg>
                         </div>
-                        <p id="appName" class="pop-up-title">{{ application.title }}</p>
+                        <p id="appName" class="pop-up-title fs-6 fw-bold m-auto">{{ application.title }}</p>
                         </div>
                 </div>
                 {% if application.message is not null and application.message != "" %}
                     <div>
-                        <p style="display: inline-block; vertical-align: middle;" class="pop-up-text">
+                        <p class="pop-up-text d-inline-block align-middle text-center fs-6 h-100 overflow-auto">
                             {{ application.message }}
                         </p>
                     </div>
                 {% endif %}
                 <div>
                     {% if application.lastUpdate is not null %}
-                    <table style="width: 80%; margin: auto auto 20px;">
+                    <table class="w-50 mx-auto mt-auto mb-3">
                         <tr>
-                            <td class="pop-up-title" style="text-align: center">Dernière mise à jour</td>
-                            <td class="maintenance-text"
-                                style="color: #473F39;">{{ application.lastUpdate|date("d/m/Y") }}
-                                à {{ application.lastUpdate|date("H") }}h
-                            </td>
+                            <td class="pop-up-title fw-bold text-center m-auto fs-6">Dernière mise à jour</td>
+                            <td class="maintenance-text text-center fs-6">{{ application.lastUpdate|date("d/m/Y") }} à {{ application.lastUpdate|date("H") }}h</td>
                         </tr>
                     </table>
                     {% endif %}
-                    <div class="pop-up-title" style="width: 100%; margin-bottom: 5px; text-align: center">
+                    <div class="pop-up-title fw-bold w-100 mx-auto mb-2 text-center fs-6">
                         Prochaines maintenances
                     </div>
                     {% if application.nextMaintenance is not null %}
-                        <table class="next-maintenances">
+                        <table class="w-75 m-auto">
                             <tr>
-                                <td style="text-align: center; font-weight: bolder; color: #473F39;">Date</td>
-                                <td style="text-align: center; font-weight: bolder; color: #473F39;">Durée</td>
-                                <td style="text-align: center; font-weight: bolder; color: #473F39;">Etat</td>
+                                <td class="text-center fw-bold" style="color: #473F39;">Date</td>
+                                <td class="text-center fw-bold" style="color: #473F39;">Durée</td>
+                                <td class="text-center fw-bold" style="color: #473F39;">Etat</td>
 
                                 {# affiche le header Message dans le détail si une maintenance a un message #}
                                 {% set breakfor = false %}
                                 {% for maintenance in application.nextMaintenances %}
                                     {% if maintenance.message is not empty and not breakfor %}
                                         {% set breakfor = true %}
-                                        <td style="text-align: center; font-weight: bolder; color: #473F39;">Message</td>
+                                        <td class="text-center fw-bold" style="color: #473F39;">Message</td>
                                     {% endif %}
                                 {% endfor %}
                             </tr>
                             {% for maintenance in application.nextMaintenances %}
                                 <tr>
-                                    <td class="maintenance-text" style="text-align: center; color: #473F39;">
-                                        {{ maintenance.startingDate|date("d/m/Y") }}
-                                        à {{ maintenance.startingDate|date("H") }}h
-                                    </td>
-                                    <td class="maintenance-text" style="text-align: center; color: #473F39;">
-                                        {{ maintenance.totalTime }}
-                                    </td>
-                                    <td class="maintenance-text {{ maintenance.state }}-maintenance"
-                                        style="text-align: center; font-weight: bolder">
+                                    <td class="text-center" style="color: #473F39;">{{ maintenance.startingDate|date("d/m/Y") }} à {{ maintenance.startingDate|date("H") }}h</td>
+                                    <td class="text-center" style="color: #473F39;">{{ maintenance.totalTime }}</td>
+                                    <td class="text-center fw-bold {{ maintenance.state }}-maintenance">
                                         {% if maintenance.state == 'unavailable' %}
                                             Indisponible
                                         {% elseif maintenance.state == 'perturbed' %}
@@ -85,16 +76,12 @@
                                             Opérationnel
                                         {% endif %}
                                     </td>
-                                    <td class="maintenance-text" style="text-align: center; color: #473F39;">
-                                        {{ maintenance.message }}
-                                    </td>
+                                    <td class="text-center" style="color: #473F39;">{{ maintenance.message }}</td>
                                 </tr>
                             {% endfor %}
                         </table>
                     {% else %}
-                        <div class="maintenance-text">
-                            Aucune maintenance n'est prévue
-                        </div>
+                        <div class="maintenance-text text-center">Aucune maintenance n'est prévue</div>
                     {% endif %}
                 </div>
             </div>

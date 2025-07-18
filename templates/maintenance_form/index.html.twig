@@ -5,7 +5,7 @@
             {{ form_start(maintenanceForm) }}
             <div class="row mt-3">
                 <div class="col-3">
-                    <h6 class="droite">Application<span style="color:red">*</span></h6>
+                    <h6 class="text-end">Application<span class="text-danger">*</span></h6>
                 </div>
                 <div class="col-6">
                     {{ form_widget(maintenanceForm.application, {'attr': {'class': 'form-control rounded', 'style': 'width: 250px;'}}) }}
@@ -13,7 +13,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-3">
-                    <h6 class="droite">État courant<span style="color:red">*</span></h6>
+                    <h6 class="text-end">État courant<span class="text-danger">*</span></h6>
                 </div>
                 <div class="col-6">
                     {{ form_widget(maintenanceForm.applicationState, {'attr': {'class': 'form-select rounded', 'style': 'width: 250px;'}}) }}
@@ -21,7 +21,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-3">
-                    <h6 class="droite">Début prévu</h6>
+                    <h6 class="text-end">Début prévu</h6>
                 </div>
                 <div class="col-6">
                     {{ form_widget(maintenanceForm.startingDate, {'attr': {'class': 'form-control rounded', 'style': 'width: 250px;'}}) }}
@@ -32,7 +32,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-3">
-                    <h6 class="droite">Fin prévue</h6>
+                    <h6 class="text-end">Fin prévue</h6>
                 </div>
                 <div class="col-6">
                     {{ form_widget(maintenanceForm.endingDate, {'attr': {'class': 'form-control rounded', 'style': 'width: 250px;'}}) }}
@@ -43,7 +43,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-3">
-                    <h6 class="droite">Détail de la maintenance</h6>
+                    <h6 class="text-end">Détail de la maintenance</h6>
                 </div>
                 <div class="col-6">
                     {{ form_widget(maintenanceForm.message, {'attr': {'class': 'form-control rounded', 'style': 'width: 250px;'}}) }}
@@ -62,7 +62,7 @@
             <div class="row mt-5">
                 <div class="col-3"></div>
                 <div class="col-6">
-                    <button type="submit" class="save shadow"><b>Sauvegarder</b></button>
+                    <button type="submit" id="save" class="shadow px-3 py-2 rounded-pill border-0 text-center"><b>Sauvegarder</b></button>
                 </div>
             </div>
             {{ form_end(maintenanceForm) }}
