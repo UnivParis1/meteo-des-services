@@ -38,7 +38,6 @@ $(function() {
     $.fn.confirmDeletion = function(event, url, entityName) {
         event.preventDefault(); // Empêche la redirection immédiate
 
-        console.log("work");
         // Affiche la popup de confirmation
         if (confirm("Êtes-vous sûr de vouloir supprimer cette " + entityName + " ?")) {
             window.location.href = url; // Redirige l'utilisateur si l'action est confirmée
@@ -46,20 +45,36 @@ $(function() {
     }
 
     $.fn.hideContent = function(contentId) {
-        document.getElementById(contentId).style.display = "none";
+        const content = document.getElementById(contentId);
+        const classes = content.classList.toString();
+
+        // regex cherchant tous les d-* (d-inline ou d-block par ex)
+        const regex = /\bd-[a-z]+/gi;
+        const matches = classes.match(regex);
+
+        if (matches != null)
+            for (const idx in matches)
+                content.classList.remove(matches[idx]);
+
+        content.classList.add('d-none');
         $.fn.enableHomepageActions("main-block");
     }
 
     // ACTIONS SUR LA PAGE D'ACCUEIL
     $.fn.disableHomepageActions = function(blockId)
     {
-        document.getElementById(blockId).style.pointerEvents = "none";
-        document.getElementById(blockId).style.opacity = "0.25";
+        const elem = document.getElementById(blockId);
+
+        elem.classList.add("pe-none");
+        elem.classList.add("opacity-25")
     }
 
     $.fn.enableHomepageActions = function(blockId)
     {
-        document.getElementById(blockId).style.pointerEvents = "auto";
-        document.getElementById(blockId).style.opacity = "1";
+        const elem = document.getElementById(blockId);
+
+        elem.classList.remove("pe-none");
+        elem.classList.add("opacity-100");
     }
-    });
+
+});

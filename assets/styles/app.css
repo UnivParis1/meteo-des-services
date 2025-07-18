@@ -101,39 +101,18 @@ h6{
 }
 
 /* CSS POP UP */
-.dialog-box{
+#dialog-box{
     background-color: #FBF4EC;
-    width: 40%;
-    margin:auto;
-    position: relative;
-    top: 50%;
-    transform: perspective(1px) translateY(-50%);
-    border-radius: 10px;
-    padding: 10px 20px 20px 20px;
 }
 
-.close-button{
-    font-size: 18px;
-    font-weight: bold;
-    /* default CSS properties to remove */
+#close-button{
     background-color: transparent;
-    border: none;
-    margin: 0;
-    padding: 0;
-    text-align: inherit;
-    border-radius: 0;
-    appearance: none; /* Just in case we missed anything.*/
 }
 
-.meteo-icon{
-    margin: auto 10px auto auto;
+#meteo-icon{
     height: 35px;
     width: 35px;
-    border-radius: 50%;
-    display: flex; /* Utilisation de flexbox */
     align-items: center; /* Centrage vertical */
-    justify-content: center; /* Centrage horizontal */
-    background-color: lightgrey; /* par défaut */
 }
 
 .sun{
@@ -148,11 +127,12 @@ h6{
     background-color: #F8957F;
 }
 
+.grey {
+    background-color: #d3d3d3;
+}
+
 .pop-up-title{
     font-family: Inter, sans-serif;
-    font-size: 18px;
-    font-weight: bolder;
-    margin:auto;
     color:#033E79;
 }
 
@@ -160,15 +140,10 @@ h6{
 {
     font-family: Inter, sans-serif;
     color: #473F39;
-    font-size: 18px;
-    text-align: center;
-    height: 100px;
-    overflow:auto;
 }
 
 .maintenance-text{
-    font-size: 18px;
-    text-align: center;
+    color: #473F39;
 }
 
 .next-maintenances
