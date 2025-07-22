@@ -118,7 +118,7 @@ class UserService
 
     public function createOrUpdateUserRole(stdClass $userStd, string $role) : void
     {
-        $user = $this->userRepository->findOneBy(["uid" => $userStd->uid]) ?? $this->userRepository->createUser($userStd->uid, $userStd->displayName, $userStd->mail);
+        $user = $this->userRepository->findOneBy(["uid" => $userStd->uid]) ?? $this->userRepository->createUser($userStd->uid, $userStd->displayName, $userStd->mail, null);
 
         $user->setRoles([$role]);
         $this->userRepository->updateUser($user);
