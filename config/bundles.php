@@ -18,4 +18,5 @@ return [
     EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle::class => ['all' => true],
     Survos\CommandBundle\SurvosCommandBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
+    Ajgl\Twig\Extension\SymfonyBundle\AjglBreakpointTwigExtensionBundle::class => ['dev' => true],
 ];
