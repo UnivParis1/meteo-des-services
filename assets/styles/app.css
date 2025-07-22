@@ -63,18 +63,6 @@ h6{
     left: 10%;
 }
 
-.operational-maintenance{
-    color: green;
-}
-
-.perturbed-maintenance{
-    color: orange;
-}
-
-.unavailable-maintenance{
-    color: red;
-}
-
 .default{
     color:#112E58;
     position: relative;

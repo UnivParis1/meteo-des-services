@@ -15,9 +15,9 @@
                             {% set state = application.state %}
                         {% endif %}
 
-                        {% set meteoIcone = iconsName[state][0] %}
-                        {% set size = iconsName[state][1] %}
-                        {% set pathD = iconsName[state][2] %}
+                        {% set meteoIcone = iconsName[state][2] %}
+                        {% set size = iconsName[state][3] %}
+                        {% set pathD = iconsName[state][4] %}
 
                         <div id="meteo-icon" class="m-auto me-3 rounded-circle d-flex align-items-center justify-content-center {{ meteoIcone }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="currentColor"
@@ -67,15 +67,7 @@
                                 <tr>
                                     <td class="text-center" style="color: #473F39;">{{ maintenance.startingDate|date("d/m/Y") }} à {{ maintenance.startingDate|date("H") }}h</td>
                                     <td class="text-center" style="color: #473F39;">{{ maintenance.totalTime }}</td>
-                                    <td class="text-center fw-bold {{ maintenance.state }}-maintenance">
-                                        {% if maintenance.state == 'unavailable' %}
-                                            Indisponible
-                                        {% elseif maintenance.state == 'perturbed' %}
-                                            Perturbé
-                                        {% else %}
-                                            Opérationnel
-                                        {% endif %}
-                                    </td>
+                                    <td class="text-center fw-bold {{ iconsName[maintenance.state][1] }}"  > {{ iconsName[maintenance.state][0] }} </td>
                                     <td class="text-center" style="color: #473F39;">{{ maintenance.message }}</td>
                                 </tr>
                             {% endfor %}
