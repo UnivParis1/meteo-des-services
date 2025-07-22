@@ -46,10 +46,16 @@ class MaintenanceService
         }
 
         $maintenances = [];
+	    $nextMaintenanceEstInsere = false;
         foreach ($nextMaintenances as $nextMaintenanceEntity) {
             $nextMaintenanceDTO = $this->convertToDTO($nextMaintenanceEntity);
 
-            $application->setNextMaintenance($nextMaintenanceDTO);
+            // ne met que la prochaine maintenance
+            if ( ! $nextMaintenanceEstInsere) {
+                $application->setNextMaintenance($nextMaintenanceDTO);
+                $nextMaintenanceEstInsere = true;
+            }
+
             if ($nextMaintenanceDTO->getStartingDate() < $now && $nextMaintenanceDTO->getEndingDate() > $now) {
                 $application->setIsInMaintenance(true);
             }
