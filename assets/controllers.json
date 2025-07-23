@@ -4,7 +4,6 @@
             "autocomplete": {
                 "enabled": true,
                 "fetch": "eager",
-                "controllers" : "custom-autocomplete",
                 "autoimport": {
                     "tom-select/dist/css/tom-select.default.css": true,
                     "tom-select/dist/css/tom-select.bootstrap4.css": false,

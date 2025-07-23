@@ -80,11 +80,11 @@ class UserService
         return null;
     }
 
-    public function searchUserOrGroup(string $search): ?array {
+    public function searchUserOrGroup(string $search, $attrs=['uid','mail','displayName','cn','employeeType','departmentNumber','eduPersonPrimaryAffiliation','supannEntiteAffectation-ou','supannRoleGenerique','supannEtablissement']): ?array {
         $urlwsgroup = $this->params->get('urlwsgroup_user_infos');
 
         // recopié depuis creneaux (recherche utilisateur ou groupes)
-        $url = "https://wsgroups.univ-paris1.fr/search?maxRows=10&user_attrs=uid,mail,displayName,cn,employeeType,departmentNumber,eduPersonPrimaryAffiliation,supannEntiteAffectation-ou,supannRoleGenerique,supannEtablissement&filter_category=groups&filter_group_cn=employees.*&filter_eduPersonAffiliation=teacher|researcher|staff|emeritus&token=$search";
+        $url = "https://wsgroups.univ-paris1.fr/search?maxRows=10&user_attrs=". implode(',', $attrs) ."&filter_category=groups&filter_group_cn=employees.*&filter_eduPersonAffiliation=teacher|researcher|staff|emeritus&token=$search";
 
         $fd = fopen($url, 'r');
         $ajaxReturn = stream_get_contents($fd);
