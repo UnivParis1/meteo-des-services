@@ -30,7 +30,7 @@
                         </button>
                         {{ form_end(form) }}
                     </div>
-                    {% if is_granted('ROLE_USER') %}
+                    {% if is_granted('ROLE_TEACHER') %}
                         <div class="col-3 p-0 col-lg-2 p-lg-2 ms-lg-n4">
                             <a href="{{ path('app_notify_problem') }}">
                                 <button class="btn btn-light p-0 p-lg-2">
