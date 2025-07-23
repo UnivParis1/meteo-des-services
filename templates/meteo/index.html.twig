@@ -120,6 +120,7 @@
             {% else %}
                 <span class="d-flex justify-content-center mt-5">Aucun résultat</span>
             {% endif %}
+            {% if nbPage > 1 %}
             <div class="row mt-5">
                 <nav class="col-1 mx-auto">
                     <ul class="pagination">
@@ -156,7 +157,7 @@
                                                      href="{{ path('app_meteo', {'page': nbPage }) }}">{{ nbPage }}</a>
                             </li>
                         {% endif %}
-                        {% if page<nbPage - 1 %}
+                        {% if page < nbPage - 1 %}
                             <a class="page-link text-dark" href="{{ path('app_meteo', {'page': page+1}) }}"
                                aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
@@ -165,6 +166,7 @@
                     </ul>
                 </nav>
             </div>
+            {% endif %}
         </div>
     </div>
 
