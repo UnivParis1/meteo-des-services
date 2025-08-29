@@ -112,6 +112,22 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getNiveauACL(): string
+    {
+        global $app;
+
+        $kernel = $app->getKernel();
+        $hierarchyRoles = $kernel->getContainer()->getParameter("security.role_hierarchy.roles");
+
+        die(var_dump($hierarchyRoles));
+
+        if (count($this->roles) > 0) {
+            
+        }
+
+        return "0";
+    }
+
     /**
      * @see UserInterface
      */

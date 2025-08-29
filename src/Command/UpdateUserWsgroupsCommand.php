@@ -49,6 +49,10 @@ class UpdateUserWsgroupsCommand extends Command
         }
 
         foreach ($users as $user) {
+          $user->getNiveauACL();
+
+          die("okusr");
+
           $roles = $user->getRoles();
 
           // Si un ancien role ROLE_USER est affécté, le changer par ROLE_STAFF
