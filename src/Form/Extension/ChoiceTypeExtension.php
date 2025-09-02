@@ -17,7 +17,7 @@ class ChoiceTypeExtension extends AbstractTypeExtension
 
     public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder, array $options): void
     {
-        if ($options['label'] === "Roles" && $options['extra_options']['meteoAdminChoiceExtension'] == true) {
+        if ($options['label'] === "Niveau ACL" && $options['extra_options']['meteoAdminChoiceExtension'] == true) {
             $builder->addModelTransformer(new CallbackTransformer(
                 fn ($rolesAsArray):?string => count($rolesAsArray) ? implode(',', $rolesAsArray): null,
                 fn ($rolesAsString):array => explode(',', $rolesAsString)

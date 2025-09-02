@@ -23,11 +23,12 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('uid');
-        yield ChoiceField::new('roles')->setFormType(ChoiceType::class)
+        yield ChoiceField::new('roles')->setLabel("Niveau ACL")
+                                       ->setFormType(ChoiceType::class)
                                        ->setFormTypeOption("expanded", false)
                                        ->setFormTypeOption("multiple", false)
                                        ->setFormTypeOption('mapped', true)
-                                       ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // ajout pour extension ChoiceTypeExtension
+                                       ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // ajout pour que l'extension ChoiceTypeExtensions s'execute (à la drupal)
                                        ->setChoices(UserRoles::$choix);
         yield TextField::new('displayName');
         yield TextField::new('mail');
