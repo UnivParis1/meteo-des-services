@@ -3,7 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Form\UserType;
+use App\Model\UserRoles;
+use App\Form\RolesType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -24,17 +25,18 @@ class UserCrudController extends AbstractCrudController
         yield TextField::new('uid');
         yield ChoiceField::new('roles')->setFormType(ChoiceType::class)
                                        ->setFormTypeOption("expanded", false)
-                                       ->setFormTypeOption("multiple", true)
+                                       ->setFormTypeOption("multiple", false)
                                        ->setFormTypeOption('mapped', true)
-                                       ->setChoices(UserType::$choix);
+                                       ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // ajout pour extension ChoiceTypeExtension
+                                       ->setChoices(UserRoles::$choix);
         yield TextField::new('displayName');
         yield TextField::new('mail');
         yield BooleanField::new('recevoirMail');
         yield ChoiceField::new('eduPersonAffiliations')->setFormType(ChoiceType::class)
                                        ->setFormTypeOption("expanded", false)
                                        ->setFormTypeOption("multiple", true)
-                                       ->setFormTypeOption('mapped', true)
-                                       ->setChoices(UserType::$easyAdminEduAffiliations);
-//        yield ChoiceField::new('eduPersonAffiliations')->setChoices(UserType::$easyAdminEduAffiliations);
+//                                       ->setFormTypeOption('mapped', true)
+                                       ->setChoices(UserRoles::$easyAdminEduAffiliations);
+//        yield ChoiceField::new('eduPersonAffiliations')->setChoices(UserRoles::$easyAdminEduAffiliations);
     }
 }

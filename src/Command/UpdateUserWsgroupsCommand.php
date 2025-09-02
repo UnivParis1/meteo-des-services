@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use App\Model\UserRoles;
 
 #[AsCommand(
     name: 'app:update-user-wsgroups',
@@ -60,6 +61,28 @@ class UpdateUserWsgroupsCommand extends Command
             $this->userRepository->updateUser($user);
           }
 
+          // assigne un role unique (celui le plus élevé)
+          if (count($roles) > 1) {
+
+            $keyroles = array_keys(UserRoles::$choix);
+            $roleassigne = $roles[0];
+            $idx = 0;
+            foreach($roles as $role) {
+              $name = array_search($role, UserRoles::$choix);
+              $idxnew = array_search($name, $keyroles);
+
+              if ($idxnew > $idx) {
+                $idx = $idxnew;
+              }
+            }
+
+            $newRole = [UserRoles::$choix[$keyroles[$idx]]];
+
+            $output->writeln("Role pour {$user->getUid()} : " . implode(',', $roles) . " : " . implode(',', $newRole));
+
+            $user->setRoles($newRole);
+            $this->userRepository->updateUser($user);
+          }
           $output->writeln("Mise à jour de {$user->getUid()}");
 
           $user = $this->userService->updateUserRequestInfos($user);

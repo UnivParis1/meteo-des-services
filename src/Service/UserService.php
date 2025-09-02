@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
-use App\Form\UserType;
+use App\Model\UserRoles;
 use App\Repository\UserRepository;
 use stdClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
@@ -42,11 +42,11 @@ class UserService
         $user->setEduPersonAffiliations($infos->eduPersonAffiliation);
 
         foreach ($infos->eduPersonAffiliation as $affiliation) {
-            if (!isset(UserType::$choix[$affiliation]))
+            if (!isset(UserRoles::$choix[$affiliation]))
                 continue;
 
-            if (! $this->securizer->isGranted($user, UserType::$choix[$affiliation])) {
-                $user->setRoles([UserType::$choix[$affiliation]]);
+            if (! $this->securizer->isGranted($user, UserRoles::$choix[$affiliation])) {
+                $user->setRoles([UserRoles::$choix[$affiliation]]);
                 break;
             }
         }

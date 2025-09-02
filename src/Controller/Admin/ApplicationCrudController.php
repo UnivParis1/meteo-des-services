@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Application;
-use App\Form\UserType;
+use App\Model\UserRoles;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -62,7 +62,7 @@ class ApplicationCrudController extends AbstractCrudController
                                        ->setFormTypeOption("expanded", false)
                                        ->setFormTypeOption("multiple", true)
                                        ->setFormTypeOption('mapped', true)
-                                       ->setChoices(UserType::$choix);
+                                       ->setChoices(UserRoles::$choix);
         return $array;
     }
 }
