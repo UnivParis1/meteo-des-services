@@ -9,6 +9,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 
 class ApplicationCrudController extends AbstractCrudController
 {
@@ -16,29 +19,62 @@ class ApplicationCrudController extends AbstractCrudController
     {
         return Application::class;
     }
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+                 ->update(Crud::PAGE_INDEX, Action::NEW,
+                    fn (Action $action): Action => $action->setLabel("Créer une application")
+                 )->update(Crud::PAGE_INDEX, Action::EDIT,
+                    fn (Action $action): Action => $action->setLabel("Editer l'application")
+                 )->update(Crud::PAGE_INDEX, Action::DELETE,
+                    fn (Action $action): Action => $action->setLabel("Supprimer l'application")
+                 )->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN,
+                    fn (Action $action): Action => $action->setLabel("Sauvegarder l'application")
+                 )->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE,
+                    fn (Action $action): Action => $action->setLabel("Sauvegarder et continuer l'édition")
+                 )->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN,
+                    fn (Action $action): Action => $action->setLabel("Créer l'application")
+                 )->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER,
+                    fn (Action $action): Action => $action->setLabel("Créer puis créer une autre application")
+                 );
+    }
 
     public function configureCrud(Crud $crud): Crud
     {
         $crud = parent::configureCrud($crud);
 
-        $msg = "Pour roles, si l'application est visible de tous les utilisateurs, assigner ROLE_STUDENT pour ce champs";
-
-        $crud->setHelp("edit", $msg);
-        $crud->setHelp("new", $msg);
-
-        return $crud;
+        return $crud
+                 ->setPageTitle("index", "Listing des applications")
+                 ->setPageTitle("new", "Création d'une application")
+                 ->setPageTitle("edit", "Edition d'une application")
+                 ->setEntityLabelInSingular("Application")
+                 ->setEntityLabelInPlural("Applications");
     }
 
     public function configureFields(string $pageName): iterable
     {
         $array = parent::configureFields($pageName);
 
-        $array[2] = ChoiceField::new('state')->setChoices([
-            'default' => 'default',
-            'operational' => 'operational',
-            'perturbed' => 'perturbed',
-            'unavailable' => 'unavailable',
-        ]);
+        /** @var \EasyCorp\Bundle\EasyAdminBundle\Field\Field */
+        $id = $array[0];
+        $id->hideOnIndex();
+
+        /** @var \EasyCorp\Bundle\EasyAdminBundle\Field\Field */
+        $title = $array[1];
+        $title->setLabel("Titre de l'application");
+
+        $array[2] = ChoiceField::new('state')
+                                  ->setChoices([
+                                    'default' => 'default',
+                                    'operational' => 'operational',
+                                    'perturbed' => 'perturbed',
+                                    'unavailable' => 'unavailable',
+                                  ])
+                                  ->setLabel("Statut courant");
+
+        /** @var \EasyCorp\Bundle\EasyAdminBundle\Field\Field */
+        $isArchived = $array[3];
+        $isArchived->setLabel("Est archivée");
 
         $array[5] = ChoiceField::new('Categorie')->setChoices([
             "Communication" => "Communication",
@@ -56,12 +92,24 @@ class ApplicationCrudController extends AbstractCrudController
             "Renater" => "Renater"
         ]);
 
-        $array[] = AssociationField::new('users');
+        /** @var \EasyCorp\Bundle\EasyAdminBundle\Field\Field */
+        $isJson = $array[6];
+        $isJson->setLabel("source JSON")
+               ->hideOnIndex()
+               ->setHelp("Provenance de la donnée depuis le JSON des applications ENT");
 
-        $array[] = ChoiceField::new('roles')->setFormType(ChoiceType::class)
+        $array[] = AssociationField::new('users')
+                                       ->hideOnIndex()
+                                       ->hideOnDetail()
+                                       ->hideWhenCreating()
+                                       ->hideWhenUpdating();
+
+        $array[] = ChoiceField::new('roles')->setLabel("Niveau ACL")
+                                       ->setFormType(ChoiceType::class)
                                        ->setFormTypeOption("expanded", false)
-                                       ->setFormTypeOption("multiple", true)
+                                       ->setFormTypeOption("multiple", false)
                                        ->setFormTypeOption('mapped', true)
+                                       ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // identique à UserCrudController
                                        ->setChoices(UserRoles::$choix);
         return $array;
     }
