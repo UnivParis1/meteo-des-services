@@ -61,7 +61,7 @@ class Application
      * @var list<string> The roles authorized
      */
     #[ORM\Column]
-    private array $roles = ["ROLE_STUDENT"];
+    private array $roles = ["ROLE_TEACHER"];
 
     public function __construct()
     {
@@ -299,7 +299,7 @@ class Application
 
         if (count($roles) == 0) {
             // guarantee every user at least has ROLE_STUDENT
-            $roles[] = 'ROLE_STUDENT';
+            $roles[] = 'ROLE_TEACHER';
         }
 
         return array_unique($roles);
