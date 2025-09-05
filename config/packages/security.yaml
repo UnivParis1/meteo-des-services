@@ -17,6 +17,7 @@ security:
             logout:
                 path: /logout
     role_hierarchy:
+        ROLE_STUDENT:     PUBLIC_ACCESS
         ROLE_TEACHER:     ROLE_STUDENT
         ROLE_STAFF:       ROLE_TEACHER
         ROLE_ADMIN:       ROLE_STAFF

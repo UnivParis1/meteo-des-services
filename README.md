@@ -1,7 +1,7 @@
 # Meteo_des_services_P1
 
 ## Architecture
-Le projet est un projet <b>Symfony 7.2 maintenue </b>
+Le projet est un projet <b>Symfony 7.3 maintenue </b>
 Les échanges avec la base de données sont effectuées par l'ORM <b>Doctrine</b>.<br>
 Javascript a été utilisé pour l'affichage de la pop-up de Détail dans la page principale.
 
@@ -9,21 +9,22 @@ Javascript a été utilisé pour l'affichage de la pop-up de Détail dans la pag
 
 ### Gestion utilisateurs et permission/droits ACL
 
-Pour la gestion utilisateur, Le projet distingue 4 rôles avec héritage:
+Pour la gestion utilisateur, Le projet distingue 6 rôles avec héritage:
 
-- <b>ROLE_STUDENT</b> : rôle de base, assigné automatiquement si aucun rôle associé à l'utilisateur 
-- <b>ROLE_TEACHER</b> : correspond à enseignant
-- <b>ROLE_STAFF</b> : personnel de l'université (remplace le précédent ROlE_USER)
-- <b>ROLE_ADMIN</b> : accède à la météo des services en lecture et en écriture (ajout/modification/suppression d'application et maintenance)
-- <b>ROLE_SUPER_ADMIN</b> : attribue les droits utilisateurs, accède au back-office
+- <b>niveau 0</b> : <b>PUBLIC_ACCESS</b> : anonyme
+- <b>niveau 1</b> : <b>ROLE_STUDENT</b> : rôle de base, assigné automatiquement si aucun rôle associé à l'utilisateur
+- <b>niveau 2</b> : <b>ROLE_TEACHER</b> : correspond à enseignant
+- <b>niveau 3</b> : <b>ROLE_STAFF</b> : personnel de l'université (remplace le précédent ROlE_USER)
+- <b>niveau 4</b> : <b>ROLE_ADMIN</b> : accède à la météo des services en lecture et en écriture (ajout/modification/suppression d'application et maintenance)
+- <b>niveau 5</b> : <b>ROLE_SUPER_ADMIN</b> : attribue les droits utilisateurs, accède au back-office
 
 Un seul rôle est attribué aux users, les droits sont hérités du rôle précedent (ROLE_SUPER_ADMIN hérite de ROLE_ADMIN, gestion standard Symfony)
 
 #### Gestion droits des Applications
 
-Dans la partie back-office, il est possible de restreindre l'affichage d'une application en séléctionnant le profil de droit minimum.
+Dans la partie back-office, il est possible de restreindre l'affichage d'une application en séléctionnant le profil de droit minimum en sélectionnant le niveau d'accès (niveau 1,2...)
 
-Exemple: si on séléctionne ROLE_STAFF, seul les personnes assignés à ROLE_STAFF, ROLE_ADMIN et ROLE_SUPER_ADMIN verront l'application dans l'index
+Exemple: si on séléctionne ROLE_STAFF (niveau 3), seul les personnes assignés à ROLE_STAFF, ROLE_ADMIN et ROLE_SUPER_ADMIN verront l'application dans l'index
 
 ##### Tâche de maintenance
 
