@@ -70,12 +70,6 @@ class ApplicationRepository extends ServiceEntityRepository
         if (strlen($searchTerm) > 0)
             $query->andWhere("a.title LIKE '%$searchTerm%'");
 
-        // Les droits étant hierarchiques, si permission inférieure à ROLE_TEACHER on est sur ROLE_STUDENT donc filtre sur les applications
-        if ( ! $this->security->isGranted('ROLE_TEACHER') ) {
-            // obligé de passer par cast(a.roles) AS JSON pour faire un a.roles IS NULL (ajout de la lib beberlei/doctrineextensions pour avoir la fonction cast avec doctrine) pour une raison inconnue
-            $query->andWhere("cast(a.roles AS CHAR) = cast('null' AS CHAR) OR a.roles LIKE '[]' OR a.roles LIKE '%ROLE_STUDENT%'");
-        }
-
         $dql = $query->orderBy('a.title', 'ASC')
             ->getQuery();
 

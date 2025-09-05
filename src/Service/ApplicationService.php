@@ -68,7 +68,10 @@ class ApplicationService
     {
         $dtos = new ArrayCollection();
         foreach ($this->applicationRepository->findBySearchAndState($searchTerm, $stateFilter) as $application) {
-            $dtos->add($this->convertToDTO($application, null));
+            // vérifie que les droit de l'utilisateur pour chaque programmes
+            if ($this->security->isGranted(current($application->getRoles()))) {
+                $dtos->add($this->convertToDTO($application, null));
+            }
         }
         return $dtos->toArray();
     }
