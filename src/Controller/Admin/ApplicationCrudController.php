@@ -111,6 +111,7 @@ class ApplicationCrudController extends AbstractCrudController
                                        ->setFormTypeOption('mapped', true)
                                        ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // identique à UserCrudController
                                        ->setChoices(UserRoles::$choix);
+
         return $array;
     }
 }
