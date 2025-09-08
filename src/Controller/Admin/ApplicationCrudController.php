@@ -11,7 +11,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 
 class ApplicationCrudController extends AbstractCrudController
 {
@@ -112,6 +111,7 @@ class ApplicationCrudController extends AbstractCrudController
                                        ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // identique à UserCrudController
                                        ->setChoices(UserRoles::$choix);
 
+        $array[] = AssociationField::new('tags');
         return $array;
     }
 }

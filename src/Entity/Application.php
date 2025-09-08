@@ -63,11 +63,18 @@ class Application
     #[ORM\Column]
     private array $roles = ["ROLE_TEACHER"];
 
+    /**
+     * @var Collection<int, Tags>
+     */
+    #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'applications')]
+    private Collection $tags;
+
     public function __construct()
     {
         $this->histories = new ArrayCollection();
         $this->maintenances = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -308,6 +315,30 @@ class Application
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tags>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tags $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tags $tag): static
+    {
+        $this->tags->removeElement($tag);
 
         return $this;
     }

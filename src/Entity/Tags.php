@@ -18,6 +18,22 @@ class Tags
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    /**
+     * @var Collection<int, Application>
+     */
+    #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'tags')]
+    private Collection $applications;
+
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -31,6 +47,33 @@ class Tags
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->addTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            $application->removeTag($this);
+        }
 
         return $this;
     }
