@@ -66,6 +66,9 @@ class MeteoController extends AbstractController
             $session->remove('searchApplication');
             return $this->redirectToRoute('app_meteo');
         }
+        if ($nbPage > 0 && $nbPage < $page) {
+            return $this->redirectToRoute('app_meteo', ['page' => 1]);
+        }
 
         $debut = $page * $limit - $limit;
         $applicationsPaginate = array_slice($applications, $debut, $limit);
