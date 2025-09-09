@@ -111,7 +111,8 @@ class ApplicationCrudController extends AbstractCrudController
                                        ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // identique à UserCrudController
                                        ->setChoices(UserRoles::$choix);
 
-        $array[] = AssociationField::new('tags');
+        $array[] = AssociationField::new('tags')
+                                           ->hideOnIndex();
         return $array;
     }
 }
