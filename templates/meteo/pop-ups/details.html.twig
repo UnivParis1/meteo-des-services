@@ -40,7 +40,7 @@
                     <table class="w-50 mx-auto mt-auto mb-3">
                         <tr>
                             <td class="pop-up-title fw-bold text-center m-auto fs-6">Dernière mise à jour</td>
-                            <td class="maintenance-text text-center fs-6 fw-bold">{{ application.lastUpdate|format_datetime(dateFormat='full', timeFormat='medium', pattern="EEEE d MMMM YYYY \'à\' HH\'h'\mm\'s\'ss", locale='FR_fr') }}</td>
+                            <td class="maintenance-text text-center fs-6 fw-bold">{{ application.lastUpdate|format_datetime(dateFormat='full', timeFormat='medium', pattern="EEEE d MMMM YYYY \'à\' HH\'H'\mm", locale='FR_fr') }}</td>
                         </tr>
                     </table>
                     {% endif %}
