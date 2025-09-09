@@ -56,7 +56,7 @@ class ImportCsvApplicationTagsCommand extends Command
 
             $tags = $this->tagsRepository->findOneBy(['name' => $tag]);
 
-            if (!$tag) {
+            if (!$tags) {
                 $tags = new Tags();
                 $tags->setName($tag);
                 $this->tagsRepository->createTags($tags);
