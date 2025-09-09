@@ -5,39 +5,35 @@ namespace App\Repository;
 use App\Entity\Tags;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<Tags>
  */
 class TagsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,
+                                private EntityManagerInterface $em)
     {
         parent::__construct($registry, Tags::class);
     }
 
-    //    /**
-    //     * @return Tags[] Returns an array of Tags objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function updateTags(Tags $tags): Tags
+    {
+        $this->em->flush();
+        return $tags;
+    }
 
-    //    public function findOneBySomeField($value): ?Tags
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function createTags(Tags $tags): Tags
+    {
+        $this->em->persist($tags);
+        $this->em->flush();
+        return $tags;
+    }
+
+    public function deleteTags(Tags $tags): void
+    {
+        $this->em->remove($tags);
+        $this->em->flush();
+    }
 }
