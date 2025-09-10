@@ -53,7 +53,8 @@ class MeteoController extends AbstractController
             }
         }
 
-        $applications = $this->applicationService->getApplicationByFilters($searchApplication->searchTerm, $searchApplication->selectedState);
+        $applications = $this->applicationService->getApplicationByTag($searchApplication->searchTerm);
+        $applications = $applications + $this->applicationService->getApplicationByFilters($searchApplication->searchTerm, $searchApplication->selectedState);
         $applications = $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
 
         $nbApplications = count($applications);

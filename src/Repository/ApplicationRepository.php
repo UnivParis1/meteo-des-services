@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Application;
+use App\Entity\Tags;
 use App\Entity\ApplicationHistory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -81,5 +82,9 @@ class ApplicationRepository extends ServiceEntityRepository
     public function findAllNotArchived() : array
     {
         return $this->createQueryBuilder('a')->where('a.isArchived = 0')->orderBy('a.title', 'ASC')->getQuery()->getResult();
+    }
+
+    public function findAllByTags(Tags $tags): array {
+        return $this->createQueryBuilder('a')->join('a.tags', 't')->where('t = :tags')->setParameter('tags', $tags)->getQuery()->getResult();
     }
 }

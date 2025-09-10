@@ -7,12 +7,14 @@ use App\Entity\Application;
 use App\Entity\ApplicationHistory;
 use App\Repository\ApplicationHistoryRepository;
 use App\Repository\ApplicationRepository;
+use App\Repository\TagsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\SecurityBundle\Security;
 class ApplicationService
 {
 
     public function __construct(public  ApplicationRepository        $applicationRepository,
+                                public  TagsRepository               $tagsRepository,
                                 public  ApplicationHistoryRepository $applicationHistoryRepository,
                                 public  MaintenanceService           $maintenanceService,
                                 private Security                     $security
@@ -64,6 +66,20 @@ class ApplicationService
         return $dto;
     }
 
+    public function getApplicationByTag(string $searchTerm): array
+    {
+        $dtos = new ArrayCollection();
+        $tags = $this->tagsRepository->findOneBy(['name' => $searchTerm]);
+
+        if ($tags) {
+            foreach ($this->applicationRepository->findAllByTags($tags) as $application) {
+                if ($this->security->isGranted(current($application->getRoles()))) {
+                    $dtos->add($this->convertToDTO($application, null));
+                }
+            }
+        }
+        return $dtos->toArray();
+    }
     public function getApplicationByFilters(string $searchTerm, string $stateFilter): array
     {
         $dtos = new ArrayCollection();
