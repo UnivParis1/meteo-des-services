@@ -4,21 +4,20 @@ namespace App\Command;
 
 use DateTime;
 use App\Entity\Application;
+use App\Entity\Tags;
 use App\Repository\ApplicationRepository;
+use App\Repository\TagsRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Attribute\Argument;
-use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(name: 'app:import-json', description: "Importation des applications depuis le json ent")]
 class ImportJsonCommand extends Command
 {
-    public function __construct(private applicationRepository $applicationRepository)
+    public function __construct(private applicationRepository $applicationRepository,
+                                private TagsRepository $tagsRepository)
     {
         parent::__construct();
     }
@@ -63,7 +62,13 @@ class ImportJsonCommand extends Command
             else{
                 $jsonTxt = curl_exec($ch);
             }
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            if ($httpcode != 200) {
+                $output->writeln("Echec de récupération code erreur : $httpcode, réponse: $jsonTxt");
+                return Command::FAILURE;
+            }
         } else {
             if ( ! stream_is_local($fichier)) {
                 $output->writeln("l'argument uri n'est pas un fichier local");
@@ -72,7 +77,6 @@ class ImportJsonCommand extends Command
 
             $jsonTxt = file_get_contents($fichier);
         }
-
         $jsonArray = json_decode($jsonTxt, true);
 
         $output->writeln([
@@ -101,15 +105,34 @@ class ImportJsonCommand extends Command
 
             $application->setCategorie($categorie);
             $application->setFname($fname);
-            $application->setIsFromJson(true);
-            $application->setTitle($appArray['title']);
-            $application->setState('operational');
 
-            if (array_key_exists('description', $appArray))
+            // maj uniquement en création pour éviter de remplacer des saisies
+            if ( ! $isUpdate) {
+                $application->setIsFromJson(true);
+                $application->setTitle($appArray['title']);
+                $application->setState('operational');
+            }
+
+            if (array_key_exists('description', $appArray) && $application->getDescription() === null)
                 $application->setDescription($appArray['description']);
 
-            if (array_key_exists('url', $appArray))
+            if (array_key_exists('url', $appArray) && $application->getUrl() === null)
                 $application->setUrl($appArray['url']);
+
+            if (array_key_exists('tags', $appArray) && count($application->getTags()) == 0) {
+                $aTags = $appArray['tags'];
+
+                foreach ($aTags as $tag) {
+                    $tags = $this->tagsRepository->findOneBy(['name' => $tag]);
+
+                    if (!$tags) {
+                        $tags = new Tags();
+                        $tags->setName($tag);
+                        $this->tagsRepository->createTags($tags);
+                    }
+                    $application->addTag($tags);
+                }
+            }
 
             $msg = $isUpdate ? "Mise à jour" : "Création";
             $msg .= "  Application : $fname ";
