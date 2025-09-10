@@ -6,12 +6,16 @@ use DateTime;
 use App\Entity\Application;
 use App\Repository\ApplicationRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Argument;
+use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'app:import-json')]
+#[AsCommand(name: 'app:import-json', description: "Importation des applications depuis le json ent")]
 class ImportJsonCommand extends Command
 {
     public function __construct(private applicationRepository $applicationRepository)
@@ -22,13 +26,53 @@ class ImportJsonCommand extends Command
     protected function configure(): void
     {
         $this->setDescription('Importation des applications depuis le json ent')
-             ->addArgument('fichier', InputArgument::REQUIRED, 'Fichier à ouvrir');
+             ->addOption(name: 'fromENT')
+             ->addArgument('uri', InputArgument::REQUIRED, 'Localisation de la ressource web/filesystem')
+             ->addArgument('jsessionid', InputArgument::OPTIONAL);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    public function __invoke(InputInterface $input, OutputInterface $output): int
     {
-        $fichier = $input->getArgument('fichier');
-        $jsonTxt = file_get_contents($fichier);
+        $fromENT = $input->getOption('fromENT');
+        $fichier = $input->getArgument('uri');
+
+        if ($fromENT) {
+
+            if (stream_is_local($fichier)) {
+                $output->writeln("l'argument uri n'est pas une url");
+                return Command::FAILURE;
+            }
+
+            $jsessionid = $input->getArgument('jsessionid');
+
+            if (!$jsessionid) {
+                $output->writeln('Pas de valeur donnée pour le cookie de session');
+                return Command::FAILURE;
+            }
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $fichier);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['User-Agent: Météo-service application']);
+            curl_setopt($ch, CURLOPT_COOKIE, "JSESSIONID=$jsessionid");
+
+            if(!curl_exec($ch)){
+                die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
+            }
+            else{
+                $jsonTxt = curl_exec($ch);
+            }
+            curl_close($ch);
+        } else {
+            if ( ! stream_is_local($fichier)) {
+                $output->writeln("l'argument uri n'est pas un fichier local");
+                return Command::FAILURE;
+            }
+
+            $jsonTxt = file_get_contents($fichier);
+        }
+
         $jsonArray = json_decode($jsonTxt, true);
 
         $output->writeln([
