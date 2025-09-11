@@ -112,7 +112,8 @@ class ApplicationCrudController extends AbstractCrudController
                                        ->setChoices(UserRoles::$choix);
 
         $array[] = AssociationField::new('tags')
-                                           ->hideOnIndex();
+                                           ->hideOnIndex()
+                                           ->setFormTypeOption('disabled', 'disabled');
         return $array;
     }
 }

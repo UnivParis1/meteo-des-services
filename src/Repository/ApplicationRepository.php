@@ -47,9 +47,17 @@ class ApplicationRepository extends ServiceEntityRepository
         return $application;
     }
 
-    public function deleteApplication(Application $application)
+    public function deleteApplication(Application $application): void
     {
         $application->setIsArchived(true);
+        $this->em->flush();
+    }
+
+    public function removeApplicationTags(Application $application): void
+    {
+        foreach ($application->getTags() as $tags) {
+            $application->removeTag($tags);
+        }
         $this->em->flush();
     }
 

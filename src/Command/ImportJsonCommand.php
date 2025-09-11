@@ -119,8 +119,11 @@ class ImportJsonCommand extends Command
             if (array_key_exists('url', $appArray) && $application->getUrl() === null)
                 $application->setUrl($appArray['url']);
 
-            if (array_key_exists('tags', $appArray) && count($application->getTags()) == 0) {
+            if (array_key_exists('tags', $appArray)) {
                 $aTags = $appArray['tags'];
+
+                // supprime tous les tags existants avant de les importer
+                $this->applicationRepository->removeApplicationTags($application);
 
                 foreach ($aTags as $tag) {
                     $tags = $this->tagsRepository->findOneBy(['name' => $tag]);
