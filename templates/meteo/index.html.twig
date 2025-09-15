@@ -64,7 +64,7 @@
                             {% if application.nextMaintenance %}
                                 {% set maintenance = application.nextMaintenance %}
 
-                                {% set hover %} {% if application.isInMaintenance %}Maintenance en cours, fin prévue : {% else %}Maintenance prévue le {% endif %} {{ maintenance.endingDate|date('d-m-Y H:i') }} ({{ iconsName[maintenance.state][0] }}) {% endset %}
+                                {% set hover %} {% if application.isInMaintenance %}Maintenance en cours, fin prévue : {% else %}Maintenance prévue le {% endif %} {{ maintenance.startingDate|date("d-m-Y H\\Hi") }} ({{ iconsName[maintenance.state][0] }}) {% endset %}
                                 <a class="action {{ iconsName[maintenance.state][1] }}"
                                     onclick="$.fn.showDetails('{{ application.id }}')"
                                     data-toggle="modal" data-target="#details-modal"

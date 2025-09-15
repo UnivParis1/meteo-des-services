@@ -65,7 +65,7 @@
                             </tr>
                             {% for maintenance in application.nextMaintenances %}
                                 <tr>
-                                    <td class="text-center" style="color: #473F39;">{{ maintenance.startingDate|date("d/m/Y") }} à {{ maintenance.startingDate|date("H") }}h</td>
+                                    <td class="text-center" style="color: #473F39;">{{ maintenance.startingDate|date("d/m/Y") }} à {{ maintenance.startingDate|date("H\\Hi") }}</td>
                                     <td class="text-center" style="color: #473F39;">{{ maintenance.totalTime }}</td>
                                     <td class="text-center fw-bold {{ iconsName[maintenance.state][1] }}"  > {{ iconsName[maintenance.state][0] }} </td>
                                     <td class="text-center" style="color: #473F39;">{{ maintenance.message }}</td>
