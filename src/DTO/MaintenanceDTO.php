@@ -30,13 +30,24 @@ class MaintenanceDTO
         $this->endingDate = $endingDate;
         $this->message = $message;
 
-        $days = $startingDate->diff($endingDate)->days;
+        $diff = $startingDate->diff($endingDate);
+        $days = $diff->format("%d");
+
         if ($days > 1) {
             $this->totalTime = $days . " jours";
         } else if (($hours = $days * 24 + $startingDate->diff($endingDate)->h) <= 1) {
             $this->totalTime = $hours . " heure";
         } else {
             $this->totalTime = $hours . " heures";
+        }
+
+        $minutes = $diff->format("%i");
+
+        if ($minutes > 0) {
+            $this->totalTime .= " $minutes minute";
+
+            if ($minutes > 1)
+                $this->totalTime .= "s";
         }
     }
 
