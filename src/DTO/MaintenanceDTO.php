@@ -31,24 +31,36 @@ class MaintenanceDTO
         $this->message = $message;
 
         $diff = $startingDate->diff($endingDate);
-        $days = $diff->format("%d");
 
-        if ($days > 1) {
-            $this->totalTime = $days . " jours";
-        } else if (($hours = $days * 24 + $startingDate->diff($endingDate)->h) <= 1) {
-            $this->totalTime = $hours . " heure";
-        } else {
-            $this->totalTime = $hours . " heures";
+        $adiff = ['jour' => $diff->format("%d"),'heure' => $diff->format("%h"),'minute' => $diff->format("%i") ];
+
+        $avalues = array_values($adiff);
+        $akeys = array_keys($adiff);
+        $totaltime = "";
+
+        for ($idx = 0; $idx < count($adiff); $idx++) {
+            $duree = "{$akeys[$idx]}";
+            $temps = intval($avalues[$idx]);
+
+            if ($idx > 0 && strlen($totaltime) > 0)
+                $totaltime .= " ";
+
+            if ($idx == 2 && $temps > 0)
+                $totaltime .= " et ";
+
+            switch ($temps) {
+                case 0:
+                    continue;
+                case 1:
+                    $totaltime .= "$temps $duree";
+                    break;
+                case $temps > 1:
+                    $totaltime .= "$temps {$duree}s";
+                    break;
+            }
         }
 
-        $minutes = $diff->format("%i");
-
-        if ($minutes > 0) {
-            $this->totalTime .= " $minutes minute";
-
-            if ($minutes > 1)
-                $this->totalTime .= "s";
-        }
+        $this->totalTime = $totaltime;
     }
 
     /**
