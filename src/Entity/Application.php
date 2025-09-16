@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\EventListener\ApplicationChangerNotifier;
+use Doctrine\DBAL\Schema\Column;
 
 #[ORM\Entity(repositoryClass: ApplicationRepository::class)]
 #[ORM\EntityListeners([ApplicationChangerNotifier::class])]
+#[ORM\UniqueConstraint(columns: ['fname'])]
 class Application
 {
     #[ORM\Id]

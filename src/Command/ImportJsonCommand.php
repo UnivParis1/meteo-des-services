@@ -26,6 +26,7 @@ class ImportJsonCommand extends Command
     {
         $this->setDescription('Importation des applications depuis le json ent')
              ->addOption(name: 'fromENT')
+             ->addOption('creerApp')
              ->addArgument('uri', InputArgument::REQUIRED, 'Localisation de la ressource web/filesystem')
              ->addArgument('jsessionid', InputArgument::OPTIONAL);
     }
@@ -33,6 +34,9 @@ class ImportJsonCommand extends Command
     public function __invoke(InputInterface $input, OutputInterface $output): int
     {
         $fromENT = $input->getOption('fromENT');
+
+        // creer les applications inexistantes
+        $creerApp = $input->getOption('creerApp');
         $fichier = $input->getArgument('uri');
 
         if ($fromENT) {
@@ -97,7 +101,7 @@ class ImportJsonCommand extends Command
             if ($categorie == "__hidden__" || $categorie === null)
                 continue;
 
-            $application = $this->applicationRepository->findOneBy(['title' => $appArray['title'] ]);
+            $application = $this->applicationRepository->findOneBy(['fname' => $fname ]);
 
             $isUpdate = $application === null ? false : true;
 
@@ -137,12 +141,17 @@ class ImportJsonCommand extends Command
                 }
             }
 
-            $msg = $isUpdate ? "Mise à jour" : "Création";
+            $msg = $isUpdate ? "Mise à jour" : ($creerApp ? "Création" : "Sans création");
             $msg .= "  Application : $fname ";
 
             $output->writeln($msg);
 
-            $isUpdate ? $this->applicationRepository->updateApplication($application) : $this->applicationRepository->createApplication($application);
+            if (!$isUpdate && $creerApp) {
+               $this->applicationRepository->createApplication($application);
+            }
+            elseif ($isUpdate) {
+                $this->applicationRepository->updateApplication($application);
+            }
             $isUpdate ? $nbApplicationMaj++ : $nbApplicationCrees++;
         }
 
@@ -150,7 +159,7 @@ class ImportJsonCommand extends Command
             '',
             'Fin Import des applications',
             '============',
-            "Crées : $nbApplicationCrees",
+            ($creerApp ? "Crées": "Sans création") . ": $nbApplicationCrees",
             "Mise à jour: $nbApplicationMaj",
         ]);
 

@@ -51,7 +51,7 @@ class MaintenanceDTO
 
             switch ($temps) {
                 case 0:
-                    continue;
+                    break;
                 case 1:
                     $totaltime .= "$temps $duree";
                     break;
