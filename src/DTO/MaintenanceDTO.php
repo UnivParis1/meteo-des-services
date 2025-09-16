@@ -45,7 +45,8 @@ class MaintenanceDTO
             if ($idx > 0 && strlen($totaltime) > 0)
                 $totaltime .= " ";
 
-            if ($idx == 2 && $temps > 0)
+            // test si duree est par exemple: 1 heure et 12 minutes
+            if ($idx == 2 && $temps > 0 && $avalues[1] > 0)
                 $totaltime .= " et ";
 
             switch ($temps) {
