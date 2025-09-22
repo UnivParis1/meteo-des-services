@@ -2,10 +2,13 @@
 
 namespace App\Form;
 
+use DateTime;
 use App\Entity\Application;
 use App\Entity\Maintenance;
+use DateTimeInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -36,7 +39,8 @@ class MaintenanceType extends AbstractType
                 ]])
             ->add('startingDate', DateTimeType::class, [
                 'widget' => 'single_text',
-                'html5' => true,
+                'html5' => false,
+                'format' => 'dd/MM/yyyy HH:mm',
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
@@ -46,12 +50,13 @@ class MaintenanceType extends AbstractType
                     ])
                 ],
                 'attr' => [
-                    'min' => (new \DateTime('now'))->format('Y-m-d\TH:i')
+                    'min' => (new \DateTime('now'))->format('d/m/Y H:i')
                 ]
             ])
             ->add('endingDate', DateTimeType::class, [
                 'widget' => 'single_text',
-                'html5' => true,
+                'html5' => false,
+                'format' => 'dd/MM/yyyy HH:mm',
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),

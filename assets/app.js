@@ -11,6 +11,8 @@ import './styles/app.css';
 
 import './styles/font-import-google.css';
 import './styles/font-import-google-2.css';
+require("jquery-datetimepicker/jquery.datetimepicker.css");
+require('bootstrap-icons/font/bootstrap-icons.min.css');
 // start the Stimulus application
 import './bootstrap';
 
@@ -19,7 +21,23 @@ import $ from 'jquery';
 
 global.$ = global.jQuery = $;
 
+import "jquery-datetimepicker/build/jquery.datetimepicker.full.js";
+
 $(function() {
+    $.datetimepicker.setLocale("fr");
+
+    // le datetimepicker est mis sur les inputs html
+    $('#maintenance_startingDate , #maintenance_endingDate').datetimepicker({
+        format:'d/m/Y H:i',
+        step: 10,
+        mask: true
+    });
+
+    // rajoute le click sur l'icone calendar
+    $('.datetimepicker').on('click', function(elem) {
+        $(elem.target).prev().datetimepicker('show');
+    });
+
     // Ajout du Tooltip Bootstrap
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
