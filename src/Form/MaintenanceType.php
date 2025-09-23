@@ -82,8 +82,8 @@ class MaintenanceType extends AbstractType
         $endingDate = $value;
 
         if ($startingDate && $endingDate) {
-            if ($endingDate < $startingDate) {
-                $context->buildViolation('La date de fin ne peut pas être antérieure à la date de début.')
+            if ($endingDate <= $startingDate) {
+                $context->buildViolation('La date de fin ne peut pas être antérieure ou égale à la date de début.')
                     ->atPath('endingDate')
                     ->addViolation();
             }

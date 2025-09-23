@@ -5,32 +5,62 @@
  * (and its CSS file) in your base layout (base.html.twig).
  */
 
-import './styles/global.scss';
+require('./styles/global.scss');
 
-import './styles/app.css';
+require('./styles/app.css');
 
-import './styles/font-import-google.css';
-import './styles/font-import-google-2.css';
+require('./styles/font-import-google.css');
+require('./styles/font-import-google-2.css');
 require("jquery-datetimepicker/jquery.datetimepicker.css");
 require('bootstrap-icons/font/bootstrap-icons.min.css');
 // start the Stimulus application
-import './bootstrap';
+require('./stimulus');
 
-import { Tooltip  } from 'bootstrap';
-import $ from 'jquery';
+require('bootstrap');
+require('jquery');
+
+require("jquery-datetimepicker/build/jquery.datetimepicker.full");
+
+import DateFormatter from "php-date-formatter/js/php-date-formatter";
+
+global.DateFormatter = DateFormatter;
 
 global.$ = global.jQuery = $;
-
-import "jquery-datetimepicker/build/jquery.datetimepicker.full.js";
 
 $(function() {
     $.datetimepicker.setLocale("fr");
 
-    // le datetimepicker est mis sur les inputs html
-    $('#maintenance_startingDate , #maintenance_endingDate').datetimepicker({
+    let optionsDtpicker = {
         format:'d/m/Y H:i',
         step: 10,
         mask: true
+    };
+
+    // le datetimepicker est mis sur les inputs html
+    $('input#maintenance_startingDate').datetimepicker({
+        ...optionsDtpicker,
+        onSelectTime: function(ct) {
+            let fmt = new DateFormatter();
+            let jqEnding = $('input#maintenance_endingDate');
+
+            jqEnding.datetimepicker('setOptions', {
+                minDate: fmt.formatDate(ct, 'd/m/Y')
+            });
+
+            let ctstep = new Date(ct);
+            ctstep.setMinutes(ct.getMinutes() + optionsDtpicker.step);
+
+            jqEnding.val(fmt.formatDate(ctstep, 'd/m/Y H:i')).focus();
+
+            $(this).datetimepicker("hide");
+        }
+    })
+
+    $('input#maintenance_endingDate').datetimepicker({
+        ...optionsDtpicker,
+        onSelectTime: function(ct, target) {
+            $(target).blur();
+        }
     });
 
     // rajoute le click sur l'icone calendar
