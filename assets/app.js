@@ -16,7 +16,7 @@ require('bootstrap-icons/font/bootstrap-icons.min.css');
 // start the Stimulus application
 require('./stimulus');
 
-require('bootstrap');
+import { Tooltip } from 'bootstrap';
 require('jquery');
 
 require("jquery-datetimepicker/build/jquery.datetimepicker.full");
