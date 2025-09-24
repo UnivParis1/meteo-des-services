@@ -24,12 +24,12 @@
                     <h6 class="text-end">Début prévu</h6>
                 </div>
                 <div class="col-6">
+                    <div class="text-danger">
+                        {{ form_errors(maintenanceForm.startingDate) }}
+                    </div>
                     {{ form_widget(maintenanceForm.startingDate, {'attr': {'class': 'd-inline form-control rounded', 'style': 'width: 250px;'}}) }}
                     {#{ ajout d'une icone avec des marges négatives pour cliquer sur le calendrier (idem pour endingDate mais je remet pas ce commentaire) }#}
                     <i class="datetimepicker d-inline m-n5 bi bi-calendar"></i>
-                </div>
-                <div class="text-danger">
-                    {{ form_errors(maintenanceForm.startingDate) }}
                 </div>
             </div>
             <div class="row mt-3">
@@ -37,11 +37,11 @@
                     <h6 class="text-end">Fin prévue</h6>
                 </div>
                 <div class="col-6">
-                    {{ form_widget(maintenanceForm.endingDate, {'attr': {'class': 'd-inline form-control rounded', 'style': 'width: 250px;'}}) }}
-                    <i class="datetimepicker d-inline m-n5 bi bi-calendar"></i>
                     <div class="text-danger">
                         {{ form_errors(maintenanceForm.endingDate) }}
                     </div>
+                    {{ form_widget(maintenanceForm.endingDate, {'attr': {'class': 'd-inline form-control rounded', 'style': 'width: 250px;'}}) }}
+                    <i class="datetimepicker d-inline m-n5 bi bi-calendar"></i>
                 </div>
             </div>
             <div class="row mt-3">

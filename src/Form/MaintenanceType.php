@@ -45,8 +45,8 @@ class MaintenanceType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\GreaterThanOrEqual([
-                        'value' => new \DateTime('today'),
-                        'message' => 'La date de début ne peut pas être antérieure à aujourd\'hui.',
+                        'value' => new \DateTime('now'),
+                        'message' => "La date de début ne peut pas être antérieure à l'heure actuelle",
                     ])
                 ],
                 'attr' => [

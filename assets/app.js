@@ -54,7 +54,7 @@ $(function() {
 
             $(this).datetimepicker("hide");
         }
-    })
+    });
 
     $('input#maintenance_endingDate').datetimepicker({
         ...optionsDtpicker,
