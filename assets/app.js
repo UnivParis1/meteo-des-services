@@ -31,7 +31,8 @@ $(function() {
     $.datetimepicker.setLocale("fr");
 
     let optionsDtpicker = {
-        format:'d/m/Y H:i',
+        format:'d / m / Y , H : i',
+        maskFormat: 'd / m / Y , H : i',
         step: 10,
         mask: true
     };
@@ -44,13 +45,13 @@ $(function() {
             let jqEnding = $('input#maintenance_endingDate');
 
             jqEnding.datetimepicker('setOptions', {
-                minDate: fmt.formatDate(ct, 'd/m/Y')
+                minDate: fmt.formatDate(ct, 'd / m / Y')
             });
 
             let ctstep = new Date(ct);
             ctstep.setMinutes(ct.getMinutes() + optionsDtpicker.step);
 
-            jqEnding.val(fmt.formatDate(ctstep, 'd/m/Y H:i')).focus();
+            jqEnding.val(fmt.formatDate(ctstep, 'd / m / Y H : i')).focus();
 
             $(this).datetimepicker("hide");
         }

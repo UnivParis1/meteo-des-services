@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class MaintenanceType extends AbstractType
 {
+    private static string $format = 'dd / MM / yyyy , HH : mm';
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -40,23 +42,23 @@ class MaintenanceType extends AbstractType
             ->add('startingDate', DateTimeType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'format' => 'dd/MM/yyyy HH:mm',
+                'format' => self::$format,
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\GreaterThanOrEqual([
-                        'value' => new \DateTime('now'),
+                        'value' => new DateTime('now'),
                         'message' => "La date de début ne peut pas être antérieure à l'heure actuelle",
                     ])
                 ],
                 'attr' => [
-                    'min' => (new \DateTime('now'))->format('d/m/Y H:i')
+                    'min' => (new DateTime('now'))->format(self::$format)
                 ]
             ])
             ->add('endingDate', DateTimeType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'format' => 'dd/MM/yyyy HH:mm',
+                'format' => self::$format,
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),

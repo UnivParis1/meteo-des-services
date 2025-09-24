@@ -7,49 +7,49 @@
                 <div class="col-3">
                     <h6 class="text-end">Application<span class="text-danger">*</span></h6>
                 </div>
-                <div class="col-6">
-                    {{ form_widget(maintenanceForm.application, {'attr': {'class': 'form-control rounded', 'style': 'width: 250px;'}}) }}
+                <div class="col-6 col-md-3">
+                    {{ form_widget(maintenanceForm.application, {'attr': {'class': 'form-control rounder ps-3'}}) }}
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-3">
                     <h6 class="text-end">État courant<span class="text-danger">*</span></h6>
                 </div>
-                <div class="col-6">
-                    {{ form_widget(maintenanceForm.applicationState, {'attr': {'class': 'form-select rounded', 'style': 'width: 250px;'}}) }}
+                <div class="col-6 col-md-3">
+                    {{ form_widget(maintenanceForm.applicationState, {'attr': {'class': 'form-select rounder ps-3'}}) }}
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-3">
                     <h6 class="text-end">Début prévu</h6>
                 </div>
-                <div class="col-6">
+                <div class="col-6 col-md-3">
                     <div class="text-danger">
                         {{ form_errors(maintenanceForm.startingDate) }}
                     </div>
-                    {{ form_widget(maintenanceForm.startingDate, {'attr': {'class': 'd-inline form-control rounded', 'style': 'width: 250px;'}}) }}
+                    {{ form_widget(maintenanceForm.startingDate, {'attr': {'class': 'd-inline form-control rounded ps-3'}}) }}
                     {#{ ajout d'une icone avec des marges négatives pour cliquer sur le calendrier (idem pour endingDate mais je remet pas ce commentaire) }#}
-                    <i class="datetimepicker d-inline m-n5 bi bi-calendar"></i>
+                    <i class="datetimepicker d-inline m-n4 m-md-n5 bi bi-calendar"></i>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-3">
                     <h6 class="text-end">Fin prévue</h6>
                 </div>
-                <div class="col-6">
+                <div class="col-6 col-md-3">
                     <div class="text-danger">
                         {{ form_errors(maintenanceForm.endingDate) }}
                     </div>
-                    {{ form_widget(maintenanceForm.endingDate, {'attr': {'class': 'd-inline form-control rounded', 'style': 'width: 250px;'}}) }}
-                    <i class="datetimepicker d-inline m-n5 bi bi-calendar"></i>
+                    {{ form_widget(maintenanceForm.endingDate, {'attr': {'class': 'd-inline form-control rounder ps-3'}}) }}
+                    <i class="datetimepicker d-inline m-n4 m-md-n5 bi bi-calendar"></i>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-3">
                     <h6 class="text-end">Détail de la maintenance</h6>
                 </div>
-                <div class="col-6">
-                    {{ form_widget(maintenanceForm.message, {'attr': {'class': 'form-control rounded', 'style': 'width: 250px;'}}) }}
+                <div class="col-6 col-md-3">
+                    {{ form_widget(maintenanceForm.message, {'attr': {'class': 'form-control rounder ps-3'}}) }}
                     <div class="text-danger">
                         {{ form_errors(maintenanceForm.message) }}
                     </div>
