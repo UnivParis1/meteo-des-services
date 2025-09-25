@@ -29,31 +29,33 @@ global.$ = global.jQuery = $;
 
 $(function() {
     $.datetimepicker.setLocale("fr");
+    let format = 'd/m/Y H:i';
+
+    let dtnow = new Date();
+    let minDate = dtnow.getDay() + '/' + dtnow.getMonth() + '/' + dtnow.getFullYear() + ' 00:00';
 
     let optionsDtpicker = {
-        format:'d / m / Y , H : i',
-        maskFormat: 'd / m / Y , H : i',
+        format: format,
+        maskFormat: format,
         step: 10,
-        mask: true
+        mask: true,
+        minDate: minDate
     };
 
     // le datetimepicker est mis sur les inputs html
     $('input#maintenance_startingDate').datetimepicker({
         ...optionsDtpicker,
         onSelectTime: function(ct) {
-            let fmt = new DateFormatter();
-            let jqEnding = $('input#maintenance_endingDate');
+            $(this).datetimepicker("hide");
 
-            jqEnding.datetimepicker('setOptions', {
-                minDate: fmt.formatDate(ct, 'd / m / Y')
-            });
+            let jqEnding = $('input#maintenance_endingDate');
 
             let ctstep = new Date(ct);
             ctstep.setMinutes(ct.getMinutes() + optionsDtpicker.step);
 
-            jqEnding.val(fmt.formatDate(ctstep, 'd / m / Y H : i')).focus();
-
-            $(this).datetimepicker("hide");
+            let fmt = new DateFormatter();
+            jqEnding.val(fmt.formatDate(ctstep, format));
+            jqEnding.focus();
         }
     });
 
@@ -65,7 +67,7 @@ $(function() {
     });
 
     // rajoute le click sur l'icone calendar
-    $('.datetimepicker').on('click', function(elem) {
+    $('false.dtipicker').on('click', function(elem) {
         $(elem.target).prev().datetimepicker('show');
     });
 

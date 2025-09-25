@@ -96,6 +96,11 @@ h6{
     width: 35px;
 }
 
+.meteo-maintenance-errors ul{
+    list-style-type: none;
+    padding-left: 0;
+}
+
 .sun{
     background-color: #C2EBA1;
 }

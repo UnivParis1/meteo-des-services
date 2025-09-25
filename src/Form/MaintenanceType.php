@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class MaintenanceType extends AbstractType
 {
-    private static string $format = 'dd / MM / yyyy , HH : mm';
+    private static string $format = 'dd/MM/yyyy HH:mm';
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -47,7 +47,8 @@ class MaintenanceType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\GreaterThanOrEqual([
-                        'value' => new DateTime('now'),
+                        // formate le temps actuel à la minute pour éviter de faire une comparaison sur les secondes
+                        'value' => new DateTime(new DateTime('now')->format('Y-m-d H:i')),
                         'message' => "La date de début ne peut pas être antérieure à l'heure actuelle",
                     ])
                 ],
