@@ -56,7 +56,7 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('uid');
-        yield ChoiceField::new('roles')->setLabel("Niveau ACL")
+        yield ChoiceField::new('roles')->setLabel("Autorisation d'accès")
                                        ->setFormType(ChoiceType::class)
                                        ->setFormTypeOption("expanded", false)
                                        ->setFormTypeOption("multiple", false)
