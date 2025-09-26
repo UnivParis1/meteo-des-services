@@ -11,6 +11,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class ApplicationCrudController extends AbstractCrudController
 {
@@ -52,17 +56,13 @@ class ApplicationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $array = parent::configureFields($pageName);
+         yield NumberField::new('id')->hideOnIndex()->hideOnForm();
 
         /** @var \EasyCorp\Bundle\EasyAdminBundle\Field\Field */
-        $id = $array[0];
-        $id->hideOnIndex();
+        yield TextField::new('title')->setLabel("Titre de l'application")
+              ->setRequired(true);
 
-        /** @var \EasyCorp\Bundle\EasyAdminBundle\Field\Field */
-        $title = $array[1];
-        $title->setLabel("Titre de l'application");
-
-        $array[2] = ChoiceField::new('state')
+        yield ChoiceField::new('state')
                                   ->setChoices([
                                     'default' => 'default',
                                     'operational' => 'operational',
@@ -72,10 +72,11 @@ class ApplicationCrudController extends AbstractCrudController
                                   ->setLabel("Statut courant");
 
         /** @var \EasyCorp\Bundle\EasyAdminBundle\Field\Field */
-        $isArchived = $array[3];
-        $isArchived->setLabel("Est archivée");
+        yield BooleanField::new('isArchived')->setLabel("Est archivée");
 
-        $array[5] = ChoiceField::new('Categorie')->setChoices([
+        yield TextField::new('description');
+
+        yield ChoiceField::new('Categorie')->setChoices([
             "Communication" => "Communication",
             "Document" => "Document",
             "Vie administrative" => "Vie administrative",
@@ -91,29 +92,27 @@ class ApplicationCrudController extends AbstractCrudController
             "Renater" => "Renater"
         ]);
 
-        /** @var \EasyCorp\Bundle\EasyAdminBundle\Field\Field */
-        $isJson = $array[6];
-        $isJson->setLabel("source JSON")
+        yield BooleanField::new('isFromJson')->setLabel("source JSON")
                ->hideOnIndex()
                ->setHelp("Provenance de la donnée depuis le JSON des applications ENT");
 
-        $array[] = AssociationField::new('users')
+        yield AssociationField::new('users')
                                        ->hideOnIndex()
                                        ->hideOnDetail()
                                        ->hideWhenCreating()
                                        ->hideWhenUpdating();
 
-        $array[] = ChoiceField::new('roles')->setLabel("Niveau ACL")
+        yield ChoiceField::new('roles')->setLabel("Autorisation d'accès")
                                        ->setFormType(ChoiceType::class)
                                        ->setFormTypeOption("expanded", false)
                                        ->setFormTypeOption("multiple", false)
                                        ->setFormTypeOption('mapped', true)
                                        ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // identique à UserCrudController
-                                       ->setChoices(UserRoles::$choix);
+                                       ->setChoices(UserRoles::$choix)
+                                       ->setHelp("définis les autorisations d'accès à l'application de manière hiérarchique (ex: un enseignant a accès aux applications étudiantes, un biatssp aux applications enseignantes...)");
 
-        $array[] = AssociationField::new('tags')
+        yield AssociationField::new('tags')
                                            ->hideOnIndex()
                                            ->setFormTypeOption('disabled', 'disabled');
-        return $array;
     }
 }
