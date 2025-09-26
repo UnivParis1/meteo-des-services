@@ -48,7 +48,7 @@ class MaintenanceType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\GreaterThanOrEqual([
                         // formate le temps actuel à la minute pour éviter de faire une comparaison sur les secondes
-                        'value' => new DateTime(new DateTime('now')->format('Y-m-d H:i')),
+                        'value' => new DateTime((new DateTime('now'))->format('Y-m-d H:i')),
                         'message' => "La date de début ne peut pas être antérieure à l'heure actuelle",
                     ])
                 ],
