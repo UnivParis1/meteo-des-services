@@ -13,7 +13,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-3">
-                    <h6 class="text-end">État courant<span class="text-danger">*</span></h6>
+                    <h6 class="text-end">État pendant l'opération<span class="text-danger">*</span></h6>
                 </div>
                 <div class="col-6 col-xl-3 pe-md-5">
                     {{ form_widget(maintenanceForm.applicationState, {'attr': {'class': 'form-select rounder text-center'}}) }}
@@ -21,7 +21,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-3">
-                    <h6 class="text-end">Début prévu</h6>
+                    <h6 class="text-end">Début prévu<span class="text-danger">*</span></h6>
                 </div>
                 <div class="col-6 col-xl-3 pe-md-5">
                     <div class="text-danger meteo-maintenance-errors">
@@ -34,7 +34,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-3">
-                    <h6 class="text-end">Fin prévue</h6>
+                    <h6 class="text-end">Fin prévue<span class="text-danger">*</span></h6>
                 </div>
                 <div class="col-6 col-xl-3 pe-md-5 me-n4">
                     <div class="text-danger meteo-maintenance-errors">
