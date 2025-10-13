@@ -28,7 +28,7 @@ class ImportJsonCommand extends Command
              ->addOption(name: 'fromENT')
              ->addOption('creerApp')
              ->addArgument('uri', InputArgument::REQUIRED, 'Localisation de la ressource web/filesystem')
-             ->addArgument('jsessionid', InputArgument::OPTIONAL);
+             ->addArgument('bearerFile', InputArgument::REQUIRED);
     }
 
     public function __invoke(InputInterface $input, OutputInterface $output): int
@@ -46,19 +46,20 @@ class ImportJsonCommand extends Command
                 return Command::FAILURE;
             }
 
-            $jsessionid = $input->getArgument('jsessionid');
+            $bearerFile = $input->getArgument('bearerFile');
 
-            if (!$jsessionid) {
-                $output->writeln('Pas de valeur donnée pour le cookie de session');
+            if (! is_file($bearerFile) ) {
+                $output->writeln("Le fichier bearer est absent du chemin pour: $bearerFile");
                 return Command::FAILURE;
             }
+            $bearerContent = file_get_contents($bearerFile);
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $fichier);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['User-Agent: Météo-service application']);
-            curl_setopt($ch, CURLOPT_COOKIE, "JSESSIONID=$jsessionid");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['User-Agent: Météo-service application',
+                                                  "Authorization: Bearer $bearerContent"]);
 
             if(!curl_exec($ch)){
                 die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
