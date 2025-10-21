@@ -6,6 +6,7 @@
  */
 
 require('./styles/global.scss');
+require('./styles/custom_bootstrap.scss');
 
 require('./styles/app.css');
 

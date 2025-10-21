@@ -1,0 +1,30 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/maps";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
+
+// ajout de ce code pour avoir une valeure suplémentaire (80%) ainsi que des breakpoints responsive pour la propriété width (les breakpoints n'existent pas dans bootstrap pour w-*)
+$utilities: map-merge(
+  $utilities,
+  (
+    'width': (
+      property: width,
+      class: w,
+      responsive: true,
+      values: (
+        25: 25%,
+        33: 33%,
+        40: 40%,
+        50: 50%,
+        60: 60%,
+        75: 75%,
+        80: 80%,
+        100: 100%,
+        auto: auto,
+      ),
+    ),
+  )
+);
+
+@import "~bootstrap/scss/utilities/api";
