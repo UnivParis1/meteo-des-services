@@ -19,6 +19,7 @@ require('./stimulus');
 
 import { Tooltip } from 'bootstrap';
 require('jquery');
+require('jquery-stage');
 
 require("jquery-datetimepicker/build/jquery.datetimepicker.full");
 
@@ -27,6 +28,8 @@ import DateFormatter from "php-date-formatter/js/php-date-formatter";
 global.DateFormatter = DateFormatter;
 
 global.$ = global.jQuery = $;
+
+require('./screenlock');
 
 $(function() {
     $.datetimepicker.setLocale("fr");

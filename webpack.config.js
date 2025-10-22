@@ -71,6 +71,15 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
+
+    // ajouter pour demander l'orientation paysage à l'utilisateur.
+    .addLoader({
+        test: /\.(html)$/i,
+        loader: 'html-loader',
+        options: {
+            sources: false
+        }
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();
