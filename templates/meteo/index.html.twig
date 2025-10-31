@@ -7,15 +7,32 @@
                     <a class="link-primary" href="{{ path('admin_user_index') }}">Backoffice gestion de l'application météo </a>
                 </div>
                 {% endif %}
-                <div class="row align-items-center p-0 px-lg-3">
+                {% if is_granted('ROLE_TEACHER') %}
+                <div class="row d-lg-none my-3 justify-content-center">
+                {% block signaler_problemes %}
+                    <a class="col-4 p-0 col-lg-2 p-lg-2" href="{{ path('app_notify_problem') }}">
+                        <button class="btn btn-light p-0 p-lg-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                 fill="currentColor"
+                                 class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                            </svg>
+                            Signaler un problème
+                        </button>
+                    </a>
+                {% endblock %}
+                </div>
+                {% endif %}
+                <div class="row align-items-center justify-content-center p-0 px-lg-3">
                     <div class="col-3 p-0 col-lg-2 ps-lg-2 pe-lg-3 offset-lg-2">
                         {{ form_start(form) }}
                         {{ form_widget(form.searchTerm, {'attr': {'class': 'form-control rounded'}}) }}
                     </div>
-                    <div class="col-3 col-lg-2 pe-lg-5">
+                    <div class="col-4 col-md-3 col-lg-2 pe-lg-5">
                         {{ form_widget(form.selectedState, {'attr': {'class': 'form-select rounded'}}) }}
                     </div>
-                    <div class="col-2 ms-lg-n4">
+                    <div class="col-3 col-md-2">
                         <div class='d-none d-lg-inline fw-light'>Résultats :</div>
                         <div class="d-md-inline-block">
                             {{ form_widget(form.limit, {'attr': {'class': 'form-select rounded'}}) }}
@@ -30,21 +47,10 @@
                         </button>
                         {{ form_end(form) }}
                     </div>
-                    {% if is_granted('ROLE_TEACHER') %}
-                        <div class="col-3 p-0 col-lg-2 p-lg-2 ms-lg-n4">
-                            <a href="{{ path('app_notify_problem') }}">
-                                <button class="btn btn-light p-0 p-lg-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                         fill="currentColor"
-                                         class="bi bi-exclamation-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                    </svg>
-                                    Signaler un problème
-                                </button>
-                            </a>
-                        </div>
-                    {% endif %}
+                    <div class="col-3 d-none d-lg-block">
+                        {#  on fait appel une 2ème fois à ce block pour la gestion du responsive #}
+                        {{ block('signaler_problemes') }}
+                    </div>
                 </div>
             </div>
             <div class="row d-flex justify-content-center mt-3 mt-lg-5">
