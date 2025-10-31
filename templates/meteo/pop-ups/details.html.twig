@@ -1,7 +1,7 @@
 {% if application.title is defined %} <!-- Permet de ne pas charger la pop-up si elle n'a pas été activée -->
     <div class="fixed-top h-100" id="details-modal" aria-hidden="true" tabindex="-1"
          role="dialog" aria-labelledby="details-header">
-        <div id="dialog-box" class="position-absolute top-50 start-50 w-80 w-sm-75 w-xl-60 w-xxl-50 mx-5 translate-middle rounded-2 p-2">
+        <div id="dialog-box" class="position-relative top-50 start-50 w-80 w-sm-75 w-xl-60 w-xxl-50 translate-middle rounded-2 p-2 ms-0 me-5 ms-lg-5">
             <div class="d-flex flex-column pb-1">
                 <div class="d-flex flex-row-reverse">
                     <button id="close-button" class="fs-5 fw-bold m-0 p-0 border-0" onclick="$.fn.hideContent('details-modal')">x</button>

@@ -10,7 +10,7 @@
                 {% if is_granted('ROLE_TEACHER') %}
                 <div class="row d-lg-none my-3 justify-content-center">
                 {% block signaler_problemes %}
-                    <a class="col-4 p-0 col-lg-2 p-lg-2" href="{{ path('app_notify_problem') }}">
+                    <a class="col-4 p-0 col-lg-2" href="{{ path('app_notify_problem') }}">
                         <button class="btn btn-light p-0 p-lg-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                  fill="currentColor"
@@ -29,10 +29,10 @@
                         {{ form_start(form) }}
                         {{ form_widget(form.searchTerm, {'attr': {'class': 'form-control rounded'}}) }}
                     </div>
-                    <div class="col-4 col-md-3 col-lg-2 pe-lg-5">
+                    <div class="col-4 col-md-3 col-lg-2 ps-lg-3 pe-lg-4">
                         {{ form_widget(form.selectedState, {'attr': {'class': 'form-select rounded'}}) }}
                     </div>
-                    <div class="col-3 col-md-2">
+                    <div class="col-3 col-md-2 ps-lg-0 me-lg-3">
                         <div class='d-none d-lg-inline fw-light'>Résultats :</div>
                         <div class="d-md-inline-block">
                             {{ form_widget(form.limit, {'attr': {'class': 'form-select rounded'}}) }}
@@ -47,7 +47,7 @@
                         </button>
                         {{ form_end(form) }}
                     </div>
-                    <div class="col-3 d-none d-lg-block">
+                    <div class="col-3 d-none d-lg-block px-0 ms-lg-n3">
                         {#  on fait appel une 2ème fois à ce block pour la gestion du responsive #}
                         {{ block('signaler_problemes') }}
                     </div>
@@ -60,18 +60,18 @@
                 <div class="col-4 text-center ps-5 col-lg-3 text-lg-end pe-lg-5">
                     <h6>ÉTAT COURANT</h6>
                 </div>
-                <div class="col-3 ps-3 ps-lg-5">
+                <div class="col-3 ps-3 ms-0 ps-lg-5 ms-lg-3">
                     <h6>DERNIÈRE MISE À JOUR</h6>
                 </div>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <div class="col-1 text-center"></div>
-                    <div class="col-1 text-center"></div>
+                    <div class="col-1"></div>
+                    <div class="col-1"></div>
                 {% endif %}
             </div>
             {% if nbPage!=0 %}
                 {% for application in applications %}
-                    <div class="row mt-3 d-flex justify-content-center">
-                        <div class="col-1 col-lg-2 d-flex justify-content-end">
+                    <div class="row mt-3">
+                        <div class="col-1 col-lg-2 d-flex align-items-center justify-content-end">
                             {% if application.nextMaintenance %}
                                 {% set maintenance = application.nextMaintenance %}
 
@@ -88,23 +88,23 @@
                                 </a>
                             {% endif %}
                         </div>
-                        <div class="col-3 overflow-auto" style="height: 25px;">{{ application.title }}</div>
-                            <div class="col-3 col-lg-2 text-center rounded shadow {{ application.state }}">
-
-                            {% set state = application.state %}
-                            {% set txtState = iconsName[state][0] %}
-                            {% set meteoIcone = iconsName[state][2] %}
-                            {% set size = iconsName[state][3] %}
-                            {% set pathD = iconsName[state][4] %}
-
+                        <div class="col-3 ps-0 pe-1 align-content-center">{{ application.title }}</div>
+                        <div class="d-flex col-3 col-lg-2 px-0 align-content-center flex-wrap justify-content-center rounded shadow {{ application.state }}">
+                        {% set state = application.state %}
+                        {% set txtState = iconsName[state][0] %}
+                        {% set meteoIcone = iconsName[state][2] %}
+                        {% set size = iconsName[state][3] %}
+                        {% set pathD = iconsName[state][4] %}
+                            <div class="d-flex pt-0 pt-lg-1 justify-content-start">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="currentColor"
                                         class="bi bi-brightness-high-fill" viewBox="0 0 {{ size }} {{ size }}">
                                     <path d="{{ pathD }}"/>
                                 </svg>
-                                <b>{{ txtState }}</b>
                             </div>
-                        <div class="col-3 text-center">{{ application.lastUpdate is null ? "" : application.lastUpdate|date('d-m-Y H:i') }}</div>
-                        <div class="col-1">
+                            <b>{{ txtState }}</b>
+                        </div>
+                        <div class="col-3 d-flex px-0 justify-content-center align-items-center text-center">{{ application.lastUpdate is null ? "" : application.lastUpdate|date('d-m-Y H:i') }}</div>
+                        <div class="col-1 d-flex align-items-center ps-0">
                             <a class="action" data-toggle="modal" data-target="#details-modal"
                                onclick="$.fn.showDetails('{{ application.id }}')"
                                data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Afficher les détails">
@@ -115,7 +115,7 @@
                                 </svg>
                             </a>
                         </div>
-                        <div class="col-1">
+                        <div class="col-1 d-flex align-items-center ps-0">
                         {% if is_granted('ROLE_ADMIN') %}
                                 <a class="action" href="{{ path('app_edit_application', { 'id' : application.id}) }}"
                                 data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Modifier">

@@ -33,22 +33,10 @@ h6{
     position: relative;
 }
 
-.operational svg{
-    position: absolute; /* Position absolue pour positionner l'élément SVG */
-    top: 10%; /* Éloigner l'élément SVG de 10px du haut de la div */
-    left: 10%;
-}
-
 .unavailable{
     background-color:#F8957F;
     color: #530000;
     position: relative;
-}
-
-.unavailable svg{
-    position: absolute; /* Position absolue pour positionner l'élément SVG */
-    top: 10%; /* Éloigner l'élément SVG de 10px du haut de la div */
-    left: 10%;
 }
 
 .perturbed{
@@ -57,20 +45,9 @@ h6{
     position: relative;
 }
 
-.perturbed svg{
-    position: absolute; /* Position absolue pour positionner l'élément SVG */
-    top: 10%; /* Éloigner l'élément SVG de 10px du haut de la div */
-    left: 10%;
-}
-
 .default{
     color:#112E58;
     position: relative;
-}
-.default svg{
-    position: absolute; /* Position absolue pour positionner l'élément SVG */
-    top: 10%; /* Éloigner l'élément SVG de 10px du haut de la div */
-    left: 10%;
 }
 
 .lien{
