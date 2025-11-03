@@ -75,6 +75,28 @@
                     {% else %}
                         <div class="maintenance-text text-center">Aucune maintenance n'est prévue</div>
                     {% endif %}
+
+                    {% if histories is not empty %}
+                    <div class="pop-up-title fw-bold w-100 mx-auto mb-2 text-center fs-6 mt-3">
+                        Historique des maintenances
+                    </div>
+                    <table class="w-100 mx-auto mt-auto mb-3">
+                             <tr>
+                                <th class="text-center fw-bold" style="color: #473F39;">Date</td>
+                                <th class="text-center fw-bold" style="color: #473F39;">Etat</td>
+                                <th class="text-center fw-bold" style="color: #473F39;">Message</td>
+                                <th class="text-center fw-bold" style="color: #473F39;">Auteur</td>
+                            </tr>
+                            {% for history in histories %}
+                             <tr class="border border-gray-500 border-dotted p-3">
+                                 <td class="text-center" style="color: #473F39;">{{ history.date|date("d/m/Y") }} à {{ history.date|date("H\\Hi") }}</td>
+                                 <td class="text-center" style="color: #473F39;">{{ history.state }}</td>
+                                 <td class="text-center" style="color: #473F39;">{{ history.message }}</td>
+                                 <td class="text-center" style="color: #473F39;">{{ history.author }}</td>
+                             </tr>
+                            {% endfor %}
+                    </table>
+                    {% endif %}
                 </div>
             </div>
         </div>

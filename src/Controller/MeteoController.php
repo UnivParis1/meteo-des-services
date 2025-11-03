@@ -87,8 +87,15 @@ class MeteoController extends AbstractController
     public function updateDetailsPopUp(int $id)
     {
         $application = $this->applicationService->getApplicationById($id);
+        $histories = null;
+
+        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
+            $histories = $application->getHistories();
+        }
+
         return new Response($this->renderView('meteo/pop-ups/details.html.twig', [
             'application' => $this->applicationService->convertToDTO($application, null),
+            'histories' => $histories,
             'iconsName' => $this->iconsName
         ]));
     }
