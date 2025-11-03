@@ -7,7 +7,7 @@
                 <div class="col-3">
                     <h6 class="text-end">Application<span class="text-danger">*</span></h6>
                 </div>
-                <div class="col-6 col-xl-3 pe-md-5">
+                <div class="col-7 col-xl-3 pe-md-5">
                     {{ form_widget(maintenanceForm.application, {'attr': {'class': 'form-control rounder text-center'}}) }}
                 </div>
             </div>
@@ -15,7 +15,7 @@
                 <div class="col-3">
                     <h6 class="text-end">État pendant l'opération<span class="text-danger">*</span></h6>
                 </div>
-                <div class="col-6 col-xl-3 pe-md-5">
+                <div class="col-7 col-xl-3 pe-md-5">
                     {{ form_widget(maintenanceForm.applicationState, {'attr': {'class': 'form-select rounder text-center'}}) }}
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <div class="col-3">
                     <h6 class="text-end">Début prévu<span class="text-danger">*</span></h6>
                 </div>
-                <div class="col-6 col-xl-3 pe-md-5">
+                <div class="col-7 col-xl-3 pe-md-5">
                     <div class="text-danger meteo-maintenance-errors">
                         {{ form_errors(maintenanceForm.startingDate) }}
                     </div>
@@ -36,7 +36,7 @@
                 <div class="col-3">
                     <h6 class="text-end">Fin prévue<span class="text-danger">*</span></h6>
                 </div>
-                <div class="col-6 col-xl-3 pe-md-5 me-n4">
+                <div class="col-7 col-xl-3 pe-md-5 me-n4">
                     <div class="text-danger meteo-maintenance-errors">
                         {{ form_errors(maintenanceForm.endingDate) }}
                     </div>
@@ -48,7 +48,7 @@
                 <div class="col-3">
                     <h6 class="text-end">Détail de la maintenance</h6>
                 </div>
-                <div class="col-6 col-xl-3 pe-md-5">
+                <div class="col-7 col-xl-3 pe-md-5">
                     {{ form_widget(maintenanceForm.message, {'attr': {'class': 'form-control rounder text-center'}}) }}
                     <div class="text-danger">
                         {{ form_errors(maintenanceForm.message) }}
