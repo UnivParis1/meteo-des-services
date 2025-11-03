@@ -1,5 +1,7 @@
 # Meteo up1 : fichiers .lock ignorés
 
+/backups/
+
 /composer.lock
 /symfony.lock
 /*.lock
