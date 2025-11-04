@@ -4,6 +4,25 @@
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/utilities";
 
+$upb:   #FEEFDE;
+$title: #033E79;
+
+$custom-colors: (
+  'custom-upb':   $upb,
+  'custom-title': $title
+);
+
+$utilities: map-merge(
+  $utilities,
+  (
+   "background-color": (
+      property: background-color,
+      class: bg,
+      values: $custom-colors
+    ),
+  )
+);
+
 // ajout de ce code pour avoir une valeure suplémentaire (80%) ainsi que des breakpoints responsive pour la propriété width (les breakpoints n'existent pas dans bootstrap pour w-*)
 $utilities: map-merge(
   $utilities,
