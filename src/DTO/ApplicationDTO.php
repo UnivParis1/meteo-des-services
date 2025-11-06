@@ -2,6 +2,9 @@
 
 namespace App\DTO;
 
+use App\Entity\ApplicationHistory;
+use Doctrine\Common\Collections\Collection;
+
 class ApplicationDTO
 {
     public int $id;
@@ -19,6 +22,8 @@ class ApplicationDTO
     public ?MaintenanceDTO $nextMaintenance = null;
 
     public array $nextMaintenances = [];
+
+    public array $histories = [];
 
     public function __construct(int                $id,
                                 string             $title,
@@ -123,5 +128,23 @@ class ApplicationDTO
         $this->state = $state;
     }
 
+    /**
+     * Get the value of histories
+     */
+    public function getHistories(): array
+    {
+        return $this->histories;
+    }
 
+    /**
+     * Set the value of histories
+     *
+     * @return  self
+     */
+    public function setHistories($histories): static
+    {
+        $this->histories = $histories;
+
+        return $this;
+    }
 }

@@ -150,6 +150,11 @@ class Application
         return $this;
     }
 
+    public function eraseHistories(): static {
+        $this->histories = new ArrayCollection();
+        return $this;
+    }
+
     /**
      * @return Collection<int, Maintenance>
      */

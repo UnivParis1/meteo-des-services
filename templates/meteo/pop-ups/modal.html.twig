@@ -1,17 +1,72 @@
 <div id="details" class="modal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content bg-custom-upb">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content bg-custom-upb border-0">
+			<div class="modal-header border-0">
+				<div id="meteo-icon" class="">
+					<svg xmlns="http://www.w3.org/2000/svg" width="" height="" fill="currentColor" class="bi bi-brightness-high-fill" viewbox="">
+						<path d=""/>
+					</svg>
+				</div>
+				<h5 id="details-title" class="modal-title"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p id="detail-app-msg" class="pop-up-text d-inline-block align-middle text-center fs-6 h-100 overflow-auto"></p>
+				<div>
+					<table class="w-50 mx-auto mt-auto mb-3">
+						<tbody>
+							<tr>
+								<td class="pop-up-title fw-bold text-center m-auto fs-6">Dernière mise à jour</td>
+								<td id="lastUpdate" class="maintenance-text text-center fs-6 fw-bold"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pop-up-title fw-bold w-100 mx-auto mb-2 text-center fs-6">
+						Prochaines maintenances
+					</div>
+					<div id="nomaintenances" class="maintenance-text text-center d-none">Aucune maintenance n'est prévue</div>
+					<table class="w-75 m-auto d-none">
+						<tbody>
+							<tr>
+								<td class="text-center fw-bold" style="color: #473F39;">Date</td>
+								<td class="text-center fw-bold" style="color: #473F39;">Durée</td>
+								<td class="text-center fw-bold" style="color: #473F39;">Etat</td>
+
+							</tr>
+							<tr>
+								<td class="text-center" style="color: #473F39;"></td>
+								<td class="text-center" style="color: #473F39;"></td>
+								<td class="text-center fw-bold text-danger"></td>
+								<td class="text-center" style="color: #473F39;"></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div id="history" class="pop-up-title fw-bold w-100 mx-auto mb-2 text-center fs-6 mt-3 d-none">
+						Historique de l'application
+					</div>
+					<table class="w-100 mx-auto mt-auto mb-3">
+						<tbody>
+							<tr>
+								<th class="text-center fw-bold" style="color: #473F39;">Date
+								</th>
+								<th class="text-center fw-bold" style="color: #473F39;">Etat
+								</th>
+								<th class="text-center fw-bold" style="color: #473F39;">Message
+								</th>
+								<th class="text-center fw-bold" style="color: #473F39;">Auteur
+								</th>
+							</tr>
+							<tr class="border border-gray-500 border-dotted p-3">
+								<td class="text-center" style="color: #473F39;">27/06/2025 à 09H15</td>
+								<td class="text-center" style="color: #473F39;">operational</td>
+								<td class="text-center" style="color: #473F39;"></td>
+								<td class="text-center" style="color: #473F39;">uiduser</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div></div>

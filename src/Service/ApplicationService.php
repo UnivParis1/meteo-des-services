@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\DTO\ApplicationDTO;
+use App\DTO\HistoryDTO;
 use App\Entity\Application;
 use App\Entity\ApplicationHistory;
 use App\Repository\ApplicationHistoryRepository;
@@ -52,7 +53,7 @@ class ApplicationService
         return $array;
     }
 
-    public function convertToDTO(Application $application, ?string $title): ApplicationDTO
+    public function convertToDTO(Application $application, ?string $title, bool $setHistory = false): ApplicationDTO
     {
         $dto = new ApplicationDTO(
             $application->getId(),
@@ -63,6 +64,19 @@ class ApplicationService
         );
         // Ajout des maintenances
         $dto = $this->maintenanceService->setNextMaintenancesOfApplication($dto);
+
+        if ($setHistory) {
+            $histories = $application->getHistories();
+
+            $dtoHistories = [];
+            foreach($histories as $history) {
+                $dtoHistories[] = new HistoryDTO($history->getId(), $application->getId(),
+                                                $history->getType(), $history->getState(),
+                                                $history->getDate(), $history->getAuthor(),
+                                                $history->getMessage());
+            }
+            $dto->setHistories($dtoHistories);
+        }
         return $dto;
     }
 

@@ -101,7 +101,7 @@
                         </div>
                         <div class="col-3 d-flex px-0 justify-content-center align-items-center text-center">{{ application.lastUpdate is null ? "" : application.lastUpdate|date('d-m-Y H:i') }}</div>
                         <div class="col-1 d-flex align-items-center ps-0">
-                            <a class="action" href="#" data-bs-toggle="modal" data-bs-target="#details">
+                            <a class="action" href="#" data-bs-toggle="modal" data-bs-target="#details" applicationid="{{ application.id }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                      class="bi bi-eye-fill" viewBox="0 0 16 16">
                                     <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>

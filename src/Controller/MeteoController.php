@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\SecurityBundle\Security;
+use Doctrine\ORM\EntityManagerInterface;
 
 class MeteoController extends AbstractController
 {
@@ -19,8 +21,9 @@ class MeteoController extends AbstractController
                                'unavailable' => ['Indisponible', 'text-danger' , 'lightning', 16, 'M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1 .395.807l-7 9a.5.5 0 0 1-.873-.454L6.823 9.5H3.5a.5.5 0 0 1-.48-.641z'],
                                'default'     => ['Non renseigné', ''           , 'grey'     , 16, 'M4.475 5.458c-.284 0-.514-.237-.47-.517C4.28 3.24 5.576 2 7.825 2c2.25 0 3.767 1.36 3.767 3.215 0 1.344-.665 2.288-1.79 2.973-1.1.659-1.414 1.118-1.414 2.01v.03a.5.5 0 0 1-.5.5h-.77a.5.5 0 0 1-.5-.495l-.003-.2c-.043-1.221.477-2.001 1.645-2.712 1.03-.632 1.397-1.135 1.397-2.028 0-.979-.758-1.698-1.926-1.698-1.009 0-1.71.529-1.938 1.402-.066.254-.278.461-.54.461h-.777ZM7.496 14c.622 0 1.095-.474 1.095-1.09 0-.618-.473-1.092-1.095-1.092-.606 0-1.087.474-1.087 1.091S6.89 14 7.496 14']
                               ];
-    public function __construct(public ApplicationService $applicationService,
-                                public ApplicationsSorter $applicationsSorter)
+    public function __construct(public  ApplicationService $applicationService,
+                                public  ApplicationsSorter $applicationsSorter,
+                                private Security          $security)
     {
     }
 
@@ -34,6 +37,28 @@ class MeteoController extends AbstractController
         $applications = $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
 
         return new JsonResponse($applications);
+    }
+
+    #[Route('/meteo/api/application/{id}', name: 'api_application_details')]
+    public function api_application_details(int $id, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $application = $this->applicationService->getApplicationById($id);
+
+        $setHistory = false;
+        if ( $this->security->isGranted(current($application->getRoles())) && $this->isGranted('ROLE_SUPER_ADMIN') ) {
+            $setHistory = true;
+        }
+
+        $state = $application->getState();
+        $applicationDTO = $this->applicationService->convertToDTO($application, null, $setHistory);
+
+        if ($applicationDTO->isInMaintenance()) {
+            $state = $applicationDTO->nextMaintenance->state;
+        }
+
+        $data = ['application' => $applicationDTO,
+                 'icone' => $this->iconsName[$state] ];
+        return $this->json($data);
     }
 
     #[Route('/meteo/{page<\d+>?1}', name: 'app_meteo')]
