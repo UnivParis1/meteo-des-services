@@ -34,6 +34,79 @@ function formatDateMtncHisto(date) {
     return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("H") + 'H' + dt.toFormat('m');
 }
 
+function buildDetailsMaintenance(maintenances) {
+    let nomaintenances = $("#details #nomaintenances");
+
+    let tablemtncs = nomaintenances.next();
+    if (maintenances.length == 0) {
+        nomaintenances.removeClass('d-none');
+        tablemtncs.addClass('d-none');
+    } else {
+        nomaintenances.addClass('d-none');
+        tablemtncs.removeClass('d-none');
+
+        let trmtnc = tablemtncs.find('tbody').children().slice(1);
+        let refMtnc = trmtnc[0].cloneNode(true);
+
+        trmtnc.each(function () {
+            this.remove();
+        });
+        // (ré)initialise le visuel pour les maintenances
+
+        let tdsMtnc = refMtnc.children;
+        for (let i = 0; i < maintenances.length; i++) {
+            let maintenance = maintenances[i];
+
+            tdsMtnc[0].textContent = formatDateMtncHisto(maintenance.startingDate);
+            tdsMtnc[1].textContent = maintenance.totalTime;
+            tdsMtnc[2].textContent = maintenance.state;
+
+            let trnode = document.createElement('tr');
+
+            for (let j = 0; j < tdsMtnc.length; j++) {
+                trnode.appendChild(tdsMtnc[j].cloneNode(true));
+            }
+
+            tablemtncs.children().append(trnode);
+        }
+    }
+}
+
+function buildHistories(histories) {
+    let history = $("#details #history");
+    history.removeClass('d-none');
+
+    let tbodyHistory = history.next().find("tbody");
+    let trHistories = tbodyHistory.children().slice(1);
+
+    let trHistory = trHistories[0];
+
+    let trClasses = trHistory.className;
+    let trHistoryRef = trHistory.cloneNode(true);
+    let firstTrTds = trHistoryRef.children;
+
+    trHistories.each(function() {
+        this.remove();
+    });
+
+    for (let i = 0; i < histories.length; i++) {
+        let history = histories[i];
+
+        firstTrTds[0].textContent = formatDateMtncHisto(history.date);
+        firstTrTds[1].textContent = history.state;
+        firstTrTds[2].textContent = history.message;
+        firstTrTds[3].textContent = history.author;
+
+        let trnode = document.createElement('tr');
+        trnode.className = trClasses;
+
+        for (let j = 0; j < firstTrTds.length; j++) {
+            trnode.appendChild(firstTrTds[j].cloneNode(true));
+        }
+        tbodyHistory.append(trnode);
+    }
+}
+
 $(function () {
     const myModalEl = document.getElementById('details');
 
@@ -52,7 +125,6 @@ $(function () {
                     let application = response.application;
                     let icone = response.icone;
                     let title = response.application.title;
-                    let maintenances = response.application.nextMaintenances;
 
                     $('#details #details-title').html(title);
 
@@ -71,74 +143,10 @@ $(function () {
 
                     $('#details #lastUpdate').html(formatDateDetails(application.lastUpdate));
 
-                    let nomaintenances = $("#details #nomaintenances");
+                    buildDetailsMaintenance(application.nextMaintenances);
 
-                    let tablemtncs = nomaintenances.next();
-                    if (maintenances.length == 0) {
-                        nomaintenances.removeClass('d-none');
-                        tablemtncs.addClass('d-none');
-                    } else {
-                        nomaintenances.addClass('d-none');
-                        tablemtncs.removeClass('d-none');
-
-                        let trmtnc=tablemtncs.children().children();
-
-                        let refMtnc = trmtnc[1].cloneNode(true);
-
-                        // (ré)initialise le visuel pour les maintenances
-                        for (let i = 1; i < trmtnc.length; i++) {
-                            trmtnc[i].remove();
-                        }
-
-                        let tdsMtnc = refMtnc.children;
-                        for (let i = 0; i < maintenances.length; i++) {
-                            let maintenance = maintenances[i];
-
-                            tdsMtnc[0].textContent = formatDateMtncHisto(maintenance.startingDate);
-                            tdsMtnc[1].textContent = maintenance.totalTime;
-                            tdsMtnc[2].textContent = maintenance.state;
-
-                            let trnode = document.createElement('tr');
-
-                            for (let j=0; j < tdsMtnc.length; j++) {
-                                trnode.appendChild(tdsMtnc[j].cloneNode(true));
-                            }
-
-                            tablemtncs.children().append(trnode);
-                        }
-
-                        let histories = application.histories;
-
-                        if (histories.length > 0) {
-                            let history = $("#details #history");
-                            history.removeClass('d-none');
-
-                            let trHistory = history.next().children().children().next().get(0);
-                            let trClasses = trHistory.className;
-                            let trHistoryRef = trHistory.cloneNode(true);
-
-                            let tbodyHistory = history.next().find("tbody");
-
-                            let firstTrTds = trHistoryRef.children;
-
-                            trHistory.remove();
-                            for (let i = 0; i < histories.length; i++) {
-                                let history = histories[i];
-
-                                firstTrTds[0].textContent = formatDateMtncHisto(history.date);
-                                firstTrTds[1].textContent = history.state;
-                                firstTrTds[2].textContent = history.message;
-                                firstTrTds[3].textContent = history.author;
-
-                                let trnode = document.createElement('tr');
-                                trnode.className = trClasses;
-
-                                for (let j=0; j < firstTrTds.length; j++) {
-                                    trnode.appendChild(firstTrTds[j].cloneNode(true));
-                                }
-                                tbodyHistory.append(trnode);
-                            }
-                        }
+                    if (application.histories.length > 0) {
+                        buildHistories(application.histories);
                     }
                 },
                 error: function (xhr, status, error) {
