@@ -24,6 +24,114 @@ global.DateFormatter = DateFormatter;
 
 global.$ = global.jQuery = $;
 
+$(function () {
+    const myModalEl = document.getElementById('details');
+
+    if (myModalEl != null) {
+
+        myModalEl.addEventListener('show.bs.modal', event => {
+
+            let applicationId = event.relatedTarget.attributes['applicationid'].value;
+
+            $.ajax({
+                async: false, // obligatoire pour ne pas avoir les champs vides
+                url: '/meteo/api/application/' + applicationId, // renvoie le contenu de la pop-up
+                method: 'GET',
+                success: (response) => successDetail(response),
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            })
+        });
+    }
+
+    $.datetimepicker.setLocale("fr");
+    let format = 'd/m/Y H:i';
+    let dtnow = new Date();
+    let minDate = dtnow.getDay() + '/' + dtnow.getMonth() + '/' + dtnow.getFullYear() + ' 00:00';
+    let optionsDtpicker = {
+        format: format,
+        maskFormat: format,
+        step: 10,
+        mask: true,
+        minDate: minDate
+    };
+
+    // le datetimepicker est mis sur les inputs html
+    $('input#maintenance_startingDate').datetimepicker({
+        ...optionsDtpicker,
+        onSelectTime: function (ct) {
+            $(this).datetimepicker("hide");
+
+            let jqEnding = $('input#maintenance_endingDate');
+
+            let ctstep = new Date(ct);
+            ctstep.setMinutes(ct.getMinutes() + optionsDtpicker.step);
+
+            let fmt = new DateFormatter();
+            jqEnding.val(fmt.formatDate(ctstep, format));
+            jqEnding.focus();
+        }
+    });
+
+    $('input#maintenance_endingDate').datetimepicker({
+        ...optionsDtpicker,
+        onSelectTime: function (ct, target) {
+            $(target).blur();
+        }
+    });
+
+    // rajoute le click sur l'icone calendar
+    $('false.dtipicker').on('click', function (elem) {
+        $(elem.target).prev().datetimepicker('show');
+    });
+
+    // Ajout du Tooltip Bootstrap
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new Tooltip(tooltipTriggerEl)
+    });
+
+    $.fn.confirmDeletion = function (event, url, entityName) {
+        event.preventDefault(); // Empêche la redirection immédiate
+
+        // Affiche la popup de confirmation
+        if (confirm("Êtes-vous sûr de vouloir supprimer cette " + entityName + " ?")) {
+            window.location.href = url; // Redirige l'utilisateur si l'action est confirmée
+        }
+    }
+});
+
+function successDetail(response) {
+    let size = response.icone[3];
+    let application = response.application;
+    let icone = response.icone;
+    let title = response.application.title;
+
+    $('#details #details-title').html(title);
+
+    let meteoIcon = $('#details #meteo-icon');
+    meteoIcon.attr('class', 'm-auto me-3 rounded-circle d-flex align-items-center justify-content-center ' + icone[2]);
+
+    let svg = meteoIcon.children();
+    svg.attr('width', size);
+    svg.attr('height', size);
+    svg.attr('viewBox', "0 0 " + size + ' ' + size);
+
+    let pathd = svg.children();
+    pathd.attr('d', icone[4]);
+
+    $('#details #detail-app-msg').html(application.message);
+
+    $('#details #lastUpdate').html(formatDateDetails(application.lastUpdate));
+
+    buildDetailsMaintenance(application.nextMaintenances);
+
+    if (application.histories.length > 0) {
+        buildHistories(application.histories);
+    }
+}
+
 function formatDateDetails(date) {
     let dt = DateTime.fromISO(date).setLocale('fr');
     return dt.toFormat("EEEE d MMMM yyyy \'à\' HH\'H'\mm");
@@ -85,7 +193,7 @@ function buildHistories(histories) {
     let trHistoryRef = trHistory.cloneNode(true);
     let firstTrTds = trHistoryRef.children;
 
-    trHistories.each(function() {
+    trHistories.each(function () {
         this.remove();
     });
 
@@ -107,155 +215,3 @@ function buildHistories(histories) {
     }
 }
 
-$(function () {
-    const myModalEl = document.getElementById('details');
-
-    if (myModalEl != null) {
-
-        myModalEl.addEventListener('show.bs.modal', event => {
-
-            let applicationId = event.relatedTarget.attributes['applicationid'].value;
-
-            $.ajax({
-                async: false, // obligatoire pour ne pas avoir les champs vides
-                url: '/meteo/api/application/' + applicationId, // renvoie le contenu de la pop-up
-                method: 'GET',
-                success: function (response) {
-                    let size = response.icone[3];
-                    let application = response.application;
-                    let icone = response.icone;
-                    let title = response.application.title;
-
-                    $('#details #details-title').html(title);
-
-                    let meteoIcon = $('#details #meteo-icon');
-                    meteoIcon.attr('class', 'm-auto me-3 rounded-circle d-flex align-items-center justify-content-center ' + icone[2]);
-
-                    let svg = meteoIcon.children();
-                    svg.attr('width', size);
-                    svg.attr('height', size);
-                    svg.attr('viewBox', "0 0 " + size + ' ' + size);
-
-                    let pathd = svg.children();
-                    pathd.attr('d', icone[4]);
-
-                    $('#details #detail-app-msg').html(application.message);
-
-                    $('#details #lastUpdate').html(formatDateDetails(application.lastUpdate));
-
-                    buildDetailsMaintenance(application.nextMaintenances);
-
-                    if (application.histories.length > 0) {
-                        buildHistories(application.histories);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
-            })
-        });
-    }
-
-    $.datetimepicker.setLocale("fr");
-    let format = 'd/m/Y H:i';
-    let dtnow = new Date();
-    let minDate = dtnow.getDay() + '/' + dtnow.getMonth() + '/' + dtnow.getFullYear() + ' 00:00';
-    let optionsDtpicker = {
-        format: format,
-        maskFormat: format,
-        step: 10,
-        mask: true,
-        minDate: minDate
-    };
-
-    // le datetimepicker est mis sur les inputs html
-    $('input#maintenance_startingDate').datetimepicker({
-        ...optionsDtpicker,
-        onSelectTime: function (ct) {
-            $(this).datetimepicker("hide");
-
-            let jqEnding = $('input#maintenance_endingDate');
-
-            let ctstep = new Date(ct);
-            ctstep.setMinutes(ct.getMinutes() + optionsDtpicker.step);
-
-            let fmt = new DateFormatter();
-            jqEnding.val(fmt.formatDate(ctstep, format));
-            jqEnding.focus();
-        }
-    });
-
-    $('input#maintenance_endingDate').datetimepicker({
-        ...optionsDtpicker,
-        onSelectTime: function (ct, target) {
-            $(target).blur();
-        }
-    });
-
-    // rajoute le click sur l'icone calendar
-    $('false.dtipicker').on('click', function (elem) {
-        $(elem.target).prev().datetimepicker('show');
-    });
-
-    // Ajout du Tooltip Bootstrap
-    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new Tooltip(tooltipTriggerEl)
-    });
-
-    $.fn.showDetails = function (applicationId) {
-        // Affecte les éléments de la pop
-        $.ajax({
-            url: '/meteo/application/' + applicationId, // renvoie le contenu de la pop-up
-            method: 'GET',
-            success: function (response) {
-                $('#details-content').html(response);
-                $.fn.disableHomepageActions('main-block');
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }
-
-    $.fn.confirmDeletion = function (event, url, entityName) {
-        event.preventDefault(); // Empêche la redirection immédiate
-
-        // Affiche la popup de confirmation
-        if (confirm("Êtes-vous sûr de vouloir supprimer cette " + entityName + " ?")) {
-            window.location.href = url; // Redirige l'utilisateur si l'action est confirmée
-        }
-    }
-
-    $.fn.hideContent = function (contentId) {
-        const content = document.getElementById(contentId);
-        const classes = content.classList.toString();
-
-        // regex cherchant tous les d-* (d-inline ou d-block par ex)
-        const regex = /\bd-[a-z]+/gi;
-        const matches = classes.match(regex);
-
-        if (matches != null)
-            for (const idx in matches)
-                content.classList.remove(matches[idx]);
-
-        content.classList.add('d-none');
-        $.fn.enableHomepageActions("main-block");
-    }
-
-    // ACTIONS SUR LA PAGE D'ACCUEIL
-    $.fn.disableHomepageActions = function (blockId) {
-        const elem = document.getElementById(blockId);
-
-        elem.classList.add("pe-none");
-        elem.classList.add("opacity-25")
-    }
-
-    $.fn.enableHomepageActions = function (blockId) {
-        const elem = document.getElementById(blockId);
-
-        elem.classList.remove("pe-none");
-        elem.classList.add("opacity-100");
-    }
-
-});
