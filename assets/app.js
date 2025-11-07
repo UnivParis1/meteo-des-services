@@ -139,7 +139,7 @@ function formatDateDetails(date) {
 
 function formatDateMtncHisto(date) {
     let dt = DateTime.fromISO(date).setLocale('fr');
-    return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("H") + 'H' + dt.toFormat('m');
+    return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("HH") + 'H' + dt.toFormat('mm');
 }
 
 function buildDetailsMaintenance(maintenances) {
