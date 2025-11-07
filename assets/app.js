@@ -129,6 +129,8 @@ function successDetail(response) {
 
     if (application.histories.length > 0) {
         buildHistories(application.histories);
+    } else {
+        $("#details #history").addClass('d-none');
     }
 }
 
@@ -184,7 +186,7 @@ function buildHistories(histories) {
     let history = $("#details #history");
     history.removeClass('d-none');
 
-    let tbodyHistory = history.next().find("tbody");
+    let tbodyHistory = history.find("tbody");
     let trHistories = tbodyHistory.children().slice(1);
 
     let trHistory = trHistories[0];

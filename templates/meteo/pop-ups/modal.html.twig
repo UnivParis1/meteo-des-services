@@ -11,7 +11,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<p id="detail-app-msg" class="pop-up-text d-inline-block align-middle text-center fs-6 h-100 overflow-auto"></p>
+				<p id="detail-app-msg" class="pop-up-text d-flex justify-content-center fs-6"></p>
 				<div>
 					<table class="w-50 mx-auto mt-auto mb-3">
 						<tbody>
@@ -42,29 +42,29 @@
 						</tbody>
 					</table>
 
-					<div id="history" class="pop-up-title fw-bold w-100 mx-auto mb-2 text-center fs-6 mt-3 d-none">
-						Historique de l'application
+					<div id="history" class="d-none">
+						<p class="pop-up-title fw-bold mb-2 text-center fs-6 mt-3">Historique de l'application</p>
+						<table class="w-100 mx-auto mt-auto mb-3">
+							<tbody>
+								<tr>
+									<th class="text-center fw-bold" style="color: #473F39;">Date
+									</th>
+									<th class="text-center fw-bold" style="color: #473F39;">Etat
+									</th>
+									<th class="text-center fw-bold" style="color: #473F39;">Message
+									</th>
+									<th class="text-center fw-bold" style="color: #473F39;">Auteur
+									</th>
+								</tr>
+								<tr class="border border-gray-500 border-dotted p-3">
+									<td class="text-center" style="color: #473F39;"></td>
+									<td class="text-center" style="color: #473F39;"></td>
+									<td class="text-center" style="color: #473F39;"></td>
+									<td class="text-center" style="color: #473F39;"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					<table class="w-100 mx-auto mt-auto mb-3">
-						<tbody>
-							<tr>
-								<th class="text-center fw-bold" style="color: #473F39;">Date
-								</th>
-								<th class="text-center fw-bold" style="color: #473F39;">Etat
-								</th>
-								<th class="text-center fw-bold" style="color: #473F39;">Message
-								</th>
-								<th class="text-center fw-bold" style="color: #473F39;">Auteur
-								</th>
-							</tr>
-							<tr class="border border-gray-500 border-dotted p-3">
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
-							</tr>
-						</tbody>
-					</table>
 				</div>
 			</div>
 		</div>
