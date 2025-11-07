@@ -123,7 +123,9 @@ function successDetail(response) {
 
     $('#details #detail-app-msg').html(application.message);
 
-    $('#details #lastUpdate').html(formatDateDetails(application.lastUpdate));
+    if (application.lastUpdate != null) {
+        $('#details #lastUpdate').html(formatDateDetails(application.lastUpdate));
+    }
 
     buildDetailsMaintenance(application.nextMaintenances);
 
