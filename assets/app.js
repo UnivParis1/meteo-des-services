@@ -4,33 +4,36 @@
  * We recommend including the built version of this JavaScript file
  * (and its CSS file) in your base layout (base.html.twig).
  */
-
 require('./styles/global.scss');
 require('./styles/custom_bootstrap.scss');
-
 require('./styles/app.css');
-
 require('./styles/font-import-google.css');
 require('./styles/font-import-google-2.css');
 require("jquery-datetimepicker/jquery.datetimepicker.css");
 require('bootstrap-icons/font/bootstrap-icons.min.css');
-// start the Stimulus application
+
 require('./stimulus');
-
-import { Tooltip } from 'bootstrap';
 require('jquery');
-
 require("jquery-datetimepicker/build/jquery.datetimepicker.full");
 
-import DateFormatter from "php-date-formatter/js/php-date-formatter";
+import { Tooltip } from 'bootstrap';
+import { DateTime } from 'luxon';
+import { DateFormatter } from "php-date-formatter/js/php-date-formatter";
 
 global.DateFormatter = DateFormatter;
 
 global.$ = global.jQuery = $;
 
-import { DateTime } from 'luxon';
-import { app } from './stimulus';
-import { main } from '@popperjs/core';
+function formatDateDetails(date) {
+    let dt = DateTime.fromISO(date).setLocale('fr');
+    return dt.toFormat("EEEE d MMMM yyyy \'à\' HH\'H'\mm");
+}
+
+function formatDateMtncHisto(date) {
+    let dt = DateTime.fromISO(date).setLocale('fr');
+    return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("H") + 'H' + dt.toFormat('m');
+}
+
 $(function () {
     const myModalEl = document.getElementById('details');
 
@@ -66,8 +69,7 @@ $(function () {
 
                     $('#details #detail-app-msg').html(application.message);
 
-                    let dt = DateTime.fromISO(application.lastUpdate).setLocale('fr');
-                    $('#details #lastUpdate').html(dt.toFormat("EEEE d MMMM yyyy \'à\' HH\'H'\mm"));
+                    $('#details #lastUpdate').html(formatDateDetails(application.lastUpdate));
 
                     let nomaintenances = $("#details #nomaintenances");
 
@@ -92,10 +94,7 @@ $(function () {
                         for (let i = 0; i < maintenances.length; i++) {
                             let maintenance = maintenances[i];
 
-                            let dt = DateTime.fromISO(maintenance.startingDate).setLocale('fr');
-                            let startTime = dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("H") + 'H' + dt.toFormat('m');
-
-                            tdsMtnc[0].textContent = startTime;
+                            tdsMtnc[0].textContent = formatDateMtncHisto(maintenance.startingDate);
                             tdsMtnc[1].textContent = maintenance.totalTime;
                             tdsMtnc[2].textContent = maintenance.state;
 
@@ -114,14 +113,31 @@ $(function () {
                             let history = $("#details #history");
                             history.removeClass('d-none');
 
-                            let domHisto = history.next().children().children().next();
-                            let refHisto = domHisto[0].cloneNode(true);
-                            domHisto[0].remove();
+                            let trHistory = history.next().children().children().next().get(0);
+                            let trClasses = trHistory.className;
+                            let trHistoryRef = trHistory.cloneNode(true);
 
+                            let tbodyHistory = history.next().find("tbody");
+
+                            let firstTrTds = trHistoryRef.children;
+
+                            trHistory.remove();
                             for (let i = 0; i < histories.length; i++) {
-                                console.log(histories[i]);
-                            }
+                                let history = histories[i];
 
+                                firstTrTds[0].textContent = formatDateMtncHisto(history.date);
+                                firstTrTds[1].textContent = history.state;
+                                firstTrTds[2].textContent = history.message;
+                                firstTrTds[3].textContent = history.author;
+
+                                let trnode = document.createElement('tr');
+                                trnode.className = trClasses;
+
+                                for (let j=0; j < firstTrTds.length; j++) {
+                                    trnode.appendChild(firstTrTds[j].cloneNode(true));
+                                }
+                                tbodyHistory.append(trnode);
+                            }
                         }
                     }
                 },
