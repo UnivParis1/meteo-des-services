@@ -30,24 +30,20 @@ h6{
 .operational{
     background-color: #C2EBA1;
     color: #004D00;
-    position: relative;
 }
 
 .unavailable{
     background-color:#F8957F;
     color: #530000;
-    position: relative;
 }
 
 .perturbed{
     background-color:#F8CE8E;
     color: #3C1F00;
-    position: relative;
 }
 
 .default{
     color:#112E58;
-    position: relative;
 }
 
 .lien{
@@ -97,7 +93,6 @@ h6{
 .pop-up-text
 {
     font-family: Inter, sans-serif;
-    color: #473F39;
 }
 
 .maintenance-text{

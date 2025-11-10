@@ -89,7 +89,7 @@
                             {% endif %}
                         </div>
                         <div class="col-3 ps-0 pe-1 align-content-center">{{ application.title }}</div>
-                        <div class="d-flex col-3 col-lg-2 px-0 align-content-center flex-wrap justify-content-center rounded shadow {{ application.state }}">
+                        <div class="d-flex col-3 col-lg-2 px-0 align-content-center flex-wrap justify-content-center rounded shadow bg-{{ application.state }}">
                         {% set state = application.state %}
                         {% set txtState = iconsName[state][0] %}
                         {% set meteoIcone = iconsName[state][2] %}
@@ -179,4 +179,9 @@
 
 {% include 'meteo/pop-ups/modal.html.twig' %}
 
+<!--
+    <div id="details-content"> -->
+        <!-- POP-UP page de détail -->
+        {#% include 'meteo/pop-ups/details.html.twig' %#}
+<!--    </div>-->
 {% endblock %}

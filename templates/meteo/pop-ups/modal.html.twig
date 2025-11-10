@@ -13,7 +13,7 @@
 			<div class="modal-body">
 				<p id="detail-app-msg" class="pop-up-text d-flex justify-content-center fs-6"></p>
 				<div>
-					<table class="w-50 mx-auto mt-auto mb-3">
+					<table class="w-80 w-lg-50 mx-auto mt-auto mb-3">
 						<tbody>
 							<tr>
 								<td class="pop-up-title fw-bold text-center m-auto fs-6">Dernière mise à jour</td>
@@ -25,19 +25,17 @@
 						Prochaines maintenances
 					</div>
 					<div id="nomaintenances" class="maintenance-text text-center d-none">Aucune maintenance n'est prévue</div>
-					<table class="w-75 m-auto d-none">
+					<table class="w-90 w-sm-75 m-auto d-none">
 						<tbody>
 							<tr>
-								<td class="text-center fw-bold" style="color: #473F39;">Date</td>
-								<td class="text-center fw-bold" style="color: #473F39;">Durée</td>
-								<td class="text-center fw-bold" style="color: #473F39;">Etat</td>
-
+								<td class="text-center fw-bold">Date</td>
+								<td class="text-center fw-bold">Durée</td>
+								<td class="text-center fw-bold">Etat</td>
 							</tr>
 							<tr>
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center fw-bold text-danger"></td>
-								<td class="text-center" style="color: #473F39;"></td>
+								<td class="text-center"></td>
+								<td class="text-center border-start border-end px-2 text-popuptext"></td>
+								<td id="statemaintenance" class="text-center fw-bold"></td>
 							</tr>
 						</tbody>
 					</table>

@@ -6,10 +6,24 @@
 
 $upb:   #FEEFDE;
 $title: #033E79;
+$popuptext: #473F39;
+$sun: #C2EBA1;
+$cloud: #F8CE8E;
+$lightning: #F8957F;
+$grey: #d3d3d3;
+
 
 $custom-colors: (
   'custom-upb':   $upb,
-  'custom-title': $title
+  'custom-title': $title,
+  'popuptext': $popuptext,
+  'sun' : $sun,
+  'cloud': $cloud,
+  'lightning': $lightning,
+  'grey': $grey,
+  'operational': $sun,
+  'unavailable': $lightning,
+  'perturbed': $cloud,
 );
 
 $utilities: map-merge(
@@ -18,6 +32,17 @@ $utilities: map-merge(
    "background-color": (
       property: background-color,
       class: bg,
+      values: $custom-colors
+    ),
+  )
+);
+
+$utilities: map-merge(
+  $utilities,
+  (
+   "text-color": (
+      property: color,
+      class: text,
       values: $custom-colors
     ),
   )

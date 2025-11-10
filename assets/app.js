@@ -111,7 +111,7 @@ function successDetail(response) {
     $('#details #details-title').html(title);
 
     let meteoIcon = $('#details #meteo-icon');
-    meteoIcon.attr('class', 'm-auto me-3 rounded-circle d-flex align-items-center justify-content-center ' + icone[2]);
+    meteoIcon.attr('class', 'm-auto me-3 rounded-circle d-flex align-items-center justify-content-center ' + 'bg-' + icone[2]);
 
     let svg = meteoIcon.children();
     svg.attr('width', size);
@@ -127,7 +127,7 @@ function successDetail(response) {
         $('#details #lastUpdate').html(formatDateDetails(application.lastUpdate));
     }
 
-    buildDetailsMaintenance(application.nextMaintenances);
+    buildDetailsMaintenance(application.nextMaintenances, icone);
 
     if (application.histories.length > 0) {
         buildHistories(application.histories);
@@ -146,7 +146,7 @@ function formatDateMtncHisto(date) {
     return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("HH") + 'H' + dt.toFormat('mm');
 }
 
-function buildDetailsMaintenance(maintenances) {
+function buildDetailsMaintenance(maintenances, icone) {
     let nomaintenances = $("#details #nomaintenances");
 
     let tablemtncs = nomaintenances.next();
@@ -172,6 +172,8 @@ function buildDetailsMaintenance(maintenances) {
             tdsMtnc[0].textContent = formatDateMtncHisto(maintenance.startingDate);
             tdsMtnc[1].textContent = maintenance.totalTime;
             tdsMtnc[2].textContent = maintenance.state;
+            let stateClasses = 'text-center fw-bold';
+            tdsMtnc[2].className = stateClasses + ' ' + icone[1];
 
             let trnode = document.createElement('tr');
 
