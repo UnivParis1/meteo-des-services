@@ -27,25 +27,6 @@ h6{
     font-size: 13px;
 }
 
-.operational{
-    background-color: #C2EBA1;
-    color: #004D00;
-}
-
-.unavailable{
-    background-color:#F8957F;
-    color: #530000;
-}
-
-.perturbed{
-    background-color:#F8CE8E;
-    color: #3C1F00;
-}
-
-.default{
-    color:#112E58;
-}
-
 .lien{
     text-decoration: none
 }
@@ -69,31 +50,11 @@ h6{
     padding-left: 0;
 }
 
-.sun{
-    background-color: #C2EBA1;
-}
-
-.cloud{
-    background-color: #F8CE8E;
-}
-
-.lightning{
-    background-color: #F8957F;
-}
-
-.grey {
-    background-color: #d3d3d3;
-}
-
 .pop-up-title{
     font-family: Inter, sans-serif;
     color:#033E79;
 }
 
-.pop-up-text
-{
-    font-family: Inter, sans-serif;
-}
 
 .maintenance-text{
     color: #473F39;

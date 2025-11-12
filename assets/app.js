@@ -28,6 +28,8 @@ $(function () {
     const myModalEl = document.getElementById('details');
 
     if (myModalEl != null) {
+        // c'est laid mais on a besoin de charger la réf des classes bootstrap définits dans la modale dès le début (on ne sait pas ce qu'adviendra le dom à terme)
+        global.classListTrStatesForMtncRef = $('#nomaintenances + table td#states').get(0).classList;
 
         myModalEl.addEventListener('show.bs.modal', event => {
 
@@ -102,7 +104,7 @@ $(function () {
     }
 });
 
-function successDetail(response) {
+function successDetail(response)  {
     let size = response.icone[3];
     let application = response.application;
     let icone = response.icone;
@@ -168,12 +170,15 @@ function buildDetailsMaintenance(maintenances, icone) {
         let tdsMtnc = refMtnc.children;
         for (let i = 0; i < maintenances.length; i++) {
             let maintenance = maintenances[i];
+            let stateClasses = Array.from(classListTrStatesForMtncRef);
+            stateClasses.push(icone[1]);
 
             tdsMtnc[0].textContent = formatDateMtncHisto(maintenance.startingDate);
             tdsMtnc[1].textContent = maintenance.totalTime;
             tdsMtnc[2].textContent = maintenance.state;
-            let stateClasses = 'text-center fw-bold';
-            tdsMtnc[2].className = stateClasses + ' ' + icone[1];
+
+            // équivalent de impode en php ...
+            tdsMtnc[2].classList.value = stateClasses.join(' ');
 
             let trnode = document.createElement('tr');
 
