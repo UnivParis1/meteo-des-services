@@ -40,7 +40,7 @@ class MeteoController extends AbstractController
     }
 
     #[Route('/meteo/api/application/{id}', name: 'api_application_details')]
-    public function api_application_details(int $id, EntityManagerInterface $entityManager): JsonResponse
+    public function api_application_details(int $id): JsonResponse
     {
         $application = $this->applicationService->getApplicationById($id);
 

@@ -125,9 +125,7 @@ function successDetail(response)  {
 
     $('#details #detail-app-msg').html(application.message);
 
-    if (application.lastUpdate != null) {
-        $('#details #lastUpdate').html(formatDateDetails(application.lastUpdate));
-    }
+    $('#details #lastUpdate').html(application.lastUpdate ? formatDateDetails(application.lastUpdate) : '');
 
     buildDetailsMaintenance(application.nextMaintenances, icone);
 
