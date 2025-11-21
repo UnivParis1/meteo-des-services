@@ -16,11 +16,9 @@ require('./stimulus');
 require('jquery');
 require("jquery-datetimepicker/build/jquery.datetimepicker.full");
 
+import DateFormatter from "php-date-formatter/js/php-date-formatter.min";
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
-import { DateFormatter } from "php-date-formatter/js/php-date-formatter";
-
-global.DateFormatter = DateFormatter;
 
 global.$ = global.jQuery = $;
 
@@ -190,10 +188,10 @@ function buildDetailsMaintenance(maintenances, icone) {
 }
 
 function buildHistories(histories) {
-    let history = $("#details #history");
-    history.removeClass('d-none');
+    let historyElem = $("#details #history");
+    historyElem.removeClass('d-none');
 
-    let tbodyHistory = history.find("tbody");
+    let tbodyHistory = historyElem.find("tbody");
     let trHistories = tbodyHistory.children().slice(1);
 
     let trHistory = trHistories[0];
@@ -213,6 +211,7 @@ function buildHistories(histories) {
         firstTrTds[1].textContent = history.state;
         firstTrTds[2].textContent = history.message;
         firstTrTds[3].textContent = history.author;
+        firstTrTds[4].textContent = history.isMaintenance ? 'Maintenance' : 'Hors maintenance';
 
         let trnode = document.createElement('tr');
         trnode.className = trClasses;

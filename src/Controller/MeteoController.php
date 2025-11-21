@@ -50,7 +50,7 @@ class MeteoController extends AbstractController
         }
 
         $state = $application->getState();
-        $applicationDTO = $this->applicationService->convertToDTO($application, null, $setHistory);
+        $applicationDTO = $this->applicationService->convertToDTO($application, null, $setHistory, $setHistory);
 
         if ($applicationDTO->isInMaintenance()) {
             $state = $applicationDTO->nextMaintenance->state;

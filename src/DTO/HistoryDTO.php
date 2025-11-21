@@ -18,8 +18,9 @@ class HistoryDTO
 
     public string $author;
 
+    public bool $isMaintenance = false;
 
-    public function __construct(int $id, int $application_id, string $type, string $state, \DateTimeInterface $date, string $author, ?string $message)   {
+    public function __construct(int $id, int $application_id, string $type, string $state, \DateTimeInterface $date, string $author, ?string $message, $isMaintenance = false)   {
         $this->id = $id;
         $this->application_id = $application_id;
         $this->type = $type;
@@ -27,6 +28,7 @@ class HistoryDTO
         $this->date = $date;
         $this->author = $author;
         $this->message = $message;
+        $this->isMaintenance = $isMaintenance;
     }
 
     /**
@@ -165,6 +167,26 @@ class HistoryDTO
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of isMaintenance
+     */
+    public function getIsMaintenance()
+    {
+        return $this->isMaintenance;
+    }
+
+    /**
+     * Set the value of isMaintenance
+     *
+     * @return  self
+     */
+    public function setIsMaintenance($isMaintenance)
+    {
+        $this->isMaintenance = $isMaintenance;
 
         return $this;
     }

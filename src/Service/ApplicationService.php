@@ -4,24 +4,28 @@ namespace App\Service;
 
 use App\DTO\ApplicationDTO;
 use App\DTO\HistoryDTO;
+use App\DTO\MaintenanceDTO;
 use App\Entity\Application;
 use App\Entity\ApplicationHistory;
 use App\Repository\ApplicationHistoryRepository;
 use App\Repository\ApplicationRepository;
 use App\Repository\TagsRepository;
+use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\SecurityBundle\Security;
+
 class ApplicationService
 {
 
-    public function __construct(public  ApplicationRepository        $applicationRepository,
-                                public  TagsRepository               $tagsRepository,
-                                public  ApplicationHistoryRepository $applicationHistoryRepository,
-                                public  MaintenanceService           $maintenanceService,
-                                private Security                     $security
-                                )
-    {
-    }
+    public function __construct(
+        public  ApplicationRepository        $applicationRepository,
+        public  TagsRepository               $tagsRepository,
+        public  ApplicationHistoryRepository $applicationHistoryRepository,
+        public  MaintenanceService           $maintenanceService,
+        private UserRepository               $userRepository,
+        private Security                     $security
+    ) {}
 
     public function createApplicationFromMeteoDesServices(Application $application): void
     {
@@ -53,7 +57,20 @@ class ApplicationService
         return $array;
     }
 
-    public function convertToDTO(Application $application, ?string $title, bool $setHistory = false): ApplicationDTO
+    private static function sortDateHistoriesDTO($histories)
+    {
+        $values = $histories;
+        usort($values, static function (HistoryDTO $a, HistoryDTO $b): int {
+            if ($a->getDate()->getTimestamp() === $b->getDate()->getTimestamp()) {
+                return 0;
+            }
+
+            return $a->getDate()->getTimestamp() > $b->getDate()->getTimestamp() ? -1 : 1;
+        });
+
+        return $values;
+    }
+    public function convertToDTO(Application $application, ?string $title, bool $setHistory = false, $addMaintenancesToHistories = false): ApplicationDTO
     {
         $dto = new ApplicationDTO(
             $application->getId(),
@@ -69,13 +86,49 @@ class ApplicationService
             $histories = $application->getHistories();
 
             $dtoHistories = [];
-            foreach($histories as $history) {
-                $dtoHistories[] = new HistoryDTO($history->getId(), $application->getId(),
-                                                $history->getType(), $history->getState(),
-                                                $history->getDate(), $history->getAuthor(),
-                                                $history->getMessage());
+            foreach ($histories as $history) {
+                $dtoHistories[] = new HistoryDTO(
+                    $history->getId(),
+                    $application->getId(),
+                    $history->getType(),
+                    $history->getState(),
+                    $history->getDate(),
+                    $this->userRepository->findOneByUid($history->getAuthor())->getDisplayName(),
+                    $history->getMessage(),
+                    false
+                );
             }
-            $dto->setHistories($dtoHistories);
+            if (! $addMaintenancesToHistories) {
+                $dto->setHistories(self::sortDateHistoriesDTO($dtoHistories));
+            }
+        }
+
+        if ($addMaintenancesToHistories) {
+            $maintenances = $application->getMaintenances();
+
+            foreach ($maintenances as $maintenance) {
+                $maintenanceHistories = $maintenance->getMaintenanceHistories();
+
+                if (count($maintenanceHistories) > 0) {
+                    $lastIdMaintenance = $maintenanceHistories->get(0);
+                    foreach ($maintenanceHistories as $maintenanceHistory) {
+                        if ($maintenanceHistory->getId() > $lastIdMaintenance->getId())
+                            $lastIdMaintenance = $maintenanceHistory;
+                    }
+
+                    $dtoHistories[] = new HistoryDTO(
+                        $lastIdMaintenance->getId(),
+                        $lastIdMaintenance->getMaintenance()->getId(),
+                        $lastIdMaintenance->getType(),
+                        $lastIdMaintenance->getApplicationState(),
+                        $lastIdMaintenance->getStartingDate(),
+                        $this->userRepository->findOneByUid($lastIdMaintenance->getAuthor())->getDisplayName(),
+                        $lastIdMaintenance->getMessage(),
+                        true
+                    );
+                }
+            }
+            $dto->setHistories(self::sortDateHistoriesDTO($dtoHistories));
         }
         return $dto;
     }
