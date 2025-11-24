@@ -79,6 +79,18 @@ class ApplicationDTO
     }
 
     /**
+     * Set the value of lastUpdate
+     *
+     * @return  self
+     */
+    public function setLastUpdate($lastUpdate): static
+    {
+        $this->lastUpdate = $lastUpdate;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getNextMaintenances(): array

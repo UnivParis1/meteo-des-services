@@ -72,12 +72,14 @@ class ApplicationService
     }
     public function convertToDTO(Application $application, ?string $title, bool $setHistory = false, $addMaintenancesToHistories = false): ApplicationDTO
     {
+        $appLastUpdate = $application->getLastUpdate();
+
         $dto = new ApplicationDTO(
             $application->getId(),
             $title == null ? $application->getTitle() : $title,
             $application->getState(),
             ($application->getMessage() == null ? "" : $application->getMessage()), // Handle null case
-            $application->getLastUpdate()
+            $appLastUpdate
         );
         // Ajout des maintenances
         $dto = $this->maintenanceService->setNextMaintenancesOfApplication($dto);
@@ -128,7 +130,18 @@ class ApplicationService
                     );
                 }
             }
-            $dto->setHistories(self::sortDateHistoriesDTO($dtoHistories));
+
+            $dtoHistoSorted = self::sortDateHistoriesDTO($dtoHistories);
+            $dto->setHistories($dtoHistoSorted);
+
+            if (\count($dtoHistories) > 0) {
+                $lastDtoHistory = end($dtoHistories);
+                $lastDateMtnc = $lastDtoHistory->getDate();
+
+                if ($lastDateMtnc > $appLastUpdate) {
+                    $dto->setLastUpdate($lastDateMtnc);
+                }
+            }
         }
         return $dto;
     }
