@@ -70,7 +70,7 @@ class ApplicationService
 
         return $values;
     }
-    public function convertToDTO(Application $application, ?string $title, bool $setHistory = false, $addMaintenancesToHistories = false): ApplicationDTO
+    public function convertToDTO(Application $application, ?string $title, bool $setHistory = true, $addMaintenancesToHistories = true): ApplicationDTO
     {
         $appLastUpdate = $application->getLastUpdate();
 

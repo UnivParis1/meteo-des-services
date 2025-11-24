@@ -44,16 +44,16 @@ class MeteoController extends AbstractController
     {
         $application = $this->applicationService->getApplicationById($id);
 
-        $setHistory = false;
-        if ( $this->security->isGranted(current($application->getRoles())) && $this->isGranted('ROLE_SUPER_ADMIN') ) {
-            $setHistory = true;
-        }
-
         $state = $application->getState();
-        $applicationDTO = $this->applicationService->convertToDTO($application, null, $setHistory, $setHistory);
+        $applicationDTO = $this->applicationService->convertToDTO($application, null);
 
         if ($applicationDTO->isInMaintenance()) {
             $state = $applicationDTO->nextMaintenance->state;
+        }
+
+        // supprime l'historique de l'objet DTO si l'utilisateur n'est pas superviseur
+        if ( ! $this->isGranted('ROLE_SUPER_ADMIN') ) {
+            $applicationDTO->setHistories([]);
         }
 
         $data = ['application' => $applicationDTO,
