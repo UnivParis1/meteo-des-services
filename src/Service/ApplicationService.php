@@ -125,7 +125,7 @@ class ApplicationService
                         $lastIdMaintenance->getMaintenance()->getId(),
                         $lastIdMaintenance->getType(),
                         $lastIdMaintenance->getApplicationState(),
-                        $lastIdMaintenance->getStartingDate(),
+                        $lastIdMaintenance->getDate(),
                         $this->userRepository->findOneByUid($lastIdMaintenance->getAuthor())->getDisplayName(),
                         $lastIdMaintenance->getMessage(),
                         true
