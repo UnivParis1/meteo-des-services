@@ -5,12 +5,11 @@ namespace App\Entity;
 use App\Repository\MaintenanceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Schema\View;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MaintenanceRepository::class, readOnly: true)]
-#[ORM\Table(name:"view_maintenance_encours")]
+#[ORM\Table(name: 'view_maintenance_encours')]
 class ViewMaintenanceEnCours
 {
     #[ORM\Id]

@@ -5,20 +5,19 @@ namespace App\Service;
 use App\Entity\User;
 use App\Model\UserRoles;
 use App\Repository\UserRepository;
-use stdClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class UserService
 {
-    public function __construct(private UserRepository $userRepository,private ContainerBagInterface $params, private Securizer $securizer)
+    public function __construct(private UserRepository $userRepository, private ContainerBagInterface $params, private Securizer $securizer)
     {
     }
 
-    public function createUser($uid): User {
+    public function createUser($uid): User
+    {
         $infos = $this->requestUidInfo($uid);
 
-        if ($infos === null) {
+        if (null === $infos) {
             $user = $this->userRepository->createUser($uid, null, null, null);
         } else {
             $user = $this->userRepository->createUser($uid, $infos->displayName ?? null, $infos->mail ?? null, $infos->eduPersonAffiliation ?? null);
@@ -27,25 +26,29 @@ class UserService
         return $user;
     }
 
-    public function updateUserRequestInfos(User $user): User {
+    public function updateUserRequestInfos(User $user): User
+    {
         $infos = $this->requestUidInfo($user->getUid());
 
-        if (!$infos)
-            return $user; 
-
-        $infos->displayName == null ?: $user->setDisplayName($infos->displayName);
-        !(isset($infos->mail) && $infos->mail !== null) ?: $user->setMail($infos->mail);
-
-        if ( ! (isset($infos->eduPersonAffiliation) && $infos->eduPersonAffiliation !== null) )
+        if (!$infos) {
             return $user;
+        }
+
+        null == $infos->displayName ?: $user->setDisplayName($infos->displayName);
+        !(isset($infos->mail) && null !== $infos->mail) ?: $user->setMail($infos->mail);
+
+        if (!(isset($infos->eduPersonAffiliation) && null !== $infos->eduPersonAffiliation)) {
+            return $user;
+        }
 
         $user->setEduPersonAffiliations($infos->eduPersonAffiliation);
 
         foreach ($infos->eduPersonAffiliation as $affiliation) {
-            if (!isset(UserRoles::$choix[$affiliation]))
+            if (!isset(UserRoles::$choix[$affiliation])) {
                 continue;
+            }
 
-            if (! $this->securizer->isGranted($user, UserRoles::$choix[$affiliation])) {
+            if (!$this->securizer->isGranted($user, UserRoles::$choix[$affiliation])) {
                 $user->setRoles([UserRoles::$choix[$affiliation]]);
                 break;
             }
@@ -54,10 +57,11 @@ class UserService
         return $user;
     }
 
-    private function requestUidInfo(string $uid, $attrs = ['uid', 'displayName', 'mail', 'eduPersonAffiliation']): ?stdClass {
+    private function requestUidInfo(string $uid, $attrs = ['uid', 'displayName', 'mail', 'eduPersonAffiliation']): ?\stdClass
+    {
         $urlwsgroup = $this->params->get('urlwsgroup_user_infos');
 
-        $url = "$urlwsgroup?token=$uid&maxRows=1&attrs=". implode(',', $attrs);
+        $url = "$urlwsgroup?token=$uid&maxRows=1&attrs=".implode(',', $attrs);
 
         $fd = fopen($url, 'r');
         $ajaxReturn = stream_get_contents($fd);
@@ -80,25 +84,25 @@ class UserService
         return null;
     }
 
-    public function searchUserOrGroup(string $search, $attrs=['uid','mail','displayName','cn','employeeType','departmentNumber','eduPersonPrimaryAffiliation','supannEntiteAffectation-ou','supannRoleGenerique','supannEtablissement']): ?array {
+    public function searchUserOrGroup(string $search, $attrs = ['uid', 'mail', 'displayName', 'cn', 'employeeType', 'departmentNumber', 'eduPersonPrimaryAffiliation', 'supannEntiteAffectation-ou', 'supannRoleGenerique', 'supannEtablissement']): ?array
+    {
         $urlwsgroup = $this->params->get('urlwsgroup_user_infos');
 
         // recopié depuis creneaux (recherche utilisateur ou groupes)
-        $url = "https://wsgroups.univ-paris1.fr/search?maxRows=10&user_attrs=". implode(',', $attrs) ."&filter_category=groups&filter_group_cn=employees.*&filter_eduPersonAffiliation=teacher|researcher|staff|emeritus&token=$search";
+        $url = 'https://wsgroups.univ-paris1.fr/search?maxRows=10&user_attrs='.implode(',', $attrs)."&filter_category=groups&filter_group_cn=employees.*&filter_eduPersonAffiliation=teacher|researcher|staff|emeritus&token=$search";
 
         $fd = fopen($url, 'r');
         $ajaxReturn = stream_get_contents($fd);
         fclose($fd);
 
-        $stdResponse= json_decode($ajaxReturn);
+        $stdResponse = json_decode($ajaxReturn);
 
         if (is_array($stdResponse->users) && count($stdResponse->users) > 0) {
             // vérifier uid,displayName et mail présent
-            return $stdResponse->users; //$stdResponse->users;
-        }
-        elseif (is_array($stdResponse->groups) && count($stdResponse->groups) > 0) {
+            return $stdResponse->users; // $stdResponse->users;
+        } elseif (is_array($stdResponse->groups) && count($stdResponse->groups) > 0) {
             foreach ($stdResponse->groups as $group) {
-                if ($group->category == "groups_structures") {
+                if ('groups_structures' == $group->category) {
                     $groupSearch = $group->key;
                     $urlRecuperationsMails = "https://wsgroups.univ-paris1.fr/searchUser?key=$groupSearch&filter_member_of_group=$groupSearch&filter_mail=*&maxRows=100&attrs=uid%2CdisplayName%2Cmail";
                     $fd = fopen($urlRecuperationsMails, 'r');
@@ -116,9 +120,9 @@ class UserService
         return null;
     }
 
-    public function createOrUpdateUserRole(stdClass $userStd, string $role) : void
+    public function createOrUpdateUserRole(\stdClass $userStd, string $role): void
     {
-        $user = $this->userRepository->findOneBy(["uid" => $userStd->uid]) ?? $this->userRepository->createUser($userStd->uid, $userStd->displayName, $userStd->mail, null);
+        $user = $this->userRepository->findOneBy(['uid' => $userStd->uid]) ?? $this->userRepository->createUser($userStd->uid, $userStd->displayName, $userStd->mail, null);
 
         $user->setRoles([$role]);
         $this->userRepository->updateUser($user);

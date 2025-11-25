@@ -2,11 +2,9 @@
 
 namespace App\Form\Extension;
 
-use App\Model\UserRoles;
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ChoiceTypeExtension extends AbstractTypeExtension
 {
@@ -17,10 +15,10 @@ class ChoiceTypeExtension extends AbstractTypeExtension
 
     public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder, array $options): void
     {
-        if (isset($options['extra_options']['meteoAdminChoiceExtension']) && $options['extra_options']['meteoAdminChoiceExtension'] == true) {
+        if (isset($options['extra_options']['meteoAdminChoiceExtension']) && true == $options['extra_options']['meteoAdminChoiceExtension']) {
             $builder->addModelTransformer(new CallbackTransformer(
-                fn ($rolesAsArray):?string => count($rolesAsArray) ? implode(',', $rolesAsArray): null,
-                fn ($rolesAsString):array => explode(',', $rolesAsString)
+                fn ($rolesAsArray): ?string => count($rolesAsArray) ? implode(',', $rolesAsArray) : null,
+                fn ($rolesAsString): array => explode(',', $rolesAsString)
             ));
         }
     }

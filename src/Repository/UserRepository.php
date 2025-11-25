@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -13,36 +13,34 @@ use Doctrine\ORM\EntityManagerInterface;
 class UserRepository extends ServiceEntityRepository
 {
     public function __construct(private ManagerRegistry $registry,
-                               private EntityManagerInterface $em)
+        private EntityManagerInterface $em)
     {
         parent::__construct($registry, User::class);
     }
 
     public function createUser(string $uid, ?string $displayName, ?string $mail, ?array $eduPersonAffiliations): User
     {
-            $u = new User();
-            $u->setUid($uid);
+        $u = new User();
+        $u->setUid($uid);
 
-            $u->setMail($mail);
-            $u->setDisplayName($displayName);
-            $u->setEduPersonAffiliations($eduPersonAffiliations);
+        $u->setMail($mail);
+        $u->setDisplayName($displayName);
+        $u->setEduPersonAffiliations($eduPersonAffiliations);
 
-            $em = $this->getEntityManager();
-            $em->persist($u);
-            $em->flush();
+        $em = $this->getEntityManager();
+        $em->persist($u);
+        $em->flush();
 
         return $u;
     }
+
     public function updateUser(User $user): User
     {
         $this->em->flush();
+
         return $user;
     }
 
-    /**
-     * @param User $user
-     * @return User|null
-     */
     public function findOne(User $user): ?User
     {
         return $this->createQueryBuilder('u')

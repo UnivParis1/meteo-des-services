@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
+use App\EventListener\ApplicationChangerNotifier;
 use App\Repository\ApplicationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\EventListener\ApplicationChangerNotifier;
-use Doctrine\DBAL\Schema\Column;
 
 #[ORM\Entity(repositoryClass: ApplicationRepository::class)]
 #[ORM\EntityListeners([ApplicationChangerNotifier::class])]
@@ -59,11 +58,11 @@ class Application
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'applications')]
     private Collection $users;
 
-     /**
+    /**
      * @var list<string> The roles authorized
      */
     #[ORM\Column]
-    private array $roles = ["ROLE_TEACHER"];
+    private array $roles = ['ROLE_TEACHER'];
 
     /**
      * @var Collection<int, Tags>
@@ -150,8 +149,10 @@ class Application
         return $this;
     }
 
-    public function eraseHistories(): static {
+    public function eraseHistories(): static
+    {
         $this->histories = new ArrayCollection();
+
         return $this;
     }
 
@@ -189,15 +190,17 @@ class Application
     {
         $histories = $this->getHistories();
 
-        if (sizeof($histories) == 0)
+        if (0 == sizeof($histories)) {
             return null;
+        }
 
         $lastUpdate = $histories[0]->getDate();
         foreach ($histories as $history) {
-            if ($lastUpdate == null || $history->getDate() > $lastUpdate) {
+            if (null == $lastUpdate || $history->getDate() > $lastUpdate) {
                 $lastUpdate = $history->getDate();
             }
         }
+
         return $lastUpdate;
     }
 
@@ -311,7 +314,7 @@ class Application
     {
         $roles = $this->roles;
 
-        if (count($roles) == 0) {
+        if (0 == count($roles)) {
             // guarantee every user at least has ROLE_STUDENT
             $roles[] = 'ROLE_TEACHER';
         }

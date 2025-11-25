@@ -15,7 +15,7 @@ class ApplicationHistory
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'histories')]
-    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Application $application = null;
 
     #[ORM\Column(length: 255)]

@@ -3,12 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use App\EventListener\UserListener;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['uid'])]
@@ -45,8 +44,8 @@ class User implements UserInterface
     private Collection $applications;
 
     /**
-    * @var list<string> The user eduPersonAffiliations
-    */
+     * @var list<string> The user eduPersonAffiliations
+     */
     #[ORM\Column]
     private array $eduPersonAffiliations = ['student'];
 
@@ -55,9 +54,11 @@ class User implements UserInterface
         $this->applications = new ArrayCollection();
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->uid;
     }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,7 +95,7 @@ class User implements UserInterface
     {
         $roles = $this->roles;
 
-        if (count($roles) == 0) {
+        if (0 == count($roles)) {
             // guarantee every user at least has ROLE_STUDENT
             $roles[] = 'ROLE_STUDENT';
         }
@@ -191,12 +192,13 @@ class User implements UserInterface
      */
     public function getEduPersonAffiliations(): ?array
     {
-        if ( ! isset($this->eduPersonAffiliations))
-           return null;
+        if (!isset($this->eduPersonAffiliations)) {
+            return null;
+        }
 
         $eduPersonAffiliations = $this->eduPersonAffiliations;
 
-        if (count($eduPersonAffiliations) == 0) {
+        if (0 == count($eduPersonAffiliations)) {
             // guarantee every user at least has eduPersonAffiliation_STUDENT
             $eduPersonAffiliations[] = 'student';
         }

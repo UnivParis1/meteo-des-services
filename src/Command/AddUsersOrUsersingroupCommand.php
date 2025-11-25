@@ -7,7 +7,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -25,7 +24,7 @@ class AddUsersOrUsersingroupCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('userorgroup', InputArgument::REQUIRED, "User à rajouter ou Groupe d'utilisateurs");
-        $this->addArgument('role', InputArgument::REQUIRED, "Role assigné a(aux) utilisateur(s)");
+        $this->addArgument('role', InputArgument::REQUIRED, 'Role assigné a(aux) utilisateur(s)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -36,13 +35,14 @@ class AddUsersOrUsersingroupCommand extends Command
 
         if (!$userorgroup) {
             $io->error("Pas d'utilisateur ou de Groupe fourni");
+
             return Command::INVALID;
         }
 
         $users = $this->userService->searchUserOrGroup($userorgroup);
 
         if ($users && count($users) > 0) {
-            foreach($users as $user) {
+            foreach ($users as $user) {
                 $io->info("Ajout ou Mise à jour de {$user->uid}");
                 $this->userService->createOrUpdateUserRole($user, $role);
             }
@@ -53,7 +53,7 @@ class AddUsersOrUsersingroupCommand extends Command
         }
 
         $io->error("Pas d'utilisateurs importés");
-        return Command::INVALID;
 
+        return Command::INVALID;
     }
 }

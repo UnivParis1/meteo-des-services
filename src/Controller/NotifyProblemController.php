@@ -5,19 +5,19 @@ namespace App\Controller;
 use App\Form\NotifyProblemFormType;
 use App\Model\NotifyProblem;
 use App\Repository\ApplicationRepository;
-use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NotifyProblemController extends AbstractController
 {
-    public function __construct(private ApplicationRepository $applicationRepository) {}
+    public function __construct(private ApplicationRepository $applicationRepository)
+    {
+    }
 
     /**
      * @throws TransportExceptionInterface
@@ -29,19 +29,19 @@ class NotifyProblemController extends AbstractController
 
         $form = $this->createForm(NotifyProblemFormType::class, $problem);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $application = $this->applicationRepository->findOneBy(['title' => $problem->title]);
 
-            if ($application == null)
-                throw new Exception("Veuillez contacter la DSIUN-PAS, l'application n'existe pas en Base de données");
+            if (null == $application) {
+                throw new \Exception("Veuillez contacter la DSIUN-PAS, l'application n'existe pas en Base de données");
+            }
 
             $notifyUser = false; // $application->getUser();
 
-            $text = "L'utilisateur ayant pour identifiant: " . $this->getUser()->getUserIdentifier() . " a signalé un disfonctionnement sur l'application : " . $problem->title . PHP_EOL . PHP_EOL;
-            $text .= "Description renseignée par l'utilisateur : ". PHP_EOL . $problem->message . PHP_EOL;
+            $text = "L'utilisateur ayant pour identifiant: ".$this->getUser()->getUserIdentifier()." a signalé un disfonctionnement sur l'application : ".$problem->title.PHP_EOL.PHP_EOL;
+            $text .= "Description renseignée par l'utilisateur : ".PHP_EOL.$problem->message.PHP_EOL;
 
-            $subject = "Méteo des services - équipe PAS - " . $problem->title;
+            $subject = 'Méteo des services - équipe PAS - '.$problem->title;
 
             $email = (new TemplatedEmail())
                 ->from('no-reply@univ-paris1.fr')
@@ -59,11 +59,12 @@ class NotifyProblemController extends AbstractController
 
             $mailer->send($email);
             $this->addFlash('success', 'Problème signalé avec succès');
+
             return $this->redirectToRoute('app_meteo');
         } else {
             return $this->render('notify_problem/index.html.twig', [
                 'controller_name' => 'NotifyProblemController',
-                'form' => $form->createView()
+                'form' => $form->createView(),
             ]);
         }
     }

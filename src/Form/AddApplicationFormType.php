@@ -22,10 +22,10 @@ class AddApplicationFormType extends AbstractType
                     'Inconnu' => 'default',
                     'Indisponible' => 'unavailable',
                     'Perturbé' => 'perturbed',
-                    'Opérationnel' => 'operational'
-                ]
+                    'Opérationnel' => 'operational',
+                ],
             ])
-            ->add('message', TextareaType::class, ['required' => false,]);
+            ->add('message', TextareaType::class, ['required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

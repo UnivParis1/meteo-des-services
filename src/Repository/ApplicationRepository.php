@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Application;
-use App\Entity\Tags;
 use App\Entity\ApplicationHistory;
+use App\Entity\Tags;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,9 +20,9 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 class ApplicationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry                $registry,
-                                private EntityManagerInterface $em,
-                                private Security $security)
+    public function __construct(ManagerRegistry $registry,
+        private EntityManagerInterface $em,
+        private Security $security)
     {
         parent::__construct($registry, Application::class);
     }
@@ -31,12 +31,14 @@ class ApplicationRepository extends ServiceEntityRepository
     {
         $this->em->persist($history);
         $this->em->flush();
+
         return $history;
     }
 
     public function updateApplication(Application $application): Application
     {
         $this->em->flush();
+
         return $application;
     }
 
@@ -44,6 +46,7 @@ class ApplicationRepository extends ServiceEntityRepository
     {
         $this->em->persist($application);
         $this->em->flush();
+
         return $application;
     }
 
@@ -61,10 +64,9 @@ class ApplicationRepository extends ServiceEntityRepository
         $this->em->flush();
     }
 
-
-//    /**
-//     * @return Application[] Returns an array of Application objects
-//     */
+    //    /**
+    //     * @return Application[] Returns an array of Application objects
+    //     */
     public function findBySearchAndState(string $searchTerm, string $stateFilter): array
     {
         $query = $this->getEntityManager()->createQueryBuilder()->select('a')
@@ -72,12 +74,13 @@ class ApplicationRepository extends ServiceEntityRepository
             ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::WITH, 'a.id = m.application')
             ->where('a.isArchived = 0');
 
-        if ($stateFilter != null && $stateFilter != 'all' && $stateFilter != '') {
+        if (null != $stateFilter && 'all' != $stateFilter && '' != $stateFilter) {
             $query->andWhere("a.state = '$stateFilter'")->orWhere("m.applicationState = '$stateFilter'");
         }
 
-        if (strlen($searchTerm) > 0)
+        if (strlen($searchTerm) > 0) {
             $query->andWhere("a.title LIKE '%$searchTerm%'");
+        }
 
         $dql = $query->orderBy('a.title', 'ASC')
             ->getQuery();
@@ -87,12 +90,13 @@ class ApplicationRepository extends ServiceEntityRepository
         return $results;
     }
 
-    public function findAllNotArchived() : array
+    public function findAllNotArchived(): array
     {
         return $this->createQueryBuilder('a')->where('a.isArchived = 0')->orderBy('a.title', 'ASC')->getQuery()->getResult();
     }
 
-    public function findAllByTags(Tags $tags): array {
+    public function findAllByTags(Tags $tags): array
+    {
         return $this->createQueryBuilder('a')->join('a.tags', 't')->where('t = :tags')->setParameter('tags', $tags)->getQuery()->getResult();
     }
 }

@@ -20,7 +20,8 @@ class HistoryDTO
 
     public bool $isMaintenance = false;
 
-    public function __construct(int $id, int $application_id, string $type, string $state, \DateTimeInterface $date, string $author, ?string $message, $isMaintenance = false)   {
+    public function __construct(int $id, int $application_id, string $type, string $state, \DateTimeInterface $date, string $author, ?string $message, $isMaintenance = false)
+    {
         $this->id = $id;
         $this->application_id = $application_id;
         $this->type = $type;
@@ -32,7 +33,7 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of author
+     * Get the value of author.
      */
     public function getAuthor()
     {
@@ -40,9 +41,9 @@ class HistoryDTO
     }
 
     /**
-     * Set the value of author
+     * Set the value of author.
      *
-     * @return  self
+     * @return self
      */
     public function setAuthor($author)
     {
@@ -52,7 +53,7 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of date
+     * Get the value of date.
      */
     public function getDate()
     {
@@ -60,9 +61,9 @@ class HistoryDTO
     }
 
     /**
-     * Set the value of date
+     * Set the value of date.
      *
-     * @return  self
+     * @return self
      */
     public function setDate($date)
     {
@@ -72,7 +73,7 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of message
+     * Get the value of message.
      */
     public function getMessage()
     {
@@ -80,9 +81,9 @@ class HistoryDTO
     }
 
     /**
-     * Set the value of message
+     * Set the value of message.
      *
-     * @return  self
+     * @return self
      */
     public function setMessage($message)
     {
@@ -92,7 +93,7 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of state
+     * Get the value of state.
      */
     public function getState()
     {
@@ -100,9 +101,9 @@ class HistoryDTO
     }
 
     /**
-     * Set the value of state
+     * Set the value of state.
      *
-     * @return  self
+     * @return self
      */
     public function setState($state)
     {
@@ -112,7 +113,7 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of type
+     * Get the value of type.
      */
     public function getType()
     {
@@ -120,9 +121,9 @@ class HistoryDTO
     }
 
     /**
-     * Set the value of type
+     * Set the value of type.
      *
-     * @return  self
+     * @return self
      */
     public function setType($type)
     {
@@ -132,7 +133,7 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of application_id
+     * Get the value of application_id.
      */
     public function getApplication_id()
     {
@@ -140,9 +141,9 @@ class HistoryDTO
     }
 
     /**
-     * Set the value of application_id
+     * Set the value of application_id.
      *
-     * @return  self
+     * @return self
      */
     public function setApplication_id($application_id)
     {
@@ -152,7 +153,7 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of id
+     * Get the value of id.
      */
     public function getId()
     {
@@ -160,9 +161,9 @@ class HistoryDTO
     }
 
     /**
-     * Set the value of id
+     * Set the value of id.
      *
-     * @return  self
+     * @return self
      */
     public function setId($id)
     {
@@ -172,7 +173,7 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of isMaintenance
+     * Get the value of isMaintenance.
      */
     public function getIsMaintenance()
     {
@@ -180,9 +181,9 @@ class HistoryDTO
     }
 
     /**
-     * Set the value of isMaintenance
+     * Set the value of isMaintenance.
      *
-     * @return  self
+     * @return self
      */
     public function setIsMaintenance($isMaintenance)
     {

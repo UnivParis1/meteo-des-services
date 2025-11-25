@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApplicationController extends AbstractController
 {
     public function __construct(public ApplicationService $applicationService,
-                                public MaintenanceService $maintenanceService)
+        public MaintenanceService $maintenanceService)
     {
     }
 
@@ -27,11 +27,12 @@ class ApplicationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->applicationService->createApplicationFromMeteoDesServices($application);
             $this->addFlash('success', 'Application ajoutée avec succès');
+
             return $this->redirectToRoute('app_meteo');
         }
 
         return $this->render('application_form/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -45,6 +46,7 @@ class ApplicationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->applicationService->updateApplication($application);
             $this->addFlash('success', 'Modification effectuée avec succès');
+
             return $this->redirectToRoute('app_meteo');
         }
 
@@ -52,7 +54,7 @@ class ApplicationController extends AbstractController
             'form' => $form->createView(),
             'maintenances' => $maintenances,
             'edit' => true,
-            'applicationId' => $application->getId()
+            'applicationId' => $application->getId(),
         ]);
     }
 
@@ -60,7 +62,7 @@ class ApplicationController extends AbstractController
     public function delete(int $id, Request $request): Response
     {
         $application = $this->applicationService->getApplicationById($id);
-        if ($application != null) {
+        if (null != $application) {
             $this->applicationService->deleteApplication($application);
             $this->addFlash('success', 'Application supprimée avec succès');
         } else {

@@ -2,14 +2,11 @@
 
 namespace App\Front;
 
-use App\DTO\ApplicationDTO;
-
 class ApplicationsSorter
 {
-
-    public function sortApplicationsByStateAndLastUpdate(array $applications): array
+    public function sortApplicationsByStateAndLastUpdate(array &$applications): array
     {
-        for ($i = 0; $i < count($applications); $i++) {
+        for ($i = 0; $i < count($applications); ++$i) {
             $app = $applications[$i];
 
             if ($app->isInMaintenance()) {
@@ -34,14 +31,17 @@ class ApplicationsSorter
         usort(
             $applications,
             function ($app1, $app2): int {
-                if (! ($app1->getNextMaintenance() &&  $app2->getNextMaintenance()))
+                if (!($app1->getNextMaintenance() && $app2->getNextMaintenance())) {
                     return $app2->getNextMaintenance() <=> $app1->getNextMaintenance();
+                }
 
                 return $app1->getNextMaintenance()->getStartingDate() <=> $app2->getNextMaintenance()->getStartingDate();
             }
         );
+
         return $applications;
     }
+
     private static function getOrderRankFromState(string $state): int
     {
         return match ($state) {

@@ -8,14 +8,13 @@ use App\Entity\Application;
 use App\Entity\Maintenance;
 use App\Entity\MaintenanceHistory;
 use App\Repository\MaintenanceRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class MaintenanceService
 {
-    public function __construct(public  MaintenanceRepository $maintenanceRepository,
-                                private Security              $security)
+    public function __construct(public MaintenanceRepository $maintenanceRepository,
+        private Security $security)
     {
     }
 
@@ -41,17 +40,17 @@ class MaintenanceService
         $now = new \DateTime();
         $maxNbOfMaintenances = 3;
         $nextMaintenances = $this->maintenanceRepository->findNextMaintenancesFromApplication($application->getId(), $maxNbOfMaintenances);
-        if (count($nextMaintenances) === 0) {
+        if (0 === count($nextMaintenances)) {
             return $application;
         }
 
         $maintenances = [];
-	    $nextMaintenanceEstInsere = false;
+        $nextMaintenanceEstInsere = false;
         foreach ($nextMaintenances as $nextMaintenanceEntity) {
             $nextMaintenanceDTO = $this->convertToDTO($nextMaintenanceEntity);
 
             // ne met que la prochaine maintenance
-            if ( ! $nextMaintenanceEstInsere) {
+            if (!$nextMaintenanceEstInsere) {
                 $application->setNextMaintenance($nextMaintenanceDTO);
                 $nextMaintenanceEstInsere = true;
             }
@@ -62,6 +61,7 @@ class MaintenanceService
             $maintenances[] = $nextMaintenanceDTO;
         }
         $application->setNextMaintenances($maintenances);
+
         return $application;
     }
 
@@ -72,6 +72,7 @@ class MaintenanceService
         foreach ($entites as $entity) {
             $dtos->add($this->convertToDTO($entity));
         }
+
         return $dtos->toArray();
     }
 
@@ -97,8 +98,9 @@ class MaintenanceService
         // Date créée automatiquement par le constructeur
         $history->setAuthor($this->security->getUser()->getUserIdentifier());
 
-        if (strlen($maintenance->getMessage()) > 0)
+        if (strlen($maintenance->getMessage()) > 0) {
             $history->setMessage($maintenance->getMessage());
+        }
 
         $this->maintenanceRepository->createHistory($history);
     }
@@ -107,12 +109,13 @@ class MaintenanceService
     {
         $maintenance = new Maintenance();
         $maintenance->setApplication($application);
-        $startingDate = new DateTime('now', new \DateTimeZone('Europe/Paris'));
+        $startingDate = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
         $startingDate->modify('+1 hour')->setTime($startingDate->format('H'), 0, 0);
         $maintenance->setStartingDate($startingDate);
-        $endingDate = new DateTime('now', new \DateTimeZone('Europe/Paris'));
+        $endingDate = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
         $endingDate->modify('+2 hour')->setTime($endingDate->format('H'), 0, 0);
         $maintenance->setEndingDate($endingDate);
+
         return $maintenance;
     }
 

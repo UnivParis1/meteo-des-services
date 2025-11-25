@@ -4,33 +4,31 @@ namespace App\Service;
 
 use App\DTO\ApplicationDTO;
 use App\DTO\HistoryDTO;
-use App\DTO\MaintenanceDTO;
 use App\Entity\Application;
 use App\Entity\ApplicationHistory;
 use App\Repository\ApplicationHistoryRepository;
 use App\Repository\ApplicationRepository;
 use App\Repository\TagsRepository;
 use App\Repository\UserRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class ApplicationService
 {
-
     public function __construct(
-        public  ApplicationRepository        $applicationRepository,
-        public  TagsRepository               $tagsRepository,
-        public  ApplicationHistoryRepository $applicationHistoryRepository,
-        public  MaintenanceService           $maintenanceService,
-        private UserRepository               $userRepository,
-        private Security                     $security
-    ) {}
+        public ApplicationRepository $applicationRepository,
+        public TagsRepository $tagsRepository,
+        public ApplicationHistoryRepository $applicationHistoryRepository,
+        public MaintenanceService $maintenanceService,
+        private UserRepository $userRepository,
+        private Security $security,
+    ) {
+    }
 
     public function createApplicationFromMeteoDesServices(Application $application): void
     {
         $this->applicationRepository->createApplication($application);
-        $this->updateHistory($application, "creation");
+        $this->updateHistory($application, 'creation');
     }
 
     public function getAllApplications(bool $archived = false): array
@@ -42,6 +40,7 @@ class ApplicationService
         foreach ($allApplications as $application) {
             $applications->add($this->convertToDTO($application, null));
         }
+
         return $applications->toArray();
     }
 
@@ -54,6 +53,7 @@ class ApplicationService
             $title = $application->getTitle();
             $array[$title] = $title;
         }
+
         return $array;
     }
 
@@ -70,15 +70,16 @@ class ApplicationService
 
         return $values;
     }
+
     public function convertToDTO(Application $application, ?string $title, bool $setHistory = true, $addMaintenancesToHistories = true): ApplicationDTO
     {
         $appLastUpdate = $application->getLastUpdate();
 
         $dto = new ApplicationDTO(
             $application->getId(),
-            $title == null ? $application->getTitle() : $title,
+            null == $title ? $application->getTitle() : $title,
             $application->getState(),
-            ($application->getMessage() == null ? "" : $application->getMessage()), // Handle null case
+            null == $application->getMessage() ? '' : $application->getMessage(), // Handle null case
             $appLastUpdate
         );
         // Ajout des maintenances
@@ -100,7 +101,7 @@ class ApplicationService
                     false
                 );
             }
-            if (! $addMaintenancesToHistories) {
+            if (!$addMaintenancesToHistories) {
                 $dto->setHistories(self::sortDateHistoriesDTO($dtoHistories));
             }
         }
@@ -114,8 +115,9 @@ class ApplicationService
                 if (count($maintenanceHistories) > 0) {
                     $lastIdMaintenance = $maintenanceHistories->get(0);
                     foreach ($maintenanceHistories as $maintenanceHistory) {
-                        if ($maintenanceHistory->getId() > $lastIdMaintenance->getId())
+                        if ($maintenanceHistory->getId() > $lastIdMaintenance->getId()) {
                             $lastIdMaintenance = $maintenanceHistory;
+                        }
                     }
 
                     $dtoHistories[] = new HistoryDTO(
@@ -143,6 +145,7 @@ class ApplicationService
                 }
             }
         }
+
         return $dto;
     }
 
@@ -158,8 +161,10 @@ class ApplicationService
                 }
             }
         }
+
         return $dtos->toArray();
     }
+
     public function getApplicationByFilters(string $searchTerm, string $stateFilter): array
     {
         $dtos = new ArrayCollection();
@@ -169,6 +174,7 @@ class ApplicationService
                 $dtos->add($this->convertToDTO($application, null));
             }
         }
+
         return $dtos->toArray();
     }
 
@@ -185,7 +191,7 @@ class ApplicationService
         $history = new ApplicationHistory();
         $history->setApplication($application);
         $history->setState($application->getState());
-        if ($application->getMessage() != null) {
+        if (null != $application->getMessage()) {
             $history->setMessage($application->getMessage());
         }
         $history->setType($historyType);

@@ -18,8 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MaintenanceRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry                $registry,
-                                private EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $registry,
+        private EntityManagerInterface $em)
     {
         parent::__construct($registry, Maintenance::class);
     }
@@ -28,6 +28,7 @@ class MaintenanceRepository extends ServiceEntityRepository
     {
         $this->em->persist($history);
         $this->em->flush();
+
         return $history;
     }
 
@@ -35,6 +36,7 @@ class MaintenanceRepository extends ServiceEntityRepository
     {
         $this->em->persist($maintenance);
         $this->em->flush();
+
         return $maintenance;
     }
 
@@ -58,6 +60,7 @@ class MaintenanceRepository extends ServiceEntityRepository
         if ($maxNbOfMaintenances > 0) {
             $query->setMaxResults($maxNbOfMaintenances);
         }
+
         return $query->getQuery()
             ->getResult();
     }
@@ -68,28 +71,28 @@ class MaintenanceRepository extends ServiceEntityRepository
         $this->em->flush();
     }
 
-//    /**
-//     * @return Maintenance[] Returns an array of Maintenance objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Maintenance[] Returns an array of Maintenance objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('m.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Maintenance
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Maintenance
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

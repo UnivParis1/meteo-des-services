@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MaintenanceController extends AbstractController
 {
     public function __construct(public ApplicationService $applicationService,
-                                public MaintenanceService $maintenanceService)
+        public MaintenanceService $maintenanceService)
     {
     }
 
@@ -27,11 +27,12 @@ class MaintenanceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->maintenanceService->createMaintenance($maintenance);
             $this->addFlash('success', 'Maintenance ajoutée avec succès');
+
             return $this->redirectToRoute('app_edit_application', ['id' => $application->getId()]);
         }
 
         return $this->render('maintenance_form\index.html.twig', [
-            'maintenanceForm' => $form->createView()
+            'maintenanceForm' => $form->createView(),
         ]);
     }
 
@@ -44,11 +45,12 @@ class MaintenanceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->maintenanceService->updateMaintenance($maintenance);
             $this->addFlash('success', 'Modification effectuée avec succès');
+
             return $this->redirectToRoute('app_edit_application', ['id' => $maintenance->getApplication()->getId()]);
         }
 
         return $this->render('maintenance_form/index.html.twig', [
-            'maintenanceForm' => $form->createView()
+            'maintenanceForm' => $form->createView(),
         ]);
     }
 
@@ -57,7 +59,7 @@ class MaintenanceController extends AbstractController
     {
         $maintenance = $this->maintenanceService->getMaintenanceById($id);
         $appId = $maintenance->getApplication()->getId();
-        if ($maintenance != null) {
+        if (null != $maintenance) {
             $this->maintenanceService->deleteMaintenance($maintenance);
             $this->addFlash('success', 'Maintenance supprimée avec succès');
         } else {

@@ -21,11 +21,11 @@ class NotifyProblemFormType extends AbstractType
         $builder
             ->add('title', ChoiceType::class,
                 ['required' => true,
-                'choices' =>  $this->applicationService->getApplicationNamesArrayForForm(),
-                'autocomplete' => true,
-                'empty_data' => '',
-                'attr' => [
-                    'data-controller' => 'custom-autocomplete',
+                    'choices' => $this->applicationService->getApplicationNamesArrayForForm(),
+                    'autocomplete' => true,
+                    'empty_data' => '',
+                    'attr' => [
+                        'data-controller' => 'custom-autocomplete',
                     ],
                 ])
             ->add('message', TextareaType::class, ['required' => true, 'empty_data' => '']);
@@ -37,7 +37,7 @@ class NotifyProblemFormType extends AbstractType
             'data_class' => NotifyProblem::class,
             'attr' => [
                 'data-controller' => 'custom-autocomplete',
-            ]
+            ],
         ]);
     }
 }

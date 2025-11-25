@@ -2,16 +2,15 @@
 
 namespace App\Command;
 
+use App\Model\UserRoles;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Model\UserRoles;
 
 #[AsCommand(
     name: 'app:update-user-wsgroups',
@@ -36,58 +35,57 @@ class UpdateUserWsgroupsCommand extends Command
         $uid = $input->getArgument('uid');
 
         if ($uid) {
-          $user = $this->userRepository->findOneBy(['uid' => $uid]);
+            $user = $this->userRepository->findOneBy(['uid' => $uid]);
 
-          if ( ! $user) {
-            $io->error("uid $uid n'existe pas en base");
-            return 2;
-          }
+            if (!$user) {
+                $io->error("uid $uid n'existe pas en base");
 
-          $users = [$user];
-        }
-        else {
-          $users = $this->userRepository->findAll();
+                return 2;
+            }
+
+            $users = [$user];
+        } else {
+            $users = $this->userRepository->findAll();
         }
 
         foreach ($users as $user) {
-          $roles = $user->getRoles();
+            $roles = $user->getRoles();
 
-          // Si un ancien role ROLE_USER est affécté, le changer par ROLE_STAFF
-          $idxRoleUser = array_search("ROLE_USER", $roles);
+            // Si un ancien role ROLE_USER est affécté, le changer par ROLE_STAFF
+            $idxRoleUser = array_search('ROLE_USER', $roles);
 
-          if ($idxRoleUser !== false) {
-            $roles[$idxRoleUser] = "ROLE_STAFF";
-            $user->setRoles($roles);
-            $this->userRepository->updateUser($user);
-          }
-
-          // assigne un role unique (celui le plus élevé)
-          if (count($roles) > 1) {
-
-            $keyroles = array_keys(UserRoles::$choix);
-            $roleassigne = $roles[0];
-            $idx = 0;
-            foreach($roles as $role) {
-              $name = array_search($role, UserRoles::$choix);
-              $idxnew = array_search($name, $keyroles);
-
-              if ($idxnew > $idx) {
-                $idx = $idxnew;
-              }
+            if (false !== $idxRoleUser) {
+                $roles[$idxRoleUser] = 'ROLE_STAFF';
+                $user->setRoles($roles);
+                $this->userRepository->updateUser($user);
             }
 
-            $newRole = [UserRoles::$choix[$keyroles[$idx]]];
+            // assigne un role unique (celui le plus élevé)
+            if (count($roles) > 1) {
+                $keyroles = array_keys(UserRoles::$choix);
+                $roleassigne = $roles[0];
+                $idx = 0;
+                foreach ($roles as $role) {
+                    $name = array_search($role, UserRoles::$choix);
+                    $idxnew = array_search($name, $keyroles);
 
-            $output->writeln("Role pour {$user->getUid()} : " . implode(',', $roles) . " : " . implode(',', $newRole));
+                    if ($idxnew > $idx) {
+                        $idx = $idxnew;
+                    }
+                }
 
-            $user->setRoles($newRole);
+                $newRole = [UserRoles::$choix[$keyroles[$idx]]];
+
+                $output->writeln("Role pour {$user->getUid()} : ".implode(',', $roles).' : '.implode(',', $newRole));
+
+                $user->setRoles($newRole);
+                $this->userRepository->updateUser($user);
+            }
+            $output->writeln("Mise à jour de {$user->getUid()}");
+
+            $user = $this->userService->updateUserRequestInfos($user);
+
             $this->userRepository->updateUser($user);
-          }
-          $output->writeln("Mise à jour de {$user->getUid()}");
-
-          $user = $this->userService->updateUserRequestInfos($user);
-
-          $this->userRepository->updateUser($user);
         }
 
         $io->success('Utilisateurs mis à jours pour roles et eduPrincipalAffiliation');

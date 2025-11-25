@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Model\SearchApplication;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceValue;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,10 +16,10 @@ class SearchFormType extends AbstractType
         $builder
             ->add('searchTerm', TextType::class, [
                 'attr' => [
-                    'placeholder' => 'Rechercher...'
+                    'placeholder' => 'Rechercher...',
                 ],
                 'required' => false,
-                'empty_data' => ''
+                'empty_data' => '',
             ])
             ->add('selectedState', ChoiceType::class, [
                 'required' => false,
@@ -29,12 +28,12 @@ class SearchFormType extends AbstractType
                     'Indisponible' => 'unavailable',
                     'Perturbé' => 'perturbed',
                     'Opérationnel' => 'Operational',
-                    'Non renseigné' => 'default'
-                ]
+                    'Non renseigné' => 'default',
+                ],
             ])->add('limit', ChoiceType::class, [
                 'required' => true,
-                'choices' => ['Tous' => null,'10'=> 10,'20' => 20, '30' => 30],
-                'empty_data' => '30'
+                'choices' => ['Tous' => null, '10' => 10, '20' => 20, '30' => 30],
+                'empty_data' => '30',
             ]);
     }
 

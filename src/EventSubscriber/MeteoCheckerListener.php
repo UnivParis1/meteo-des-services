@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace App\EventSubscriber;
 
 use App\Service\UserService;
@@ -19,22 +18,23 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\PreAuthenticate
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 
 /**
- * MeteoCheckerListener
+ * MeteoCheckerListener.
  */
 class MeteoCheckerListener implements EventSubscriberInterface
 {
     public function __construct(
         private UserCheckerInterface $userChecker,
         private UserService $userService,
-        ) {
+    ) {
     }
 
     public function preCheckCredentials(CheckPassportEvent $event): void
     {
         $passport = $event->getPassport();
 
-        if ($passport->hasBadge(PreAuthenticatedUserBadge::class))
+        if ($passport->hasBadge(PreAuthenticatedUserBadge::class)) {
             return;
+        }
 
         try {
             $user = $passport->getUser();
@@ -42,8 +42,8 @@ class MeteoCheckerListener implements EventSubscriberInterface
             $user = null;
         }
 
-        if ($user === null) {
-            $uid = (array_values($passport->getBadges())[0])->getUserIdentifier();
+        if (null === $user) {
+            $uid = array_values($passport->getBadges())[0]->getUserIdentifier();
             $user = $this->userService->createUser($uid);
         }
         $this->userChecker->checkPreAuth($user);

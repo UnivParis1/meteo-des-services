@@ -30,7 +30,7 @@ class MaintenanceHistory
     private ?string $author = null;
 
     #[ORM\ManyToOne(inversedBy: 'maintenanceHistories')]
-    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Maintenance $Maintenance = null;
 
     #[ORM\Column]
@@ -38,6 +38,7 @@ class MaintenanceHistory
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $message = null;
+
     public function __construct()
     {
         $this->date = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));

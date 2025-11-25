@@ -17,13 +17,12 @@ class MaintenanceDTO
     public ?string $message;
 
     public function __construct(
-        int                $id,
-        string             $state,
+        int $id,
+        string $state,
         \DateTimeInterface $startingDate,
         \DateTimeInterface $endingDate,
-        ?string             $message
-    )
-    {
+        ?string $message,
+    ) {
         $this->id = $id;
         $this->state = $state;
         $this->startingDate = $startingDate;
@@ -32,22 +31,24 @@ class MaintenanceDTO
 
         $diff = $startingDate->diff($endingDate);
 
-        $adiff = ['jour' => $diff->format("%d"),'heure' => $diff->format("%h"),'minute' => $diff->format("%i") ];
+        $adiff = ['jour' => $diff->format('%d'), 'heure' => $diff->format('%h'), 'minute' => $diff->format('%i')];
 
         $avalues = array_values($adiff);
         $akeys = array_keys($adiff);
-        $totaltime = "";
+        $totaltime = '';
 
-        for ($idx = 0; $idx < count($adiff); $idx++) {
+        for ($idx = 0; $idx < count($adiff); ++$idx) {
             $duree = "{$akeys[$idx]}";
             $temps = intval($avalues[$idx]);
 
-            if ($idx > 0 && strlen($totaltime) > 0)
-                $totaltime .= " ";
+            if ($idx > 0 && strlen($totaltime) > 0) {
+                $totaltime .= ' ';
+            }
 
             // test si duree est par exemple: 1 heure et 12 minutes
-            if ($idx == 2 && $temps > 0 && $avalues[1] > 0)
-                $totaltime .= " et ";
+            if (2 == $idx && $temps > 0 && $avalues[1] > 0) {
+                $totaltime .= ' et ';
+            }
 
             switch ($temps) {
                 case 0:
@@ -64,33 +65,21 @@ class MaintenanceDTO
         $this->totalTime = $totaltime;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getState(): string
     {
         return $this->state;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getStartingDate(): \DateTimeInterface
     {
         return $this->startingDate;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getEndingDate(): \DateTimeInterface
     {
         return $this->endingDate;
@@ -108,6 +97,4 @@ class MaintenanceDTO
     {
         return $this->message;
     }
-
-
 }

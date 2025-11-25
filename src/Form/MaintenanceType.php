@@ -2,13 +2,10 @@
 
 namespace App\Form;
 
-use DateTime;
 use App\Entity\Application;
 use App\Entity\Maintenance;
-use DateTimeInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -30,14 +27,14 @@ class MaintenanceType extends AbstractType
             ->add('application', EntityType::class, [
                 'class' => Application::class,
                 'choice_label' => 'title',
-                'required' => true
+                'required' => true,
             ])
             ->add('applicationState', ChoiceType::class, [
                 'required' => true,
                 'choices' => [
                     'Indisponible' => 'unavailable',
                     'Perturbé' => 'perturbed',
-                    'Opérationnel' => 'operational'
+                    'Opérationnel' => 'operational',
                 ]])
             ->add('startingDate', DateTimeType::class, [
                 'widget' => 'single_text',
@@ -48,13 +45,13 @@ class MaintenanceType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\GreaterThanOrEqual([
                         // formate le temps actuel à la minute pour éviter de faire une comparaison sur les secondes
-                        'value' => new DateTime((new DateTime('now'))->format('Y-m-d H:i')),
+                        'value' => new \DateTime((new \DateTime('now'))->format('Y-m-d H:i')),
                         'message' => "La date de début ne peut pas être antérieure à l'heure actuelle",
-                    ])
+                    ]),
                 ],
                 'attr' => [
-                    'min' => (new DateTime('now'))->format(self::$format)
-                ]
+                    'min' => (new \DateTime('now'))->format(self::$format),
+                ],
             ])
             ->add('endingDate', DateTimeType::class, [
                 'widget' => 'single_text',
@@ -64,10 +61,10 @@ class MaintenanceType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Callback([$this, 'validateDates']),
-                ]
+                ],
             ])
             ->add('message', TextareaType::class, [
-                'required' => false
+                'required' => false,
             ]);
     }
 

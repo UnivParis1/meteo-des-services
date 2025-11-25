@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Tags;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Tags>
@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class TagsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry,
-                                private EntityManagerInterface $em)
+        private EntityManagerInterface $em)
     {
         parent::__construct($registry, Tags::class);
     }
@@ -21,6 +21,7 @@ class TagsRepository extends ServiceEntityRepository
     public function updateTags(Tags $tags): Tags
     {
         $this->em->flush();
+
         return $tags;
     }
 
@@ -28,6 +29,7 @@ class TagsRepository extends ServiceEntityRepository
     {
         $this->em->persist($tags);
         $this->em->flush();
+
         return $tags;
     }
 
