@@ -38,9 +38,7 @@ $(function () {
                 url: '/meteo/api/application/' + applicationId, // renvoie le contenu de la pop-up
                 method: 'GET',
                 success: (response) => successDetail(response),
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
+                error: (xhr, status, error) => console.error(error)
             })
         });
     }
@@ -76,15 +74,11 @@ $(function () {
 
     $('input#maintenance_endingDate').datetimepicker({
         ...optionsDtpicker,
-        onSelectTime: function (ct, target) {
-            $(target).blur();
-        }
+        onSelectTime: (ct, target) => $(target).blur()
     });
 
     // rajoute le click sur l'icone calendar
-    $('false.dtipicker').on('click', function (elem) {
-        $(elem.target).prev().datetimepicker('show');
-    });
+    $('form i.dtipicker').on('click', (elem) => $(elem.target).prev().datetimepicker('show'));
 
     // Ajout du Tooltip Bootstrap
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -106,7 +100,9 @@ function successDetail(response)  {
     let size = response.icone[3];
     let application = response.application;
     let icone = response.icone;
+    let icones = response.icones;
     let title = response.application.title;
+    let isInMaintenance = response.application.isInMaintenance;
 
     $('#details #details-title').html(title);
 
@@ -125,10 +121,10 @@ function successDetail(response)  {
 
     $('#details #lastUpdate').html(application.lastUpdate ? formatDateDetails(application.lastUpdate) : '');
 
-    buildDetailsMaintenance(application.nextMaintenances, icone);
+    buildDetailsMaintenance(application.nextMaintenances, isInMaintenance, icones);
 
     if (application.histories.length > 0) {
-        buildHistories(application.histories);
+        buildHistories(application.histories, icones);
     } else {
         $("#details #history").addClass('d-none');
     }
@@ -144,18 +140,19 @@ function formatDateMtncHisto(date) {
     return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("HH") + 'H' + dt.toFormat('mm');
 }
 
-function buildDetailsMaintenance(maintenances, icone) {
+function buildDetailsMaintenance(maintenances, isInMaintenance, icones) {
     let nomaintenances = $("#details #nomaintenances");
 
-    let tablemtncs = nomaintenances.next();
+    let tablemtnc = nomaintenances.next();
     if (maintenances.length == 0) {
         nomaintenances.removeClass('d-none');
-        tablemtncs.addClass('d-none');
+        tablemtnc.addClass('d-none');
     } else {
         nomaintenances.addClass('d-none');
-        tablemtncs.removeClass('d-none');
+        tablemtnc.removeClass('d-none');
 
-        let trmtnc = tablemtncs.find('tbody').children().slice(1);
+        let tbodies = tablemtnc.find('tbody');
+        let trmtnc = tbodies.children().slice(1);
         let refMtnc = trmtnc[0].cloneNode(true);
 
         trmtnc.each(function () {
@@ -163,15 +160,16 @@ function buildDetailsMaintenance(maintenances, icone) {
         });
         // (ré)initialise le visuel pour les maintenances
 
+        let tablemtncs = $("#maintenance").find("table");
         let tdsMtnc = refMtnc.children;
         for (let i = 0; i < maintenances.length; i++) {
             let maintenance = maintenances[i];
             let stateClasses = Array.from(classListTrStatesForMtncRef);
-            stateClasses.push(icone[1]);
+            stateClasses.push(icones[maintenance.state][1]);
 
             tdsMtnc[0].textContent = formatDateMtncHisto(maintenance.startingDate);
             tdsMtnc[1].textContent = maintenance.totalTime;
-            tdsMtnc[2].textContent = maintenance.state;
+            tdsMtnc[2].textContent = icones[maintenance.state][0];
 
             // équivalent de impode en php ...
             tdsMtnc[2].classList.value = stateClasses.join(' ');
@@ -182,12 +180,12 @@ function buildDetailsMaintenance(maintenances, icone) {
                 trnode.appendChild(tdsMtnc[j].cloneNode(true));
             }
 
-            tablemtncs.children().append(trnode);
+            tablemtnc.children().append(trnode);
         }
     }
 }
 
-function buildHistories(histories) {
+function buildHistories(histories, icones) {
     let historyElem = $("#details #history");
     historyElem.removeClass('d-none');
 
@@ -208,7 +206,7 @@ function buildHistories(histories) {
         let history = histories[i];
 
         firstTrTds[0].textContent = formatDateMtncHisto(history.date);
-        firstTrTds[1].textContent = history.state;
+        firstTrTds[1].textContent = icones[history.state][0];
         firstTrTds[2].textContent = history.message;
         firstTrTds[3].textContent = history.author;
         firstTrTds[4].textContent = history.isMaintenance ? 'Maintenance' : 'Hors maintenance';

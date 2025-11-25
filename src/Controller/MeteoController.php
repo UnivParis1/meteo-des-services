@@ -57,7 +57,8 @@ class MeteoController extends AbstractController
         }
 
         $data = ['application' => $applicationDTO,
-                 'icone' => $this->iconsName[$state] ];
+                 'icone' => $this->iconsName[$state],
+                 'icones' => $this->iconsName];
         return $this->json($data);
     }
 
