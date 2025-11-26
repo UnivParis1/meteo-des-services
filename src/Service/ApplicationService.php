@@ -136,13 +136,15 @@ class ApplicationService
             $dtoHistoSorted = self::sortDateHistoriesDTO($dtoHistories);
             $dto->setHistories($dtoHistoSorted);
 
-            if (\count($dtoHistories) > 0) {
-                $lastDtoHistory = end($dtoHistories);
-                $lastDateMtnc = $lastDtoHistory->getDate();
-
+            foreach ($dtoHistories as $dtoHistory) {
+                $lastDateMtnc = $dtoHistory->getDate();
                 if ($lastDateMtnc > $appLastUpdate) {
-                    $dto->setLastUpdate($lastDateMtnc);
+                    $appLastUpdate = $lastDateMtnc;
                 }
+            }
+
+            if ($dto->getLastUpdate() != $appLastUpdate) {
+                $dto->setLastUpdate($appLastUpdate);
             }
         }
 
