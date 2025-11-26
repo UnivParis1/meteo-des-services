@@ -27,7 +27,7 @@ $(function () {
 
     if (myModalEl != null) {
         // c'est laid mais on a besoin de charger la réf des classes bootstrap définits dans la modale dès le début (on ne sait pas ce qu'adviendra le dom à terme)
-        global.classListTrStatesForMtncRef = $('#nomaintenances + table td#states').get(0).classList;
+        global.classListTrStatesForMtncRef = $('#nomaintenances + table td:last-child').get(0).classList;
 
         myModalEl.addEventListener('show.bs.modal', event => {
 
@@ -97,12 +97,11 @@ $(function () {
 });
 
 function successDetail(response)  {
+    window.icones = response.icones;
     let size = response.icone[3];
     let application = response.application;
     let icone = response.icone;
-    let icones = response.icones;
     let title = response.application.title;
-    let isInMaintenance = response.application.isInMaintenance;
 
     $('#details #details-title').html(title);
 
@@ -121,10 +120,22 @@ function successDetail(response)  {
 
     $('#details #lastUpdate').html(application.lastUpdate ? formatDateDetails(application.lastUpdate) : '');
 
-    buildDetailsMaintenance(application.nextMaintenances, isInMaintenance, icones);
+    if (response.application.isInMaintenance) {
+        buildMaintenanceEnCours(application.nextMaintenance);
+
+        for (let i=0; i < application.nextMaintenances.length; i++) {
+            if (application.nextMaintenances[i].id == application.nextMaintenance.id) {
+                application.nextMaintenances.splice(i, 1);
+            }
+        }
+    } else {
+        $("#maintenance-en-cours").addClass('d-none');
+    }
+
+    buildMaintenances(application.nextMaintenances);
 
     if (application.histories.length > 0) {
-        buildHistories(application.histories, icones);
+        buildHistories(application.histories);
     } else {
         $("#details #history").addClass('d-none');
     }
@@ -140,7 +151,22 @@ function formatDateMtncHisto(date) {
     return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("HH") + 'H' + dt.toFormat('mm');
 }
 
-function buildDetailsMaintenance(maintenances, isInMaintenance, icones) {
+function buildMaintenanceEnCours(mtnc) {
+    let refDom = $("#maintenance-en-cours");
+    refDom.removeClass('d-none');
+
+    let tds = refDom.find('td');
+    tds[0].textContent= formatDateMtncHisto(mtnc.startingDate);
+    tds[1].textContent = mtnc.totalTime;
+    tds[2].textContent = window.icones[mtnc.state][0];
+
+    let stateClasses = Array.from(classListTrStatesForMtncRef);
+    stateClasses.push(window.icones[mtnc.state][1]);
+    tds[2].classList.value = stateClasses.join(' ');
+
+}
+
+function buildMaintenances(maintenances) {
     let nomaintenances = $("#details #nomaintenances");
 
     let tablemtnc = nomaintenances.next();
@@ -160,16 +186,16 @@ function buildDetailsMaintenance(maintenances, isInMaintenance, icones) {
         });
         // (ré)initialise le visuel pour les maintenances
 
-        let tablemtncs = $("#maintenance").find("table");
         let tdsMtnc = refMtnc.children;
         for (let i = 0; i < maintenances.length; i++) {
             let maintenance = maintenances[i];
+
             let stateClasses = Array.from(classListTrStatesForMtncRef);
-            stateClasses.push(icones[maintenance.state][1]);
+            stateClasses.push(window.icones[maintenance.state][1]);
 
             tdsMtnc[0].textContent = formatDateMtncHisto(maintenance.startingDate);
             tdsMtnc[1].textContent = maintenance.totalTime;
-            tdsMtnc[2].textContent = icones[maintenance.state][0];
+            tdsMtnc[2].textContent = window.icones[maintenance.state][0];
 
             // équivalent de impode en php ...
             tdsMtnc[2].classList.value = stateClasses.join(' ');
@@ -185,7 +211,7 @@ function buildDetailsMaintenance(maintenances, isInMaintenance, icones) {
     }
 }
 
-function buildHistories(histories, icones) {
+function buildHistories(histories) {
     let historyElem = $("#details #history");
     historyElem.removeClass('d-none');
 
@@ -206,7 +232,7 @@ function buildHistories(histories, icones) {
         let history = histories[i];
 
         firstTrTds[0].textContent = formatDateMtncHisto(history.date);
-        firstTrTds[1].textContent = icones[history.state][0];
+        firstTrTds[1].textContent = window.icones[history.state][0];
         firstTrTds[2].textContent = history.message;
         firstTrTds[3].textContent = history.author;
         firstTrTds[4].textContent = history.isMaintenance ? 'Maintenance' : 'Hors maintenance';

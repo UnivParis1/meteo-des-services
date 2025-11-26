@@ -21,49 +21,67 @@
 							</tr>
 						</tbody>
 					</table>
-					<div class="pop-up-title fw-bold w-100 mx-auto mb-2 text-center fs-6">Prochaines maintenances</div>
-					<div id="nomaintenances" class="maintenance-text text-center d-none">Aucune maintenance n'est prévue</div>
-					<table class="w-90 w-sm-75 m-auto d-none">
+
+                    <div id="maintenance-en-cours" class="d-none">
+                        <div class="pop-up-title fw-bold w-100 mx-auto my-3 text-center fs-6">Maintenance en cours</div>
+                        <table class="w-90 w-sm-75 m-auto">
+                            <tbody>
+                                <tr>
+                                    <th class="text-center fw-bold w-25">Date</th>
+                                        <th class="text-center fw-bold w-25">Durée</th>
+                                        <th class="text-center fw-bold w-25">Etat</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"></td>
+                                        <td class="text-center border-start border-end px-2 text-popuptext"></td>
+                                        <td class="{# classes rajouté par app.js, classes de base prise sur ce sélécteur: #nomaintenances + table td:last-child #}"></td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pop-up-title fw-bold w-100 mx-auto my-3 text-center fs-6">Prochaines maintenances</div>
+                    <div id="nomaintenances" class="maintenance-text text-center d-none">Aucune maintenance n'est prévue</div>
+                    <table class="w-90 w-sm-75 m-auto d-none">
+                        <tbody>
+                            <tr>
+                                <th class="text-center fw-bold w-25">Date</th>
+                                <th class="text-center fw-bold w-25">Durée</th>
+                                <th class="text-center fw-bold w-25">Etat</th>
+                            </tr>
+                            <tr>
+                                <td class="text-center"></td>
+                                <td class="text-center border-start border-end px-2 text-popuptext"></td>
+                                <td class="text-center fw-bold"></td>
+                            </tr>
+                        </tbody>
+                   </table>
+                </div>
+				<div id="history" class="d-none">
+					<p class="pop-up-title fw-bold mb-2 text-center fs-6 mt-3">Historique</p>
+					<table class="w-100 mx-auto mt-auto mb-3">
 						<tbody>
 							<tr>
-								<td class="text-center fw-bold">Date</td>
-								<td class="text-center fw-bold">Durée</td>
-								<td class="text-center fw-bold">Etat</td>
+								<th class="text-center fw-bold" style="color: #473F39;">Date
+								</th>
+								<th class="text-center fw-bold" style="color: #473F39;">Etat
+								</th>
+								<th class="text-center fw-bold" style="color: #473F39;">Message
+								</th>
+								<th class="text-center fw-bold" style="color: #473F39;">Auteur
+								</th>
+								<th class="text-center fw-bold" style="color: #473F39;">Maintenance / Hors maintenance
+								</th>
 							</tr>
-							<tr>
-								<td class="text-center"></td>
-								<td class="text-center border-start border-end px-2 text-popuptext"></td>
-								<td id="states" class="text-center fw-bold"></td>
+							<tr class="border border-gray-500 border-dotted p-3">
+								<td class="text-center" style="color: #473F39;"></td>
+								<td class="text-center" style="color: #473F39;"></td>
+								<td class="text-center" style="color: #473F39;"></td>
+								<td class="text-center" style="color: #473F39;"></td>
+								<td class="text-center" style="color: #473F39;"></td>
 							</tr>
 						</tbody>
 					</table>
-
-					<div id="history" class="d-none">
-						<p class="pop-up-title fw-bold mb-2 text-center fs-6 mt-3">Historique</p>
-						<table class="w-100 mx-auto mt-auto mb-3">
-							<tbody>
-								<tr>
-									<th class="text-center fw-bold" style="color: #473F39;">Date
-									</th>
-									<th class="text-center fw-bold" style="color: #473F39;">Etat
-									</th>
-									<th class="text-center fw-bold" style="color: #473F39;">Message
-									</th>
-									<th class="text-center fw-bold" style="color: #473F39;">Auteur
-									</th>
-									<th class="text-center fw-bold" style="color: #473F39;">Maintenance / Hors maintenance
-									</th>
-								</tr>
-								<tr class="border border-gray-500 border-dotted p-3">
-									<td class="text-center" style="color: #473F39;"></td>
-									<td class="text-center" style="color: #473F39;"></td>
-									<td class="text-center" style="color: #473F39;"></td>
-									<td class="text-center" style="color: #473F39;"></td>
-									<td class="text-center" style="color: #473F39;"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
 				</div>
 			</div>
 		</div>
