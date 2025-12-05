@@ -20,7 +20,11 @@ class ApplicationDTO
 
     public array $nextMaintenances = [];
 
+    public array $lastMaintenances = [];
+
     public array $histories = [];
+
+    public array $orderedHistosAndMtncs = [];
 
     public function __construct(int $id,
         string $title,
@@ -126,6 +130,46 @@ class ApplicationDTO
     public function setHistories($histories): static
     {
         $this->histories = $histories;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of maintenances
+     */
+    public function getLastMaintenances()
+    {
+        return $this->lastMaintenances;
+    }
+
+    /**
+     * Set the value of maintenances
+     *
+     * @return  self
+     */
+    public function setLastMaintenances($lastMaintenances)
+    {
+        $this->lastMaintenances = $lastMaintenances;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of orderedHistosAndMtncs
+     */
+    public function getOrderedHistosAndMtncs()
+    {
+        return $this->orderedHistosAndMtncs;
+    }
+
+    /**
+     * Set the value of orderedHistosAndMtncs
+     *
+     * @return  self
+     */
+    public function setOrderedHistosAndMtncs($orderedHistosAndMtncs)
+    {
+        $this->orderedHistosAndMtncs = $orderedHistosAndMtncs;
 
         return $this;
     }

@@ -190,7 +190,7 @@ class Application
     {
         $histories = $this->getHistories();
 
-        if (0 == sizeof($histories)) {
+        if (0 == count($histories)) {
             return null;
         }
 

@@ -16,6 +16,8 @@ class MaintenanceDTO
 
     public ?string $message;
 
+    public array $histories = [];
+
     public function __construct(
         int $id,
         string $state,
@@ -96,5 +98,25 @@ class MaintenanceDTO
     public function getMessage(): ?string
     {
         return $this->message;
+    }
+
+    /**
+     * Get the value of histories.
+     */
+    public function getHistories(): array
+    {
+        return $this->histories;
+    }
+
+    /**
+     * Set the value of histories.
+     *
+     * @return self
+     */
+    public function setHistories($histories): static
+    {
+        $this->histories = $histories;
+
+        return $this;
     }
 }

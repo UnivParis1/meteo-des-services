@@ -3,7 +3,10 @@
 namespace App\Service;
 
 use App\DTO\ApplicationDTO;
+use App\DTO\HistoryApplicationDTO;
+use App\DTO\HistoryMaintenanceDTO;
 use App\DTO\HistoryDTO;
+use App\DTO\MaintenanceDTO;
 use App\Entity\Application;
 use App\Entity\ApplicationHistory;
 use App\Repository\ApplicationHistoryRepository;
@@ -57,7 +60,7 @@ class ApplicationService
         return $array;
     }
 
-    private static function sortDateHistoriesDTO($histories)
+    private static function sortDateHistoriesDTO(&$histories)
     {
         $values = $histories;
         usort($values, static function (HistoryDTO $a, HistoryDTO $b): int {
@@ -69,6 +72,42 @@ class ApplicationService
         });
 
         return $values;
+    }
+
+    /**
+     * sortHistosMntcs
+     *
+     * ajoute les maintenances sur un tableau commun historique application et maintenances (pour permettre de réaliser des tris sur les dates)
+     *
+     * @param  array $histories
+     * @param  array $lastMaintenances
+     * @return array
+     */
+    private static function sortHistosMntcs(array $histories, array $lastMaintenances): array {
+
+        foreach($lastMaintenances as $mtnc) {
+            $histos = $mtnc->getHistories();
+            $date = null;
+
+            for ($i = 0; $i < count($histos); $i++) {
+                $histo = $histos[$i];
+
+                if ($i == 0) {
+                    $date = $histo->getDate();
+                    $ref = $histo;
+                    continue;
+                }
+
+                if ($date < $histo->getDate()) {
+                    $date = $histo->getDate();
+                    $ref = $histo;
+                }
+            }
+
+            $histories[] = $ref;
+        }
+
+        return self::sortDateHistoriesDTO($histories);
     }
 
     public function convertToDTO(Application $application, ?string $title, bool $setHistory = true, $addMaintenancesToHistories = true): ApplicationDTO
@@ -90,7 +129,7 @@ class ApplicationService
 
             $dtoHistories = [];
             foreach ($histories as $history) {
-                $dtoHistories[] = new HistoryDTO(
+                $dtoHistories[] = new HistoryApplicationDTO(
                     $history->getId(),
                     $application->getId(),
                     $history->getType(),
@@ -98,54 +137,73 @@ class ApplicationService
                     $history->getDate(),
                     $this->userRepository->findOneByUid($history->getAuthor())->getDisplayName(),
                     $history->getMessage(),
-                    false
                 );
             }
-            if (!$addMaintenancesToHistories) {
-                $dto->setHistories(self::sortDateHistoriesDTO($dtoHistories));
-            }
+            $dto->setHistories(self::sortDateHistoriesDTO($dtoHistories));
         }
 
         if ($addMaintenancesToHistories) {
+
+            $nextMaintenances = $dto->getNextMaintenances();
+
             $maintenances = $application->getMaintenances();
+            $maintenancesDTO = [];
 
             foreach ($maintenances as $maintenance) {
+                // ne met pas les prochaines maintenances
+                $isLast = true;
+                foreach ($nextMaintenances as $nextMaintenance)
+                    if ($maintenance->getId() == $nextMaintenance->getId())
+                        $isLast = false;
+
+                if ( ! $isLast)
+                    continue;
+
+                $maintenanceDTO = new MaintenanceDTO($maintenance->getId(), $maintenance->getApplicationState(), $maintenance->getStartingDate(), $maintenance->getEndingDate(), $maintenance->getMessage());
+
                 $maintenanceHistories = $maintenance->getMaintenanceHistories();
 
                 if (count($maintenanceHistories) > 0) {
-                    $lastIdMaintenance = $maintenanceHistories->get(0);
-                    foreach ($maintenanceHistories as $maintenanceHistory) {
-                        if ($maintenanceHistory->getId() > $lastIdMaintenance->getId()) {
-                            $lastIdMaintenance = $maintenanceHistory;
-                        }
-                    }
+                    $dtoMntcHistories = [];
 
-                    $dtoHistories[] = new HistoryDTO(
-                        $lastIdMaintenance->getId(),
-                        $lastIdMaintenance->getMaintenance()->getId(),
-                        $lastIdMaintenance->getType(),
-                        $lastIdMaintenance->getApplicationState(),
-                        $lastIdMaintenance->getDate(),
-                        $this->userRepository->findOneByUid($lastIdMaintenance->getAuthor())->getDisplayName(),
-                        $lastIdMaintenance->getMessage(),
-                        true
-                    );
+                    foreach ($maintenanceHistories as $maintenanceHistory) {
+                        $dtoMntcHistories[] = new HistoryMaintenanceDTO(
+                            $maintenanceHistory->getId(),
+                            $maintenanceHistory->getMaintenance()->getId(),
+                            $maintenanceHistory->getType(),
+                            $maintenanceHistory->getApplicationState(),
+                            $maintenanceHistory->getDate(),
+                            $this->userRepository->findOneByUid($maintenanceHistory->getAuthor())->getDisplayName(),
+                            $maintenanceHistory->getMessage(),
+                            $maintenanceHistory->getStartingDate(),
+                            $maintenanceHistory->getEndingDate() );
+                    }
+                    $maintenanceDTO->setHistories(self::sortDateHistoriesDTO($dtoMntcHistories));
                 }
+                $maintenancesDTO[] = $maintenanceDTO;
             }
 
-            $dtoHistoSorted = self::sortDateHistoriesDTO($dtoHistories);
-            $dto->setHistories($dtoHistoSorted);
+            $dto->setLastMaintenances($maintenancesDTO);
 
-            foreach ($dtoHistories as $dtoHistory) {
+            $ordered = self::sortHistosMntcs($dto->getHistories(), $maintenancesDTO);
+            $dto->setOrderedHistosAndMtncs($ordered);
+
+            foreach ($ordered as $dtoHistory) {
                 $lastDateMtnc = $dtoHistory->getDate();
                 if ($lastDateMtnc > $appLastUpdate) {
                     $appLastUpdate = $lastDateMtnc;
                 }
             }
 
-            if ($dto->getLastUpdate() != $appLastUpdate) {
-                $dto->setLastUpdate($appLastUpdate);
+            if ($dto->isInMaintenance()) {
+                $mtncLastUpdate = $dto->getNextMaintenance()->getStartingDate();
+            } else {
+                $mtncLastUpdate = $dto->getLastUpdate();
             }
+
+            $lastUpdate = ($appLastUpdate > $mtncLastUpdate) ? $appLastUpdate : $mtncLastUpdate;
+
+            $dto->setLastUpdate($lastUpdate);
         }
 
         return $dto;

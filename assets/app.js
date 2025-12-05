@@ -135,7 +135,7 @@ function successDetail(response)  {
     buildMaintenances(application.nextMaintenances);
 
     if (application.histories.length > 0) {
-        buildHistories(application.histories);
+        buildHistories(application.orderedHistosAndMtncs);
     } else {
         $("#details #history").addClass('d-none');
     }
@@ -231,11 +231,14 @@ function buildHistories(histories) {
     for (let i = 0; i < histories.length; i++) {
         let history = histories[i];
 
+        let isApplication = history.hasOwnProperty('application_id') ? true : false;
+        let isMaintenance = history.hasOwnProperty('maintenance_id') ? true : false;
+
         firstTrTds[0].textContent = formatDateMtncHisto(history.date);
         firstTrTds[1].textContent = window.icones[history.state][0];
         firstTrTds[2].textContent = history.message;
         firstTrTds[3].textContent = history.author;
-        firstTrTds[4].textContent = history.isMaintenance ? 'Maintenance' : 'Hors maintenance';
+        firstTrTds[4].textContent = isApplication ? 'Hors maintenance' : 'Maintenance';
 
         let trnode = document.createElement('tr');
         trnode.className = trClasses;

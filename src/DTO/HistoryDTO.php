@@ -2,11 +2,9 @@
 
 namespace App\DTO;
 
-class HistoryDTO
-{
-    public int $id;
+class HistoryDTO {
 
-    public int $application_id;
+    public int $id;
 
     public string $type;
 
@@ -18,18 +16,14 @@ class HistoryDTO
 
     public string $author;
 
-    public bool $isMaintenance = false;
-
-    public function __construct(int $id, int $application_id, string $type, string $state, \DateTimeInterface $date, string $author, ?string $message, $isMaintenance = false)
+    public function __construct(int $id, string $type, string $state, \DateTimeInterface $date, string $author, ?string $message)
     {
         $this->id = $id;
-        $this->application_id = $application_id;
         $this->type = $type;
         $this->state = $state;
         $this->date = $date;
         $this->author = $author;
         $this->message = $message;
-        $this->isMaintenance = $isMaintenance;
     }
 
     /**
@@ -133,26 +127,6 @@ class HistoryDTO
     }
 
     /**
-     * Get the value of application_id.
-     */
-    public function getApplication_id()
-    {
-        return $this->application_id;
-    }
-
-    /**
-     * Set the value of application_id.
-     *
-     * @return self
-     */
-    public function setApplication_id($application_id)
-    {
-        $this->application_id = $application_id;
-
-        return $this;
-    }
-
-    /**
      * Get the value of id.
      */
     public function getId()
@@ -168,26 +142,6 @@ class HistoryDTO
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of isMaintenance.
-     */
-    public function getIsMaintenance()
-    {
-        return $this->isMaintenance;
-    }
-
-    /**
-     * Set the value of isMaintenance.
-     *
-     * @return self
-     */
-    public function setIsMaintenance($isMaintenance)
-    {
-        $this->isMaintenance = $isMaintenance;
 
         return $this;
     }
