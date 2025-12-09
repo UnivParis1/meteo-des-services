@@ -217,20 +217,15 @@ function buildHistories(histories) {
     let historyElem = $("#details #history");
     historyElem.removeClass('d-none');
 
-    let tbodyHistory = historyElem.find("tbody");
-    let trHistories = tbodyHistory.children().slice(1);
+    let trs = historyElem.find("tr");
 
-    let trHistory = trHistories[0];
+    for (let i=2; i < trs.length; i++) {
+        trs[i].remove();
+    }
 
-    let trClasses = trHistory.className;
-    let trHistoryRef = trHistory.cloneNode(true);
-    let firstTrTds = trHistoryRef.children;
-
-    trHistories.each(function () {
-        this.remove();
-    });
-
-    for (let i = 0; i < histories.length; i++) {
+    let tds = historyElem.find("td");
+    let i = 0;
+    do {
         let history = histories[i];
 
         let isApplication = history.hasOwnProperty('application_id') ? true : false;
@@ -242,51 +237,12 @@ function buildHistories(histories) {
         firstTrTds[3].textContent = history.author;
         firstTrTds[4].textContent = isApplication ? 'Hors maintenance' : 'Maintenance';
 
-        let trnode = document.createElement('tr');
-        trnode.className = trClasses;
-
-        for (let j = 0; j < firstTrTds.length; j++) {
-            trnode.appendChild(firstTrTds[j].cloneNode(true));
+        i++;
+        if (i < histories.length) {
+            let newTr = trs[1].cloneNode(true);
+            historyElem.find('tbody').append(newTr);
+            tds = newTr.children;
         }
-        tbodyHistory.append(trnode);
-
-        if (isMaintenance) {
-            let mtncHistoriques = getMaintenanceHistories(history.maintenance_id);
-
-            let nestedTable = $('<table>');
-            nestedTable.append(` <tr>
-                                     <td>1</td>
-                                     <td>2</td>
-                                 </tr>`);
-            $(trnode).children().get(5).append(getMaintenanceHistories(history.maintenance_id).get(0));
-        }
-    }
-}
-
-function getMaintenanceHistories(maintenance_id) {
-    let mtnc = globalThis.responseRef.application.lastMaintenances.find((mtnc) => (mtnc.id == maintenance_id));
-
-    console.log(mtnc.histories);
-
-    let table = $('<table>');
-    table.append($(`<tr>
-                        <th>Type</th>
-                        <th>Etat</th>
-                        <th>Message</th>
-                        <th>Début</th>
-                        <th>Fin</th>
-                    </tr>`));
-
-    for (let histo of mtnc.histories) {
-        let tr = $('<tr>');
-        tr.append($('<td class="border">' + histo.type + '</td>'));
-        tr.append($('<td class="border">' + histo.state+ '</td>'));
-        tr.append($('<td class="border">' + histo.message+ '</td>'));
-        tr.append($('<td class="border">' + formatDateMtncHisto(histo.startingDate) + '</td>'));
-        tr.append($('<td class="border">' + formatDateMtncHisto(histo.endingDate) + '</td>'));
-
-        table.append(tr);
-    }
-    return table;
+    } while (i < histories.length);
 }
 
