@@ -215,35 +215,28 @@ function buildHistories(histories) {
     let historyElem = $("#details #history");
     historyElem.removeClass('d-none');
 
-    let tbodyHistory = historyElem.find("tbody");
-    let trHistories = tbodyHistory.children().slice(1);
+    let trs = historyElem.find("tr");
 
-    let trHistory = trHistories[0];
-
-    let trClasses = trHistory.className;
-    let trHistoryRef = trHistory.cloneNode(true);
-    let firstTrTds = trHistoryRef.children;
-
-    trHistories.each(function () {
-        this.remove();
-    });
-
-    for (let i = 0; i < histories.length; i++) {
-        let history = histories[i];
-
-        firstTrTds[0].textContent = formatDateMtncHisto(history.date);
-        firstTrTds[1].textContent = window.icones[history.state][0];
-        firstTrTds[2].textContent = history.message;
-        firstTrTds[3].textContent = history.author;
-        firstTrTds[4].textContent = history.isMaintenance ? 'Maintenance' : 'Hors maintenance';
-
-        let trnode = document.createElement('tr');
-        trnode.className = trClasses;
-
-        for (let j = 0; j < firstTrTds.length; j++) {
-            trnode.appendChild(firstTrTds[j].cloneNode(true));
-        }
-        tbodyHistory.append(trnode);
+    for (let i=2; i < trs.length; i++) {
+        trs[i].remove();
     }
+
+    let tds = historyElem.find("td");
+    let i = 0;
+    do {
+        let history = histories[i];
+        tds[0].textContent = formatDateMtncHisto(history.date);
+        tds[1].textContent = window.icones[history.state][0];
+        tds[2].textContent = history.message;
+        tds[3].textContent = history.author;
+        tds[4].textContent = history.isMaintenance ? 'Maintenance' : 'Hors maintenance';
+
+        i++;
+        if (i < histories.length) {
+            let newTr = trs[1].cloneNode(true);
+            historyElem.find('tbody').append(newTr);
+            tds = newTr.children;
+        }
+    } while (i < histories.length);
 }
 
