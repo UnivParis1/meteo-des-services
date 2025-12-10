@@ -26,9 +26,6 @@ $(function () {
     const myModalEl = document.getElementById('details');
 
     if (myModalEl != null) {
-        // c'est laid mais on a besoin de charger la réf des classes bootstrap définits dans la modale dès le début (on ne sait pas ce qu'adviendra le dom à terme)
-        global.classListTrStatesForMtncRef = $('#nomaintenances + table td:last-child').get(0).classList;
-
         myModalEl.addEventListener('show.bs.modal', event => {
 
             let applicationId = event.relatedTarget.attributes['applicationid'].value;
@@ -96,9 +93,7 @@ $(function () {
     }
 });
 
-function successDetail(response)  {
-    globalThis.responseRef = response;
-
+function successDetail(response) {
     window.icones = response.icones;
     let size = response.icone[3];
     let application = response.application;
@@ -125,7 +120,7 @@ function successDetail(response)  {
     if (response.application.isInMaintenance) {
         buildMaintenanceEnCours(application.nextMaintenance);
 
-        for (let i=0; i < application.nextMaintenances.length; i++) {
+        for (let i = 0; i < application.nextMaintenances.length; i++) {
             if (application.nextMaintenances[i].id == application.nextMaintenance.id) {
                 application.nextMaintenances.splice(i, 1);
             }
@@ -158,20 +153,25 @@ function buildMaintenanceEnCours(mtnc) {
     refDom.removeClass('d-none');
 
     let tds = refDom.find('td');
-    tds[0].textContent= formatDateMtncHisto(mtnc.startingDate);
+    tds[0].textContent = formatDateMtncHisto(mtnc.startingDate);
     tds[1].textContent = mtnc.totalTime;
     tds[2].textContent = window.icones[mtnc.state][0];
 
-    let stateClasses = Array.from(classListTrStatesForMtncRef);
+    let stateClasses = $('#maintenance-en-cours tr td:last-child').attr('class').split(' ');
+
+    // si le dernier element est de type text-, on sait que c'est une classe utilisé pour l'état d'une application (perturbé, indisponible...)
+    if (stateClasses.at(-1).startsWith('text-')) {
+        stateClasses.pop();
+    }
+
     stateClasses.push(window.icones[mtnc.state][1]);
     tds[2].classList.value = stateClasses.join(' ');
-
 }
 
 function buildMaintenances(maintenances) {
     let nomaintenances = $("#details #nomaintenances");
+    let tablemtnc = $('#details #nomaintenances + table');
 
-    let tablemtnc = nomaintenances.next();
     if (maintenances.length == 0) {
         nomaintenances.removeClass('d-none');
         tablemtnc.addClass('d-none');
@@ -179,37 +179,39 @@ function buildMaintenances(maintenances) {
         nomaintenances.addClass('d-none');
         tablemtnc.removeClass('d-none');
 
-        let tbodies = tablemtnc.find('tbody');
-        let trmtnc = tbodies.children().slice(1);
-        let refMtnc = trmtnc[0].cloneNode(true);
+        let stateClasses = $('#details #nomaintenances + table tr td:last-child').attr('class').split(' ');
 
-        trmtnc.each(function () {
-            this.remove();
-        });
-        // (ré)initialise le visuel pour les maintenances
+        if (stateClasses.at(-1).startsWith('text-')) {
+            stateClasses.pop();
+        }
 
-        let tdsMtnc = refMtnc.children;
-        for (let i = 0; i < maintenances.length; i++) {
+        let trs = $('#details #nomaintenances + table tr');
+        for (let i = 2; i < trs.length; i++) {
+            trs[i].remove();
+        }
+
+        let tds = $('#details #nomaintenances + table tr td');
+
+        let i = 0;
+        do {
             let maintenance = maintenances[i];
 
-            let stateClasses = Array.from(classListTrStatesForMtncRef);
             stateClasses.push(window.icones[maintenance.state][1]);
 
-            tdsMtnc[0].textContent = formatDateMtncHisto(maintenance.startingDate);
-            tdsMtnc[1].textContent = maintenance.totalTime;
-            tdsMtnc[2].textContent = window.icones[maintenance.state][0];
+            tds[0].textContent = formatDateMtncHisto(maintenance.startingDate);
+            tds[1].textContent = maintenance.totalTime;
+            tds[2].textContent = window.icones[maintenance.state][0];
 
             // équivalent de impode en php ...
-            tdsMtnc[2].classList.value = stateClasses.join(' ');
+            tds[2].classList.value = stateClasses.join(' ');
 
-            let trnode = document.createElement('tr');
-
-            for (let j = 0; j < tdsMtnc.length; j++) {
-                trnode.appendChild(tdsMtnc[j].cloneNode(true));
+            i++;
+            if (i < maintenances.length) {
+                let newTr = trs[1].cloneNode(true);
+                $('#details #nomaintenances + table tbody').append(newTr);
+                tds = newTr.children;
             }
-
-            tablemtnc.children().append(trnode);
-        }
+        } while (i < maintenances.length);
     }
 }
 
@@ -219,7 +221,7 @@ function buildHistories(histories) {
 
     let trs = historyElem.find("tr");
 
-    for (let i=2; i < trs.length; i++) {
+    for (let i = 2; i < trs.length; i++) {
         trs[i].remove();
     }
 
