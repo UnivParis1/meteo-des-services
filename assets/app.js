@@ -136,12 +136,12 @@ function successDetail(response) {
 
     buildProchaineMaintenances(application.nextMaintenances);
 
-    if (application.histories.length > 0) {
+    if (application.orderedHistosAndMtncs.length > 0) {
         buildApplicationHistory(application.orderedHistosAndMtncs);
 
-        if (application.lastMaintenances.length > 0) {
+        if (application.orderedHistoriqueMtncs.length > 0) {
             $('#history nav div.nav button.nav-link').removeClass('d-none');
-            buildMaintenancesHistory(application.lastMaintenances);
+            buildMaintenancesHistory(application.orderedHistoriqueMtncs);
         } else {
             $('#history nav div.nav button.nav-link').addClass('d-none');
         }
@@ -257,16 +257,7 @@ function buildApplicationHistory(histories) {
     } while (i < histories.length);
 }
 
-function buildMaintenancesHistory(lastMaintenances) {
-
-    let mtncHistories = Array();
-
-    lastMaintenances.forEach(function(maintenance) {
-        if (maintenance.histories.length > 0) {
-            maintenance.histories.forEach((mtncHisto) => mtncHistories.push(mtncHisto));
-        }
-    });
-
+function buildMaintenancesHistory(orderedHistoriqueMtncs) {
     $('#history nav div.nav button.nav-link').removeClass('d-none');
 
     let trs = $('#history #nav-tabContent #nav-maintenances table tbody tr');
@@ -278,7 +269,7 @@ function buildMaintenancesHistory(lastMaintenances) {
     let tds = $('#history #nav-tabContent #nav-maintenances table tbody td');
     let i = 0;
     do {
-        let maintenance = mtncHistories[i];
+        let maintenance = orderedHistoriqueMtncs[i];
 
         tds[0].textContent = formatDateMtncHisto(maintenance.date);
         tds[1].textContent = maintenance.type;
@@ -289,11 +280,11 @@ function buildMaintenancesHistory(lastMaintenances) {
         tds[6].textContent = formatDateMtncHisto(maintenance.endingDate);
 
         i++;
-        if (i < mtncHistories.length) {
+        if (i < orderedHistoriqueMtncs.length) {
             let newTr = trs[1].cloneNode(true);
             $('#history #nav-tabContent #nav-maintenances table tbody').append(newTr);
             tds = newTr.children;
         }
-    } while (i < mtncHistories.length);
+    } while (i < orderedHistoriqueMtncs.length);
 }
 

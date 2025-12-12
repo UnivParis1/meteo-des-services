@@ -26,6 +26,8 @@ class ApplicationDTO
 
     public array $orderedHistosAndMtncs = [];
 
+    public array $orderedHistoriqueMtncs = [];
+
     public function __construct(int $id,
         string $title,
         string $state,
@@ -170,6 +172,26 @@ class ApplicationDTO
     public function setOrderedHistosAndMtncs($orderedHistosAndMtncs)
     {
         $this->orderedHistosAndMtncs = $orderedHistosAndMtncs;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of orderedHistoriqueMtncs
+     */
+    public function getOrderedHistoriqueMtncs()
+    {
+        return $this->orderedHistoriqueMtncs;
+    }
+
+    /**
+     * Set the value of orderedHistoriqueMtncs
+     *
+     * @return  self
+     */
+    public function setOrderedHistoriqueMtncs($orderedHistoriqueMtncs)
+    {
+        $this->orderedHistoriqueMtncs = $orderedHistoriqueMtncs;
 
         return $this;
     }

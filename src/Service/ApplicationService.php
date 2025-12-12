@@ -148,6 +148,7 @@ class ApplicationService
 
             $maintenances = $application->getMaintenances();
             $maintenancesDTO = [];
+            $allHistoriqueMtncs = [];
 
             foreach ($maintenances as $maintenance) {
                 // ne met pas les prochaines maintenances
@@ -167,7 +168,7 @@ class ApplicationService
                     $dtoMntcHistories = [];
 
                     foreach ($maintenanceHistories as $maintenanceHistory) {
-                        $dtoMntcHistories[] = new HistoryMaintenanceDTO(
+                        $historyMaintenanceDTO = new HistoryMaintenanceDTO(
                             $maintenanceHistory->getId(),
                             $maintenanceHistory->getMaintenance()->getId(),
                             $maintenanceHistory->getType(),
@@ -177,6 +178,9 @@ class ApplicationService
                             $maintenanceHistory->getMessage(),
                             $maintenanceHistory->getStartingDate(),
                             $maintenanceHistory->getEndingDate() );
+
+                        $dtoMntcHistories[] =  $historyMaintenanceDTO;
+                        $allHistoriqueMtncs[] = $historyMaintenanceDTO;
                     }
                     $maintenanceDTO->setHistories(self::sortDateHistoriesDTO($dtoMntcHistories));
                 }
@@ -184,6 +188,7 @@ class ApplicationService
             }
 
             $dto->setLastMaintenances($maintenancesDTO);
+            $dto->setOrderedHistoriqueMtncs(self::sortDateHistoriesDTO($allHistoriqueMtncs));
 
             $ordered = self::sortHistosMntcs($dto->getHistories(), $maintenancesDTO);
             $dto->setOrderedHistosAndMtncs($ordered);
