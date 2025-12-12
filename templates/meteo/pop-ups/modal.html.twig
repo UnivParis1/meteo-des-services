@@ -22,62 +22,96 @@
 						</tbody>
 					</table>
 
-                    <div id="maintenance-en-cours" class="d-none">
-                        <div class="pop-up-title fw-bold w-100 mx-auto my-3 text-center fs-6">Maintenance en cours</div>
-                        <table class="w-90 w-sm-75 m-auto">
-                            <tbody>
-                                <tr>
-                                    <th class="text-center fw-bold w-25">Date</th>
-                                        <th class="text-center fw-bold w-25">Durée</th>
-                                        <th class="text-center fw-bold w-25">Etat</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center"></td>
-                                        <td class="text-center border-start border-end px-2 text-popuptext"></td>
-                                        <td class="text-center fw-bold"></td>
-                                    </tr>
-                            </tbody>
-                        </table>
-                    </div>
+					<div id="maintenance-en-cours" class="d-none">
+						<div class="pop-up-title fw-bold w-100 mx-auto my-3 text-center fs-6">Maintenance en cours</div>
+						<table class="w-90 w-sm-75 m-auto">
+							<tbody>
+								<tr>
+									<th class="text-center fw-bold w-25">Date</th>
+									<th class="text-center fw-bold w-25">Durée</th>
+									<th class="text-center fw-bold w-25">Etat</th>
+								</tr>
+								<tr>
+									<td class="text-center"></td>
+									<td class="text-center border-start border-end px-2 text-popuptext"></td>
+                                    <td class="text-center fw-bold"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
-                    <div class="pop-up-title fw-bold w-100 mx-auto my-3 text-center fs-6">Prochaines maintenances</div>
-                    <div id="nomaintenances" class="maintenance-text text-center d-none">Aucune maintenance n'est prévue</div>
-                    <table class="w-90 w-sm-75 m-auto d-none">
-                        <tbody>
-                            <tr>
-                                <th class="text-center fw-bold w-25">Date</th>
-                                <th class="text-center fw-bold w-25">Durée</th>
-                                <th class="text-center fw-bold w-25">Etat</th>
-                            </tr>
-                            <tr>
-                                <td class="text-center"></td>
-                                <td class="text-center border-start border-end px-2 text-popuptext"></td>
-                                <td class="text-center fw-bold"></td>
-                            </tr>
-                        </tbody>
-                   </table>
-                </div>
-				<div id="history" class="d-none">
-					<p class="pop-up-title fw-bold mb-2 text-center fs-6 mt-3">Historique</p>
-					<table class="w-100 mx-auto mt-auto mb-3">
+					<div class="pop-up-title fw-bold w-100 mx-auto my-3 text-center fs-6">Prochaines maintenances</div>
+					<div id="nomaintenances" class="maintenance-text text-center d-none">Aucune maintenance n'est prévue</div>
+					<table class="w-90 w-sm-75 m-auto d-none">
 						<tbody>
 							<tr>
-								<th class="text-center fw-bold" style="color: #473F39;">Date</th>
-								<th class="text-center fw-bold" style="color: #473F39;">Etat</th>
-								<th class="text-center fw-bold" style="color: #473F39;">Message</th>
-								<th class="text-center fw-bold" style="color: #473F39;">Auteur</th>
-								<th class="text-center fw-bold" style="color: #473F39;">Maintenance / Hors maintenance</th>
+								<th class="text-center fw-bold w-25">Date</th>
+								<th class="text-center fw-bold w-25">Durée</th>
+								<th class="text-center fw-bold w-25">Etat</th>
 							</tr>
-							<tr class="border border-gray-500 border-dotted p-3">
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
-								<td class="text-center" style="color: #473F39;"></td>
+							<tr>
+								<td class="text-center"></td>
+								<td class="text-center border-start border-end px-2 text-popuptext"></td>
+								<td class="text-center fw-bold"></td>
 							</tr>
 						</tbody>
 					</table>
+				</div>
+				<div id="history" class="d-none">
+					<p class="pop-up-title fw-bold mb-2 text-center fs-6 mt-3">Historique</p>
+					<nav>
+						<div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
+							<button class="nav-link active d-none" id="nav-applications-tab" data-bs-toggle="tab" data-bs-target="#nav-applications" type="button" role="tab" aria-controls="nav-applications" aria-selected="true">Général</button>
+                            <button class="nav-link d-none" id="nav-maintenances-tab" data-bs-toggle="tab" data-bs-target="#nav-maintenances" type="button" role="tab" aria-controls="nav-maintenances" aria-selected="false">Maintenances</button>
+                        </div>
+                    </nav>
+
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane show active" id="nav-applications" role="tabpanel" aria-labelledby="nav-applications-tab" tabindex="0">
+							<table class="w-100 mx-auto mt-auto mb-3">
+								<tbody>
+									<tr>
+										<th class="text-center fw-bold" style="color: #473F39;">Date</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Etat</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Message</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Auteur</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Maintenance / Hors maintenance</th>
+									</tr>
+									<tr class="border border-gray-500 border-dotted p-3">
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+                        <div class="tab-pane fade" id="nav-maintenances" role="tabpanel" aria-labelledby="nav-maintenances-tab" tabindex="0">
+                            <table class="w-100 mx-auto mt-auto mb-3">
+                                <tbody>
+									<tr>
+										<th class="text-center fw-bold" style="color: #473F39;">Horodatage</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Type</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Etat</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Auteur</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Message</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Début</th>
+										<th class="text-center fw-bold" style="color: #473F39;">Fin</th>
+                                    </tr>
+									<tr class="border border-gray-500 border-dotted p-3">
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+										<td class="text-center" style="color: #473F39;"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

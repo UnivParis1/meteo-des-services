@@ -12,13 +12,13 @@ require('./styles/font-import-google-2.css');
 require("jquery-datetimepicker/jquery.datetimepicker.css");
 require('bootstrap-icons/font/bootstrap-icons.min.css');
 
-require('./stimulus');
 require('jquery');
 require("jquery-datetimepicker/build/jquery.datetimepicker.full");
 
 import DateFormatter from "php-date-formatter/js/php-date-formatter.min";
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
+import { main } from "@popperjs/core";
 
 global.$ = global.jQuery = $;
 
@@ -27,6 +27,11 @@ $(function () {
 
     if (myModalEl != null) {
         myModalEl.addEventListener('show.bs.modal', event => {
+
+            $("#history #nav-tabContent #nav-maintenances").removeClass('active').addClass('fade');
+            $("#history #nav-tabContent #nav-applications").removeClass('fade').addClass('active').addClass('show');
+            $('#history nav div#nav-tab button.nav-link').removeClass('active');
+            $('#history nav div#nav-tab button#nav-applications-tab').addClass('active');
 
             let applicationId = event.relatedTarget.attributes['applicationid'].value;
 
@@ -129,10 +134,18 @@ function successDetail(response) {
         $("#maintenance-en-cours").addClass('d-none');
     }
 
-    buildMaintenances(application.nextMaintenances);
+    buildProchaineMaintenances(application.nextMaintenances);
 
     if (application.histories.length > 0) {
-        buildHistories(application.orderedHistosAndMtncs);
+        buildApplicationHistory(application.orderedHistosAndMtncs);
+
+        if (application.lastMaintenances.length > 0) {
+            $('#history nav div.nav button.nav-link').removeClass('d-none');
+            buildMaintenancesHistory(application.lastMaintenances);
+        } else {
+            $('#history nav div.nav button.nav-link').addClass('d-none');
+        }
+
     } else {
         $("#details #history").addClass('d-none');
     }
@@ -168,7 +181,7 @@ function buildMaintenanceEnCours(mtnc) {
     tds[2].classList.value = stateClasses.join(' ');
 }
 
-function buildMaintenances(maintenances) {
+function buildProchaineMaintenances(maintenances) {
     let nomaintenances = $("#details #nomaintenances");
     let tablemtnc = $('#details #nomaintenances + table');
 
@@ -215,36 +228,72 @@ function buildMaintenances(maintenances) {
     }
 }
 
-function buildHistories(histories) {
+function buildApplicationHistory(histories) {
     let historyElem = $("#details #history");
     historyElem.removeClass('d-none');
 
-    let trs = historyElem.find("tr");
+    let trs = $('#history #nav-tabContent #nav-applications table tbody tr');
 
     for (let i = 2; i < trs.length; i++) {
         trs[i].remove();
     }
 
-    let tds = historyElem.find("td");
+    let tds = $('#history #nav-tabContent #nav-applications table tbody td');
     let i = 0;
     do {
         let history = histories[i];
-
-        let isApplication = history.hasOwnProperty('application_id') ? true : false;
-        let isMaintenance = history.hasOwnProperty('maintenance_id') ? true : false;
-
-        firstTrTds[0].textContent = formatDateMtncHisto(history.date);
-        firstTrTds[1].textContent = window.icones[history.state][0];
-        firstTrTds[2].textContent = history.message;
-        firstTrTds[3].textContent = history.author;
-        firstTrTds[4].textContent = isApplication ? 'Hors maintenance' : 'Maintenance';
+        tds[0].textContent = formatDateMtncHisto(history.date);
+        tds[1].textContent = window.icones[history.state][0];
+        tds[2].textContent = history.message;
+        tds[3].textContent = history.author;
+        tds[4].textContent = history.hasOwnProperty('maintenance_id') ? 'Maintenance' : 'Hors maintenance';
 
         i++;
         if (i < histories.length) {
             let newTr = trs[1].cloneNode(true);
-            historyElem.find('tbody').append(newTr);
+            $('#history #nav-tabContent #nav-applications table tbody').append(newTr);
             tds = newTr.children;
         }
     } while (i < histories.length);
+}
+
+function buildMaintenancesHistory(lastMaintenances) {
+
+    let mtncHistories = Array();
+
+    lastMaintenances.forEach(function(maintenance) {
+        if (maintenance.histories.length > 0) {
+            maintenance.histories.forEach((mtncHisto) => mtncHistories.push(mtncHisto));
+        }
+    });
+
+    $('#history nav div.nav button.nav-link').removeClass('d-none');
+
+    let trs = $('#history #nav-tabContent #nav-maintenances table tbody tr');
+
+    for (let i = 2; i < trs.length; i++) {
+        trs[i].remove();
+    }
+
+    let tds = $('#history #nav-tabContent #nav-maintenances table tbody td');
+    let i = 0;
+    do {
+        let maintenance = mtncHistories[i];
+
+        tds[0].textContent = formatDateMtncHisto(maintenance.date);
+        tds[1].textContent = maintenance.type;
+        tds[2].textContent = maintenance.state;
+        tds[3].textContent = maintenance.author;
+        tds[4].textContent = maintenance.message;
+        tds[5].textContent = formatDateMtncHisto(maintenance.startingDate);
+        tds[6].textContent = formatDateMtncHisto(maintenance.endingDate);
+
+        i++;
+        if (i < mtncHistories.length) {
+            let newTr = trs[1].cloneNode(true);
+            $('#history #nav-tabContent #nav-maintenances table tbody').append(newTr);
+            tds = newTr.children;
+        }
+    } while (i < mtncHistories.length);
 }
 
