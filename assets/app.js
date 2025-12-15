@@ -99,7 +99,7 @@ $(function () {
 });
 
 function successDetail(response) {
-    window.icones = response.icones;
+    globalThis.icones = response.icones;
     let size = response.icone[3];
     let application = response.application;
     let icone = response.icone;
@@ -123,7 +123,16 @@ function successDetail(response) {
     $('#details #lastUpdate').html(application.lastUpdate ? formatDateDetails(application.lastUpdate) : '');
 
     if (response.application.isInMaintenance) {
-        buildMaintenanceEnCours(application.nextMaintenance);
+        $("#maintenance-en-cours").removeClass('d-none');
+
+        let fields = [
+            { field: 'startingDate', func: formatDateMtncHisto },
+            { field: 'totalTime' },
+            [{ field: 'textContent', func: (state) => globalThis.icones[state][0], args: { val: 'state' } },
+             { field: 'classList.value', func: getEtatapplicationClassAndText, args: { val: 'state', jq: '#maintenance-en-cours tr td:last-child' } }
+            ]
+        ];
+        buildTablesContent(fields, [application.nextMaintenance], '#maintenance-en-cours table');
 
         for (let i = 0; i < application.nextMaintenances.length; i++) {
             if (application.nextMaintenances[i].id == application.nextMaintenance.id) {
@@ -138,14 +147,13 @@ function successDetail(response) {
 
     if (application.orderedHistosAndMtncs.length > 0) {
         $("#details #history").removeClass('d-none');
-        let fields = [{field:'date', func:formatDateMtncHisto}, {field:'state'}, {field:'message'}, {field:'author'}, {field:'maintenance_id',func:function(id){return typeof id == 'undefined' ? 'Hors Maintenance' : 'Maintenance';}}];
-        buildTableHistory(fields, application.orderedHistosAndMtncs, '#history #nav-tabContent #nav-applications table tbody');
+        let fields = [{ field: 'date', func: formatDateMtncHisto }, { field: 'state' }, { field: 'message' }, { field: 'author' }, { field: 'maintenance_id', func: function (id) { return typeof id == 'undefined' ? 'Hors Maintenance' : 'Maintenance'; } }];
+        buildTablesContent(fields, application.orderedHistosAndMtncs, '#history #nav-tabContent #nav-applications table tbody');
 
         if (application.orderedHistoriqueMtncs.length > 0) {
             $('#history nav div.nav button.nav-link').removeClass('d-none');
-            let fields = [{field:'date', func:formatDateMtncHisto}, {field: 'type'}, {field:'state'}, {field:'author'}, {field:'message'}, {field:'startingDate',func:formatDateMtncHisto}, {field:'endingDate',func:formatDateMtncHisto}];
-            buildTableHistory(fields, application.orderedHistoriqueMtncs, '#history #nav-tabContent #nav-maintenances table tbody');
-//            buildMaintenancesHistory(application.orderedHistoriqueMtncs);
+            fields = [{ field: 'date', func: formatDateMtncHisto }, { field: 'type' }, { field: 'state' }, { field: 'author' }, { field: 'message' }, { field: 'startingDate', func: formatDateMtncHisto }, { field: 'endingDate', func: formatDateMtncHisto }];
+            buildTablesContent(fields, application.orderedHistoriqueMtncs, '#history #nav-tabContent #nav-maintenances table tbody');
         } else {
             $('#history nav div.nav button.nav-link').addClass('d-none');
         }
@@ -165,24 +173,16 @@ function formatDateMtncHisto(date) {
     return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("HH") + 'H' + dt.toFormat('mm');
 }
 
-function buildMaintenanceEnCours(mtnc) {
-    let refDom = $("#maintenance-en-cours");
-    refDom.removeClass('d-none');
+function getEtatapplicationClassAndText(state, jqselect) {
+    let stateClasses = $(jqselect).attr('class').split(' ');
 
-    let tds = refDom.find('td');
-    tds[0].textContent = formatDateMtncHisto(mtnc.startingDate);
-    tds[1].textContent = mtnc.totalTime;
-    tds[2].textContent = window.icones[mtnc.state][0];
-
-    let stateClasses = $('#maintenance-en-cours tr td:last-child').attr('class').split(' ');
-
-    // si le dernier element est de type text-, on sait que c'est une classe utilisé pour l'état d'une application (perturbé, indisponible...)
     if (stateClasses.at(-1).startsWith('text-')) {
         stateClasses.pop();
     }
 
-    stateClasses.push(window.icones[mtnc.state][1]);
-    tds[2].classList.value = stateClasses.join(' ');
+    stateClasses.push(globalThis.icones[state][1]);
+
+    return stateClasses.join(' ');
 }
 
 function buildProchaineMaintenances(maintenances) {
@@ -196,44 +196,19 @@ function buildProchaineMaintenances(maintenances) {
         nomaintenances.addClass('d-none');
         tablemtnc.removeClass('d-none');
 
-        let stateClasses = $('#details #nomaintenances + table tr td:last-child').attr('class').split(' ');
-
-        if (stateClasses.at(-1).startsWith('text-')) {
-            stateClasses.pop();
-        }
-
-        let trs = $('#details #nomaintenances + table tr');
-        for (let i = 2; i < trs.length; i++) {
-            trs[i].remove();
-        }
-
-        let tds = $('#details #nomaintenances + table tr td');
-
-        let i = 0;
-        do {
-            let maintenance = maintenances[i];
-
-            stateClasses.push(window.icones[maintenance.state][1]);
-
-            tds[0].textContent = formatDateMtncHisto(maintenance.startingDate);
-            tds[1].textContent = maintenance.totalTime;
-            tds[2].textContent = window.icones[maintenance.state][0];
-
-            // équivalent de impode en php ...
-            tds[2].classList.value = stateClasses.join(' ');
-
-            i++;
-            if (i < maintenances.length) {
-                let newTr = trs[1].cloneNode(true);
-                $('#details #nomaintenances + table tbody').append(newTr);
-                tds = newTr.children;
-            }
-        } while (i < maintenances.length);
+        let fields = [
+            { field: 'startingDate', func: formatDateMtncHisto },
+            { field: 'totalTime' },
+            [{ field: 'textContent', func: (state) => globalThis.icones[state][0], args: { val: 'state' } },
+             { field: 'classList.value', func: getEtatapplicationClassAndText, args: { val: 'state', jq: '#details #nomaintenances + table tr td:last-child' } }
+            ]
+        ];
+        buildTablesContent(fields, maintenances, '#details #nomaintenances + table');
     }
 }
 
-function buildTableHistory(fields, elements, jqbasel) {
-     let trs = $(jqbasel + ' tr');
+function buildTablesContent(fields, elements, jqbasel) {
+    let trs = $(jqbasel + ' tr');
 
     for (let i = 2; i < trs.length; i++) {
         trs[i].remove();
@@ -247,10 +222,29 @@ function buildTableHistory(fields, elements, jqbasel) {
         for (let j = 0; j < fields.length; j++) {
             let prop = fields[j];
 
-            if (prop.hasOwnProperty('func')) {
-                tds[j].textContent = prop['func'](elem[prop.field]);
-            } else {
-                tds[j].textContent = elem[prop.field];
+            if (Array.isArray(prop)) {
+                for (let p of prop) {
+                    let valueFromFunc;
+                    if (p.args.hasOwnProperty('jq')) {
+                        valueFromFunc = p['func'](elem.state, p.args.jq);
+                        tds[j]['classList']['value'] = valueFromFunc;
+                    } else {
+                        valueFromFunc = p['func'](elem.state);
+                    }
+                    if (p.field.includes('.')) {
+                        let vfields = p.field.split('.');
+                        tds[j][vfields[0]][vfields[1]] = valueFromFunc;
+                    } else {
+                        tds[j][p.field] = valueFromFunc;
+                    }
+                }
+            }
+            else {
+                if (prop.hasOwnProperty('func')) {
+                    tds[j].textContent = prop['func'](elem[prop.field]);
+                } else {
+                    tds[j].textContent = elem[prop.field];
+                }
             }
         }
 
