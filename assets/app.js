@@ -128,8 +128,9 @@ function successDetail(response) {
         let fields = [
             { field: 'startingDate', func: formatDateMtncHisto },
             { field: 'totalTime' },
-            [{ field: 'textContent', func: (state) => globalThis.icones[state][0], args: { val: 'state' } },
-             { field: 'classList.value', func: getEtatapplicationClassAndText, args: { val: 'state', jq: '#maintenance-en-cours tr td:last-child' } }
+            [
+             { field: 'state', func: (state) => globalThis.icones[state][0] },
+             { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#maintenance-en-cours tr td:last-child' } }
             ]
         ];
         buildTablesContent(fields, [application.nextMaintenance], '#maintenance-en-cours table');
@@ -147,12 +148,27 @@ function successDetail(response) {
 
     if (application.orderedHistosAndMtncs.length > 0) {
         $("#details #history").removeClass('d-none');
-        let fields = [{ field: 'date', func: formatDateMtncHisto }, { field: 'state' }, { field: 'message' }, { field: 'author' }, { field: 'maintenance_id', func: function (id) { return typeof id == 'undefined' ? 'Hors Maintenance' : 'Maintenance'; } }];
+        let fields = [{ field: 'date', func: formatDateMtncHisto },
+                      [
+                        { field: 'state', func: (state) => globalThis.icones[state][0] },
+                        { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#history #nav-tabContent #nav-applications table tbody td:last-child' } }
+                      ],
+                      { field: 'message' },
+                      { field: 'author' },
+                      { field: 'maintenance_id', func: function (id) { return typeof id == 'undefined' ? 'Hors Maintenance' : 'Maintenance';}} ];
         buildTablesContent(fields, application.orderedHistosAndMtncs, '#history #nav-tabContent #nav-applications table tbody');
 
         if (application.orderedHistoriqueMtncs.length > 0) {
             $('#history nav div.nav button.nav-link').removeClass('d-none');
-            fields = [{ field: 'date', func: formatDateMtncHisto }, { field: 'type' }, { field: 'state' }, { field: 'author' }, { field: 'message' }, { field: 'startingDate', func: formatDateMtncHisto }, { field: 'endingDate', func: formatDateMtncHisto }];
+            fields = [{ field: 'date', func: formatDateMtncHisto },
+                      { field: 'type', func: (data) => (data=='creation' ? 'Création' : (data=='updating') ? 'Mise à jour' : 'Suppression')  },
+                      [{ field: 'state', func: (state) => globalThis.icones[state][0] },
+                       { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#history #nav-tabContent #nav-maintenances table tbody td:last-child' } }
+                      ],
+                      { field: 'author' },
+                      { field: 'message' },
+                      { field: 'startingDate', func: formatDateMtncHisto },
+                      { field: 'endingDate', func: formatDateMtncHisto }];
             buildTablesContent(fields, application.orderedHistoriqueMtncs, '#history #nav-tabContent #nav-maintenances table tbody');
         } else {
             $('#history nav div.nav button.nav-link').addClass('d-none');
@@ -199,8 +215,9 @@ function buildProchaineMaintenances(maintenances) {
         let fields = [
             { field: 'startingDate', func: formatDateMtncHisto },
             { field: 'totalTime' },
-            [{ field: 'textContent', func: (state) => globalThis.icones[state][0], args: { val: 'state' } },
-             { field: 'classList.value', func: getEtatapplicationClassAndText, args: { val: 'state', jq: '#details #nomaintenances + table tr td:last-child' } }
+            [
+             { field: 'state', func: (state) => globalThis.icones[state][0] },
+             { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#details #nomaintenances + table tr td:last-child' } }
             ]
         ];
         buildTablesContent(fields, maintenances, '#details #nomaintenances + table');
@@ -225,17 +242,21 @@ function buildTablesContent(fields, elements, jqbasel) {
             if (Array.isArray(prop)) {
                 for (let p of prop) {
                     let valueFromFunc;
-                    if (p.args.hasOwnProperty('jq')) {
-                        valueFromFunc = p['func'](elem.state, p.args.jq);
-                        tds[j]['classList']['value'] = valueFromFunc;
+                    if (p.hasOwnProperty('args') && p.args.hasOwnProperty('jq')) {
+                        valueFromFunc = p['func'](elem[p.field], p.args.jq);
                     } else {
-                        valueFromFunc = p['func'](elem.state);
+                        valueFromFunc = p['func'](elem[p.field]);
                     }
-                    if (p.field.includes('.')) {
-                        let vfields = p.field.split('.');
-                        tds[j][vfields[0]][vfields[1]] = valueFromFunc;
+
+                    if (p.hasOwnProperty('args') && p.args.hasOwnProperty('to')) {
+                        if (p.args.to.includes('.')) {
+                            let tos = p.args.to.split('.');
+                            tds[j][tos[0]][tos[1]] = valueFromFunc;
+                        } else {
+                            tds[j][p.args.to] = valueFromFunc;
+                        }
                     } else {
-                        tds[j][p.field] = valueFromFunc;
+                        tds[j].textContent = valueFromFunc;
                     }
                 }
             }
