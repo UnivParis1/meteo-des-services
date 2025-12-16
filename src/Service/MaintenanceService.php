@@ -56,6 +56,8 @@ class MaintenanceService
             }
 
             if ($nextMaintenanceDTO->getStartingDate() < $now && $nextMaintenanceDTO->getEndingDate() > $now) {
+                // si une maintenance est en cours, on considère que la prochaine maintenance est celle en cours
+                $application->setNextMaintenance($nextMaintenanceDTO);
                 $application->setIsInMaintenance(true);
             }
             $maintenances[] = $nextMaintenanceDTO;
