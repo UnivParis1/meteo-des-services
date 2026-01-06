@@ -1,0 +1,9 @@
+symfonycasts_sass:
+    root_sass:
+        - 'assets/styles/app.scss'
+    sass_options:
+        embed_sources: false
+        source_map: false
+#        embed_source_map:     '%kernel.debug%'
+        load_path:
+            - '%kernel.project_dir%/vendor/twbs/bootstrap/scss'

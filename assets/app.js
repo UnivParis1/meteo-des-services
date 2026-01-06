@@ -4,23 +4,22 @@
  * We recommend including the built version of this JavaScript file
  * (and its CSS file) in your base layout (base.html.twig).
  */
-require('./styles/global.scss');
-require('./styles/custom_bootstrap.scss');
-require('./styles/app.css');
-require('./styles/font-import-google.css');
-require('./styles/font-import-google-2.css');
-require("jquery-datetimepicker/jquery.datetimepicker.css");
-require('bootstrap-icons/font/bootstrap-icons.min.css');
+import './styles/app.css';
+import './styles/font-import-google.css';
+import './styles/font-import-google-2.css';
+import "./vendor/jquery-datetimepicker/jquery-datetimepicker.index.js";
+import "./vendor/php-date-formatter/php-date-formatter.index.js";
+import './vendor/bootstrap/bootstrap.index.js';
+import "./vendor/luxon/luxon.index.js";
+import "./vendor/jquery/jquery.index.js";
 
-require('jquery');
-require("jquery-datetimepicker/build/jquery.datetimepicker.full");
-
-import DateFormatter from "php-date-formatter/js/php-date-formatter.min";
+import DateFormatter from "./vendor/php-date-formatter/php-date-formatter.index.js";
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
-import { main } from "@popperjs/core";
+import { main } from "./vendor/@popperjs/core/core.index.js";
 
-global.$ = global.jQuery = $;
+import $ from 'jquery';
+window.jQuery = $;
 
 $(function () {
     const myModalEl = document.getElementById('details');

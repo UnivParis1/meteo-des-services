@@ -11,7 +11,6 @@ return [
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
-    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     Symfony\UX\Autocomplete\AutocompleteBundle::class => ['all' => true],
     Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
     Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
@@ -19,4 +18,5 @@ return [
     Survos\CommandBundle\SurvosCommandBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
     Ajgl\Twig\Extension\SymfonyBundle\AjglBreakpointTwigExtensionBundle::class => ['dev' => true],
+    Symfonycasts\SassBundle\SymfonycastsSassBundle::class => ['all' => true],
 ];
