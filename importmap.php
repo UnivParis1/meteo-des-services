@@ -52,4 +52,8 @@ return [
         'version' => '5.3.8',
         'type' => 'css',
     ],
+    'jquery-datetimepicker/build/jquery.datetimepicker.min.css' => [
+        'version' => '2.5.21',
+        'type' => 'css',
+    ],
 ];

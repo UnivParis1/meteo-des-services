@@ -7,6 +7,8 @@
 import './styles/app.css';
 import './styles/font-import-google.css';
 import './styles/font-import-google-2.css';
+import './vendor/jquery-datetimepicker/build/jquery.datetimepicker.min.css';
+
 import "./vendor/jquery-datetimepicker/jquery-datetimepicker.index.js";
 import "./vendor/php-date-formatter/php-date-formatter.index.js";
 import './vendor/bootstrap/bootstrap.index.js';
@@ -16,7 +18,6 @@ import "./vendor/jquery/jquery.index.js";
 import DateFormatter from "./vendor/php-date-formatter/php-date-formatter.index.js";
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
-import { main } from "./vendor/@popperjs/core/core.index.js";
 
 import $ from 'jquery';
 window.jQuery = $;
