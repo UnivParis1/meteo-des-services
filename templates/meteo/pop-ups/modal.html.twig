@@ -42,7 +42,7 @@
 								<tr>
 									<td class="text-center"></td>
 									<td class="text-center border-start border-end px-2 text-popuptext"></td>
-                                    <td class="text-center fw-bold"></td>
+									<td class="text-center fw-bold"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -70,12 +70,13 @@
 					<nav>
 						<div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
 							<button class="nav-link active d-none" id="nav-applications-tab" data-bs-toggle="tab" data-bs-target="#nav-applications" type="button" role="tab" aria-controls="nav-applications" aria-selected="true">Général</button>
-                            <button class="nav-link d-none" id="nav-maintenances-tab" data-bs-toggle="tab" data-bs-target="#nav-maintenances" type="button" role="tab" aria-controls="nav-maintenances" aria-selected="false">Maintenances</button>
-                        </div>
-                    </nav>
+							<button class="nav-link d-none" id="nav-maintenances-tab" data-bs-toggle="tab" data-bs-target="#nav-maintenances" type="button" role="tab" aria-controls="nav-maintenances" aria-selected="false">Maintenances</button>
+							<button class="nav-link d-none" id="nav-availability-tab" data-bs-toggle="tab" data-bs-target="#nav-availability" type="button" role="tab" aria-controls="nav-availability" aria-selected="false">Disponibilité</button>
+						</div>
+					</nav>
 
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane show active" id="nav-applications" role="tabpanel" aria-labelledby="nav-applications-tab" tabindex="0">
+					<div class="tab-content" id="nav-tabContent">
+						<div class="tab-pane show active" id="nav-applications" role="tabpanel" aria-labelledby="nav-applications-tab" tabindex="0">
 							<table class="w-100 mx-auto mt-auto mb-3">
 								<tbody>
 									<tr>
@@ -95,9 +96,9 @@
 								</tbody>
 							</table>
 						</div>
-                        <div class="tab-pane fade" id="nav-maintenances" role="tabpanel" aria-labelledby="nav-maintenances-tab" tabindex="0">
-                            <table class="w-100 mx-auto mt-auto mb-3">
-                                <tbody>
+						<div class="tab-pane fade" id="nav-maintenances" role="tabpanel" aria-labelledby="nav-maintenances-tab" tabindex="0">
+							<table class="w-100 mx-auto mt-auto mb-3">
+								<tbody>
 									<tr>
 										<th class="text-center fw-bold" style="color: #473F39;">Horodatage</th>
 										<th class="text-center fw-bold" style="color: #473F39;">Type</th>
@@ -106,7 +107,7 @@
 										<th class="text-center fw-bold" style="color: #473F39;">Message</th>
 										<th class="text-center fw-bold" style="color: #473F39;">Début</th>
 										<th class="text-center fw-bold" style="color: #473F39;">Fin</th>
-                                    </tr>
+									</tr>
 									<tr class="border border-gray-500 border-dotted p-3">
 										<td class="text-center" style="color: #473F39;"></td>
 										<td class="text-center" style="color: #473F39;"></td>
@@ -118,6 +119,15 @@
 									</tr>
 								</tbody>
 							</table>
+						</div>
+
+						<div class="tab-pane fade" id="nav-availability" role="tabpanel" aria-labelledby="nav-availability-tab" tabindex="0">
+							<div class="col-md-12">
+								<div style="overflow: hidden;" class="visavail" id="visavail_container">
+									<p id="visavail_graph" class="">
+									</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

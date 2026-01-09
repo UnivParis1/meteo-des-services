@@ -7,16 +7,22 @@
 import './styles/app.css';
 import './styles/font-import-google.css';
 import './styles/font-import-google-2.css';
+import './vendor/visavail/visavail.css';
 
 import './vendor/bootstrap/bootstrap.index.js';
 import "./vendor/luxon/luxon.index.js";
 import "./vendor/jquery/jquery.index.js";
+import "./vendor/d3/d3.index.js";
+import "./vendor/visavail/visavail.index.js";
 
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
+import * as d3 from "d3";
+import visavail from 'visavail';
 
 import $ from 'jquery';
 window.jQuery = $;
+window.d3 = d3;
 
 $(function () {
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -45,6 +51,12 @@ function showBSModal(event) {
         details_request.always( () => removeSpinner() );
         details_request.done( (response) => showDetail(response) );
         details_request.fail( (xhr, status, error) => console.error(error) );
+
+        const tabEl = document.querySelector('button#nav-availability-tab');
+        tabEl.addEventListener('shown.bs.tab', event => {
+            $('#visavail_graph').empty();
+            generateVisavailability();
+        })
 }
 
 function addSpinner() {
@@ -57,6 +69,32 @@ function removeSpinner() {
     $("#spinner").addClass('d-none');
     $(".modal-header").removeClass('invisible');
     $(".modal-body").removeClass('invisible');
+}
+
+function generateVisavailability() {
+    var dataset = [{
+        "measure": "Balance",
+        "data": [
+            ["2016-01-01 12:00:00", 1, "2016-01-01 13:00:00"],
+            ["2016-01-01 14:22:51", 1, "2016-01-01 16:14:12"],
+            ["2016-01-01 19:20:05", 0, "2016-01-01 20:30:00"],
+            ["2016-01-01 20:30:00", 1, "2016-01-01 22:00:00"]
+        ]
+    }];
+    // visualisation disponibilités
+    var options = {
+        id_div_container: "visavail_container",
+        id_div_graph: "visavail_graph",
+        icon: {
+            class_has_data: 'fas fa-fw fa-check',
+            class_has_no_data: 'fas fa-fw fa-exclamation-circle'
+        },
+    };
+
+    if (typeof chart == 'undefined') {
+        const test = d3.scaleUtc();
+	    var chart = visavail.generate(options, dataset);
+    }
 }
 
 function showDetail(response) {
@@ -139,7 +177,7 @@ function showDetail(response) {
                       { field: 'endingDate', func: formatDateMtncHisto }];
             buildTablesContent(fields, application.orderedHistoriqueMtncs, '#history #nav-tabContent #nav-maintenances table tbody');
         } else {
-            $('#history nav div.nav button.nav-link').addClass('d-none');
+            $('#history nav div.nav button.nav-link#nav-maintenances-tab').addClass('d-none');
         }
     } else {
         $("#details #history").addClass('d-none');
