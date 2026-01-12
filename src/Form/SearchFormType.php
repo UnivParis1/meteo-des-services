@@ -23,13 +23,7 @@ class SearchFormType extends AbstractType
             ])
             ->add('selectedState', ChoiceType::class, [
                 'required' => false,
-                'choices' => [
-                    'Tous les états' => '',
-                    'Indisponible' => 'unavailable',
-                    'Perturbé' => 'perturbed',
-                    'Opérationnel' => 'Operational',
-                    'Non renseigné' => 'default',
-                ],
+                'choices' => array_merge(['Tous les états' => ''], array_flip(SearchApplication::$etats))
             ])->add('limit', ChoiceType::class, [
                 'required' => true,
                 'choices' => ['Tous' => null, '10' => 10, '20' => 20, '30' => 30],
