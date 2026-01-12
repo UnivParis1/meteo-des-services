@@ -9,6 +9,7 @@ import './styles/font-import-google.css';
 import './styles/font-import-google-2.css';
 import './vendor/visavail/visavail.css';
 
+import moment from "./vendor/moment/min/moment-with-locales.min.js";
 import './vendor/bootstrap/bootstrap.index.js';
 import "./vendor/luxon/luxon.index.js";
 import "./vendor/jquery/jquery.index.js";
@@ -22,6 +23,7 @@ import visavail from 'visavail';
 
 import $ from 'jquery';
 window.jQuery = $;
+window.moment = moment;
 window.d3 = d3;
 
 $(function () {
@@ -51,12 +53,6 @@ function showBSModal(event) {
         details_request.always( () => removeSpinner() );
         details_request.done( (response) => showDetail(response) );
         details_request.fail( (xhr, status, error) => console.error(error) );
-
-        const tabEl = document.querySelector('button#nav-availability-tab');
-        tabEl.addEventListener('shown.bs.tab', event => {
-            $('#visavail_graph').empty();
-            generateVisavailability();
-        })
 }
 
 function addSpinner() {
@@ -72,8 +68,10 @@ function removeSpinner() {
 }
 
 function generateVisavailability() {
+    window.moment.locale('FR_fr');
+
     var dataset = [{
-        "measure": "Balance",
+        "measure": "Disponibilité de l'application",
         "data": [
             ["2016-01-01 12:00:00", 1, "2016-01-01 13:00:00"],
             ["2016-01-01 14:22:51", 1, "2016-01-01 16:14:12"],
@@ -179,6 +177,12 @@ function showDetail(response) {
         } else {
             $('#history nav div.nav button.nav-link#nav-maintenances-tab').addClass('d-none');
         }
+
+        const tabEl = document.querySelector('button#nav-availability-tab');
+        tabEl.addEventListener('shown.bs.tab', event => {
+            $('#visavail_graph').empty();
+            generateVisavailability(application);
+        })
     } else {
         $("#details #history").addClass('d-none');
     }
