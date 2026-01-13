@@ -42,6 +42,7 @@ function showBSModal(event) {
         $("#history #nav-tabContent #nav-applications").removeClass('fade').addClass('active').addClass('show');
         $('#history nav div#nav-tab button.nav-link').removeClass('active');
         $('#history nav div#nav-tab button#nav-applications-tab').addClass('active');
+        $('#visavail_graph').empty();
 
         let applicationId = event.relatedTarget.attributes['applicationid'].value;
 
