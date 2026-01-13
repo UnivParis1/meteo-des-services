@@ -110,7 +110,7 @@ class ApplicationService
         return self::sortDateHistoriesDTO($histories);
     }
 
-    public function convertToDTO(Application $application, ?string $title, bool $setHistory = true, $addMaintenancesToHistories = true): ApplicationDTO
+    public function convertToDTO(Application $application, ?string $title, bool $setHistory = true, $addMaintenancesToHistories = true, $genereDisponibilite = true): ApplicationDTO
     {
         $appLastUpdate = $application->getLastUpdate();
 
@@ -209,6 +209,10 @@ class ApplicationService
             $lastUpdate = ($appLastUpdate > $mtncLastUpdate) ? $appLastUpdate : $mtncLastUpdate;
 
             $dto->setLastUpdate($lastUpdate);
+        }
+
+        if ($genereDisponibilite) {
+            ApplicationDTO::createDisponibilite($ordered);
         }
 
         return $dto;

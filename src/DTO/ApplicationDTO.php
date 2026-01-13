@@ -2,6 +2,9 @@
 
 namespace App\DTO;
 
+use League\Period\Period;
+use League\Period\InvalidInterval;
+
 class ApplicationDTO
 {
     public int $id;
@@ -194,5 +197,46 @@ class ApplicationDTO
         $this->orderedHistoriqueMtncs = $orderedHistoriqueMtncs;
 
         return $this;
+    }
+
+    public static function createDisponibilite($orderedHistosAndMtncs): array
+    {
+        // remettre en ordre ascendant pour les dates
+        $orderedHistosAndMtncs = array_reverse($orderedHistosAndMtncs);
+
+        $genPeriods = [];
+        if (sizeof($events = $orderedHistosAndMtncs) > 0) {
+            $i = 0;
+            $start = null;
+            $end = null;
+            do {
+                $event = $events[$i];
+
+                $isMtnc = strstr(get_class($event), 'Maintenance') ? true : false;
+
+                if ($start && !$end) {
+                    if ($isMtnc) {
+                        $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $event->startingDate)];
+                    }
+
+                }
+
+                if (!$isMtnc) { // alors c'est une application
+                    $start = $event->getDate();
+                    $lastAppIdx = $i;
+                } else {
+                    $start = $event->startingDate;
+                    $end = $event->endingDate;
+                    $genPeriods[] = ['etat' => $event->getState(), 'period' => Period::fromDate($start, $end)];
+                }
+
+                $i++;
+            } while ($i < sizeof($orderedHistosAndMtncs));
+        }
+
+        echo '<pre>';
+        die(var_export($genPeriods));
+
+        return $genPeriods;
     }
 }
