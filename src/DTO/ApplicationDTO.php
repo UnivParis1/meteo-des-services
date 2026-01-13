@@ -31,6 +31,8 @@ class ApplicationDTO
 
     public array $orderedHistoriqueMtncs = [];
 
+    public array $disponibilites = [];
+
     public function __construct(int $id,
         string $title,
         string $state,
@@ -199,9 +201,11 @@ class ApplicationDTO
         return $this;
     }
 
-    public static function createDisponibilite($orderedHistosAndMtncs): array
+    public static function createDisponibilite($orderedHistosAndMtncs, $appState, $isInMaintenance, $nextMaintenance): array
     {
-        // remettre en ordre ascendant pour les dates
+        if (sizeof($orderedHistosAndMtncs) ==0)
+            return [];
+
         $orderedHistosAndMtncs = array_reverse($orderedHistosAndMtncs);
 
         $genPeriods = [];
@@ -242,6 +246,31 @@ class ApplicationDTO
                 $i++;
             } while ($i < sizeof($orderedHistosAndMtncs));
         }
+
+        $lastGen = end($genPeriods)['period'];
+        $state = $isInMaintenance ? $nextMaintenance->getState() : $appState;
+        $genPeriods[] = ['etat' => $state, 'period' => Period::fromDate($lastGen->startDate, new \DateTime('now') )];
+
         return $genPeriods;
+    }
+
+    /**
+     * Get the value of disponibilites
+     */
+    public function getDisponibilites(): array
+    {
+        return $this->disponibilites;
+    }
+
+    /**
+     * Set the value of disponibilites
+     *
+     * @return  self
+     */
+    public function setDisponibilites($disponibilites): self
+    {
+        $this->disponibilites = $disponibilites;
+
+        return $this;
     }
 }
