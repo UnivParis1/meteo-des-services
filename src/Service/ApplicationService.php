@@ -212,7 +212,8 @@ class ApplicationService
         }
 
         if ($genereDisponibilite) {
-            ApplicationDTO::createDisponibilite($ordered);
+            $disponibilite = ApplicationDTO::createDisponibilite($ordered, $dto->getState(), $dto->isInMaintenance(), $dto->getNextMaintenance());
+            $dto->setDisponibilites($disponibilite);
         }
 
         return $dto;
