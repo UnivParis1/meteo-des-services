@@ -212,31 +212,36 @@ class ApplicationDTO
             do {
                 $event = $events[$i];
 
-                $isMtnc = strstr(get_class($event), 'Maintenance') ? true : false;
+                $isMtnc = str_contains(get_class($event), 'HistoryMaintenanceDTO');
 
                 if ($start && !$end) {
                     if ($isMtnc) {
                         $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $event->startingDate)];
-                    }
+                    } else {
+                        $end = $event->getDate();
 
+                        if ($start < $end) {
+                            $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $end )];
+                            $lastAppIdx = $i;
+                        }
+                    }
                 }
 
                 if (!$isMtnc) { // alors c'est une application
                     $start = $event->getDate();
                     $lastAppIdx = $i;
+                    $end = null;
                 } else {
                     $start = $event->startingDate;
                     $end = $event->endingDate;
                     $genPeriods[] = ['etat' => $event->getState(), 'period' => Period::fromDate($start, $end)];
+                    $start = $end;
+                    $end = null;
                 }
 
                 $i++;
             } while ($i < sizeof($orderedHistosAndMtncs));
         }
-
-        echo '<pre>';
-        die(var_export($genPeriods));
-
         return $genPeriods;
     }
 }
