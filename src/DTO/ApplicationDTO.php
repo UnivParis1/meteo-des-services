@@ -201,10 +201,10 @@ class ApplicationDTO
         return $this;
     }
 
-    public static function createDisponibilite($orderedHistosAndMtncs, $appState, $isInMaintenance, $nextMaintenance): array
+    public static function createDisponibilite($orderedHistosAndMtncs, $appState, $isInMaintenance, $nextMaintenance): ?array
     {
         if (sizeof($orderedHistosAndMtncs) ==0)
-            return [];
+            return null;
 
         $orderedHistosAndMtncs = array_reverse($orderedHistosAndMtncs);
 
@@ -220,12 +220,12 @@ class ApplicationDTO
 
                 if ($start && !$end) {
                     if ($isMtnc) {
-                        $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $event->startingDate)];
+                        ($end < $start) ?: $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $event->startingDate)];
                     } else {
                         $end = $event->getDate();
 
-                        if ($start < $end) {
-                            $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $end )];
+                        if (isset($lastAppIdx)) {
+                            ($end < $start) ?: $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $end )];
                             $lastAppIdx = $i;
                         }
                     }
@@ -238,7 +238,7 @@ class ApplicationDTO
                 } else {
                     $start = $event->startingDate;
                     $end = $event->endingDate;
-                    $genPeriods[] = ['etat' => $event->getState(), 'period' => Period::fromDate($start, $end)];
+                    ($end < $start) ?: $genPeriods[] = ['etat' => $event->getState(), 'period' => Period::fromDate($start, $end)];
                     $start = $end;
                     $end = null;
                 }
@@ -247,9 +247,12 @@ class ApplicationDTO
             } while ($i < sizeof($orderedHistosAndMtncs));
         }
 
+        if (sizeof($genPeriods) == 0)
+            return null;
+
         $lastGen = end($genPeriods)['period'];
         $state = $isInMaintenance ? $nextMaintenance->getState() : $appState;
-        $genPeriods[] = ['etat' => $state, 'period' => Period::fromDate($lastGen->startDate, new \DateTime('now') )];
+        $genPeriods[] = ['etat' => $state, 'period' => Period::fromDate($lastGen->endDate, new \DateTime('now') )];
 
         return $genPeriods;
     }
