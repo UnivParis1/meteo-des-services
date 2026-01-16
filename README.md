@@ -73,17 +73,22 @@ La suppression d'une application depuis la météo des services ne supprime pas 
 
 ## Partie visuelle
 
-Utilise le bundle Symfony "encore" : inclus webpack au projet
+Utilisation d'AssetMapper, le gestionnaire natif symfony pour la mise à disposition (sur le répertoire public/) des fichiers CSS et JS. Gère aussi l'import et les dépendances des librairies JS.
 
-Parmi les librairies de style, le projet utilise <b>Bootstrap</b>.
+Ce projet n'utilise plus le bundle Symfony "encore".
 
-### Commande frontend compilation dans public/build
+### Installation des assets dans assets/vendor et compilation des fichiers CSS/JS vers le répertoire public/assets
 
-- `yarn run build` ou `npm run build`
+Pour installer les librairies JS/CSS :
 
-En dev pour debugger dans un browser:
+- <code>php bin/console importmap:install</code>
+- !!! Précision importante: ne pas lancer la commande <i>importmap:update</i> , une montée en version casserait certaines dépendances
 
-- `npm run watch`
+
+Il faut supprimer le répertoire <i>public/assets</i> avant de lancer la commande permettant de regrouper les fichiers CSS et JS du projet dans ce même répertoire
+
+- <code>rm -rf public/assets</code>
+- <code>php bin/console asset-map:compile</code>
 
 ## Api : webservice pour récupérer l'état d'une application
 
