@@ -4,10 +4,11 @@
  * We recommend including the built version of this JavaScript file
  * (and its CSS file) in your base layout (base.html.twig).
  */
-import './styles/app.css';
 import './styles/font-import-google.css';
 import './styles/font-import-google-2.css';
 import './vendor/visavail/visavail.css';
+import './styles/app.css';
+import './styles/custom-visavail.css';
 
 import moment from "./vendor/moment/min/moment-with-locales.min.js";
 import './vendor/bootstrap/bootstrap.index.js';
@@ -68,30 +69,38 @@ function removeSpinner() {
     $(".modal-body").removeClass('invisible');
 }
 
-function generateVisavailability() {
+function formatdtvisavail(datetime) {
+    return moment(datetime).local().format("YYYY-MM-DD HH:mm:ss");
+}
+
+function generateVisavailability(application) {
     window.moment.locale('FR_fr');
 
+    let dispos = application.disponibilites;
+
+    let cats = {};
+    Object.keys(icones).forEach((elem) => (cats[elem] = {class : icones[elem][1],  tooltip_html: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-brightness-high-fill" viewBox="0 0 20 20">
+                                                                                                  <path d="`+ icones[elem][4] + `"></path></svg>`}));
+
+    let datas = [];
+    dispos.forEach((elem) => (datas.push( [ formatdtvisavail(elem.period.startDate), elem.etat, formatdtvisavail(elem.period.endDate) ] )));
+
+    console.log(cats);
     var dataset = [{
         "measure": "Disponibilité de l'application",
-        "data": [
-            ["2016-01-01 12:00:00", 1, "2016-01-01 13:00:00"],
-            ["2016-01-01 14:22:51", 1, "2016-01-01 16:14:12"],
-            ["2016-01-01 19:20:05", 0, "2016-01-01 20:30:00"],
-            ["2016-01-01 20:30:00", 1, "2016-01-01 22:00:00"]
-        ]
+        "categories" : cats,
+        "data": datas
     }];
+
+    console.log(dataset);
     // visualisation disponibilités
     var options = {
         id_div_container: "visavail_container",
         id_div_graph: "visavail_graph",
-        icon: {
-            class_has_data: 'fas fa-fw fa-check',
-            class_has_no_data: 'fas fa-fw fa-exclamation-circle'
-        },
+        custom_categories: true
     };
 
     if (typeof chart == 'undefined') {
-        const test = d3.scaleUtc();
 	    var chart = visavail.generate(options, dataset);
     }
 }

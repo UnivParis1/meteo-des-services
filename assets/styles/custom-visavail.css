@@ -1,0 +1,19 @@
+/*
+    fichier implémentant les css pour l'affichage du graphique de disponibilité
+*/
+
+rect.text-success {
+    fill: rgba(var(--bs-success-rgb));
+}
+
+rect.text-warning {
+    fill: rgba(var(--bs-warning-rgb));
+}
+
+rect.text-danger {
+    fill: rgba(var(--bs-danger-rgb));
+}
+
+rect.text-default {
+    fill: rgba(var(--bs-white-rgb));
+}
