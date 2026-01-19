@@ -97,7 +97,11 @@ function generateVisavailability(application) {
     var options = {
         id_div_container: "visavail_container",
         id_div_graph: "visavail_graph",
-        custom_categories: true
+        custom_categories: true,
+        tooltip: {
+            height: 20,
+            left_spacing: 100
+        }
     };
 
     if (typeof chart == 'undefined') {
