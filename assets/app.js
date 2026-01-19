@@ -17,6 +17,11 @@ import "./vendor/jquery/jquery.index.js";
 import "./vendor/d3/d3.index.js";
 import "./vendor/visavail/visavail.index.js";
 
+/*
+skypack permet de convertir une librairie js en CDM / UMD, pratique pour debugger
+import visavail from "https://cdn.skypack.dev/visavail";
+*/
+
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
 import * as d3 from "d3";
@@ -85,23 +90,47 @@ function generateVisavailability(application) {
     let datas = [];
     dispos.forEach((elem) => (datas.push( [ formatdtvisavail(elem.period.startDate), elem.etat, formatdtvisavail(elem.period.endDate) ] )));
 
-    console.log(cats);
+//    console.log(cats);
     var dataset = [{
-        "measure": "Disponibilité de l'application",
+        "measure": "Disponibilité",
         "categories" : cats,
         "data": datas
     }];
 
-    console.log(dataset);
+//    console.log(dataset);
     // visualisation disponibilités
     var options = {
         id_div_container: "visavail_container",
         id_div_graph: "visavail_graph",
         custom_categories: true,
+        date_is_descending: true,
+		responsive:{
+			enabled: true
+		},
+        title: {
+            enabled: true,
+            text: "Affichage des disponibilités de l'application"
+        },
+        sub_title: {
+            enabled: true,
+            from_text: "Depuis le",
+            to_text: "jusqu'au"
+        },
         tooltip: {
             height: 20,
             left_spacing: 100
         }
+/* donnée suivantes par défaut au cas où il est nécéssaire de faire des changements
+        custom_time_format: {
+            format_millisecond : ".%L",
+            format_second : ":%S",
+            format_minute : "%H:%M",
+            format_hour : "%I %p",
+            format_day : "%a %d",
+            format_week : "%b %d",
+            format_month : "%B",
+            format_year : "%Y"
+        } */
     };
 
     if (typeof chart == 'undefined') {
