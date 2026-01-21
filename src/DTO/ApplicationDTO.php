@@ -2,6 +2,7 @@
 
 namespace App\DTO;
 
+use DateTime;
 use League\Period\Period;
 use League\Period\InvalidInterval;
 
@@ -236,6 +237,19 @@ class ApplicationDTO
                     $lastAppIdx = $i;
                     $end = null;
                 } else {
+                    // gère le cas de jonction entre 2 périodes
+                    if (sizeof($genPeriods) > 0) {
+                        $lastPeriod = end($genPeriods);
+                        $start = $lastPeriod['period']->endDate;
+                        $end = $event->startingDate;
+
+                        $diff = $event->startingDate->getTimestamp() - $start->getTimestamp();
+                        if ($diff > 0) {
+                            $state = $lastPeriod['etat'];
+                            ($end < $start) ?: $genPeriods[] = ['etat' => $event->getState(), 'period' => Period::fromDate($start, $end)];
+                        }
+                    }
+
                     $start = $event->startingDate;
                     $end = $event->endingDate;
                     ($end < $start) ?: $genPeriods[] = ['etat' => $event->getState(), 'period' => Period::fromDate($start, $end)];
@@ -252,6 +266,7 @@ class ApplicationDTO
 
         $lastGen = end($genPeriods)['period'];
         $state = $isInMaintenance ? $nextMaintenance->getState() : $appState;
+
         $genPeriods[] = ['etat' => $state, 'period' => Period::fromDate($lastGen->endDate, new \DateTime('now') )];
 
         return $genPeriods;
