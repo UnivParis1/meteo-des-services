@@ -219,6 +219,14 @@ class ApplicationDTO
 
                 $isMtnc = str_contains(get_class($event), 'HistoryMaintenanceDTO');
 
+                if ($isMtnc) {
+                    // ne traite pas les maintenances qui ont été supprimés
+                    if ($event->type == "deletion") {
+                        $i++;
+                        continue;
+                    }
+                }
+
                 if ($start && !$end) {
                     if ($isMtnc) {
                         ($end < $start) ?: $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $event->startingDate)];
