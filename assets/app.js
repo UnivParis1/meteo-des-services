@@ -88,6 +88,13 @@ function successDetail(response) {
 
     buildProchaineMaintenances(application.nextMaintenances);
 
+    // suppression de la liste des maintenances finalement supprimés
+    for (let i = 0; i < application.orderedHistosAndMtncs.length; i++) {
+        if (application.orderedHistosAndMtncs[i].type == "deletion") {
+            application.orderedHistosAndMtncs.splice(i, 1);
+        }
+    }
+
     if (application.orderedHistosAndMtncs.length > 0) {
         $("#details #history").removeClass('d-none');
         let fields = [{ field: 'date', func: formatDateMtncHisto },
@@ -115,7 +122,6 @@ function successDetail(response) {
         } else {
             $('#history nav div.nav button.nav-link').addClass('d-none');
         }
-
     } else {
         $("#details #history").addClass('d-none');
     }
