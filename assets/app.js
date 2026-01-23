@@ -29,14 +29,14 @@ $(function () {
         $("#history #nav-tabContent #nav-applications").removeClass('fade').addClass('active').addClass('show');
         $('#history nav div#nav-tab button.nav-link').removeClass('active');
         $('#history nav div#nav-tab button#nav-applications-tab').addClass('active');
+
         let applicationId = event.relatedTarget.attributes['applicationid'].value;
-        $.ajax({
-            async: false, // obligatoire pour ne pas avoir les champs vides au chargement (deprecated)
+        var details_request = $.ajax({
             url: '/meteo/api/application/' + applicationId, // renvoie le contenu de la pop-up
-            method: 'GET',
-            success: (response) => successDetail(response),
-            error: (xhr, status, error) => console.error(error)
-        })
+            method: 'GET'
+        }).fail( (xhr, status, error) => console.error(error) );
+
+        details_request.done( (response) => successDetail(response) );
     });
 });
 
