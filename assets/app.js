@@ -78,17 +78,15 @@ function formatdtvisavail(datetime) {
     return moment(datetime).local().format("YYYY-MM-DD HH:mm:ss");
 }
 
-function generateVisavailability(application) {
+function generateVisavailability(disponibilites) {
     window.moment.locale('FR_fr');
-
-    let dispos = application.disponibilites;
 
     let cats = {};
     Object.keys(icones).forEach((elem) => (cats[elem] = {class : icones[elem][1],  tooltip_html: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-brightness-high-fill" viewBox="0 0 20 20">
                                                                                                   <path d="`+ icones[elem][4] + `"></path></svg>`}));
 
     let datas = [];
-    dispos.forEach((elem) => (datas.push( [ formatdtvisavail(elem.period.startDate), elem.etat, formatdtvisavail(elem.period.endDate) ] )));
+    disponibilites.forEach((elem) => (datas.push( [ formatdtvisavail(elem.period.startDate), elem.etat, formatdtvisavail(elem.period.endDate) ] )));
 
 //    console.log(cats);
     var dataset = [{
@@ -221,11 +219,17 @@ function showDetail(response) {
             $('#history nav div.nav button.nav-link#nav-maintenances-tab').addClass('d-none');
         }
 
-        const tabEl = document.querySelector('button#nav-availability-tab');
-        tabEl.addEventListener('shown.bs.tab', event => {
-            $('#visavail_graph').empty();
-            generateVisavailability(application);
-        })
+        if (application.disponibilites.length > 1) {
+            $('button#nav-availability-tab').removeClass('d-none');
+
+            const tabEl = document.querySelector('button#nav-availability-tab');
+            tabEl.addEventListener('shown.bs.tab', event => {
+                $('#visavail_graph').empty();
+                generateVisavailability(application.disponibilites);
+            });
+        } else {
+            $('button#nav-availability-tab').addClass('d-none');
+        }
     } else {
         $("#details #history").addClass('d-none');
     }
