@@ -103,7 +103,7 @@ function generateVisavailability(application) {
         id_div_container: "visavail_container",
         id_div_graph: "visavail_graph",
         custom_categories: true,
-        date_is_descending: true,
+        date_is_descending: false,
 		responsive:{
 			enabled: true
 		},
