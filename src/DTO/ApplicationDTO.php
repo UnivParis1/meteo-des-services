@@ -229,13 +229,17 @@ class ApplicationDTO
 
                 if ($start && !$end) {
                     if ($isMtnc) {
-                        ($end < $start) ?: $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $event->startingDate)];
+                        $end = $event->startingDate;
+                        ($end < $start) ?: $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $end )];
                     } else {
                         $end = $event->getDate();
 
                         if (isset($lastAppIdx)) {
                             ($end < $start) ?: $genPeriods[] = ['etat' => $events[$lastAppIdx]->getState(), 'period' => Period::fromDate($start, $end )];
                             $lastAppIdx = $i;
+                        } else {
+                            // maintenance existe avant un status de l'application, impossible d'avoir une référence d'état, on prend la dernière entrée du tableau des périodes faute de mieux
+                            ($end < $start) ?: $genPeriods[] = ['etat' => end($genPeriods)['etat'], 'period' => Period::fromDate($start, $end )];
                         }
                     }
                 }
@@ -254,7 +258,7 @@ class ApplicationDTO
                         $diff = $event->startingDate->getTimestamp() - $start->getTimestamp();
                         if ($diff > 0) {
                             $state = $lastPeriod['etat'];
-                            ($end < $start) ?: $genPeriods[] = ['etat' => $event->getState(), 'period' => Period::fromDate($start, $end)];
+                            ($end < $start) ?: $genPeriods[] = ['etat' => $state, 'period' => Period::fromDate($start, $end)];
                         }
                     }
 
