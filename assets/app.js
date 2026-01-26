@@ -24,23 +24,42 @@ $(function () {
         return new Tooltip(tooltipTriggerEl)
     });
 
-    document.getElementById('details').addEventListener('show.bs.modal', event => {
+    document.getElementById('details').addEventListener('show.bs.modal', event => showBSModal(event) );
+});
+
+function showBSModal(event) {
+        addSpinner();
+
         $("#history #nav-tabContent #nav-maintenances").removeClass('active').addClass('fade');
         $("#history #nav-tabContent #nav-applications").removeClass('fade').addClass('active').addClass('show');
         $('#history nav div#nav-tab button.nav-link').removeClass('active');
         $('#history nav div#nav-tab button#nav-applications-tab').addClass('active');
 
         let applicationId = event.relatedTarget.attributes['applicationid'].value;
+
         var details_request = $.ajax({
             url: '/meteo/api/application/' + applicationId, // renvoie le contenu de la pop-up
             method: 'GET'
-        }).fail( (xhr, status, error) => console.error(error) );
+        });
 
-        details_request.done( (response) => successDetail(response) );
-    });
-});
+        details_request.always( () => removeSpinner() );
+        details_request.done( (response) => showDetail(response) );
+        details_request.fail( (xhr, status, error) => console.error(error) );
+}
 
-function successDetail(response) {
+function addSpinner() {
+    $('#spinner').removeClass('d-none');
+    $(".modal-header").addClass('invisible');
+    $(".modal-body").addClass('invisible');
+}
+
+function removeSpinner() {
+    $("#spinner").addClass('d-none');
+    $(".modal-header").removeClass('invisible');
+    $(".modal-body").removeClass('invisible');
+}
+
+function showDetail(response) {
     globalThis.icones = response.icones;
     let size = response.icone[3];
     let application = response.application;
