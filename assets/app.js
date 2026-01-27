@@ -117,6 +117,19 @@ function generateVisavailability(disponibilites) {
         tooltip: {
             height: 20,
             left_spacing: 100
+        },
+        zoom:{
+            enabled:true
+        },
+        graph:{
+            type: "bar",
+            width:20,
+            height:20
+        },
+        sub_chart: {
+            enabled:true,
+            height: 90,
+            graph: {enabled:""}
         }
 /* donnée suivantes par défaut au cas où il est nécéssaire de faire des changements
         custom_time_format: {
