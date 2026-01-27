@@ -90,7 +90,7 @@ function generateVisavailability(disponibilites) {
 
 //    console.log(cats);
     var dataset = [{
-        "measure": "Disponibilité",
+        "measure": "Disponibilités",
         "categories" : cats,
         "data": datas
     }];
