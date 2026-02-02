@@ -249,6 +249,8 @@ function showDetail(response) {
 
     if (application.orderedHistosAndMtncs.length > 0) {
         $("#details #history").removeClass("d-none");
+        $("#history button#nav-applications-tab").removeClass("d-none");
+
         let fields = [
             { field: "date", func: formatDateMtncHisto },
             [
