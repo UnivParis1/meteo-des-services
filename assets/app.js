@@ -4,14 +4,14 @@
  * We recommend including the built version of this JavaScript file
  * (and its CSS file) in your base layout (base.html.twig).
  */
-import './styles/font-import-google.css';
-import './styles/font-import-google-2.css';
-import './vendor/visavail/visavail.css';
-import './styles/app.css';
-import './styles/custom-visavail.css';
+import "./styles/font-import-google.css";
+import "./styles/font-import-google-2.css";
+import "./vendor/visavail/visavail.css";
+import "./styles/app.css";
+import "./styles/custom-visavail.css";
 
 import moment from "./vendor/moment/min/moment-with-locales.min.js";
-import './vendor/bootstrap/bootstrap.index.js';
+import "./vendor/bootstrap/bootstrap.index.js";
 import "./vendor/luxon/luxon.index.js";
 import "./vendor/jquery/jquery.index.js";
 import "./vendor/d3/d3.index.js";
@@ -22,56 +22,67 @@ skypack permet de convertir une librairie js en CDM / UMD, pratique pour debugge
 import visavail from "https://cdn.skypack.dev/visavail";
 */
 
-import { Tooltip } from 'bootstrap';
-import { DateTime } from 'luxon';
+import { Tooltip } from "bootstrap";
+import { DateTime } from "luxon";
 import * as d3 from "d3";
-import visavail from 'visavail';
+import visavail from "visavail";
 
-import $ from 'jquery';
+import $ from "jquery";
 window.jQuery = $;
 window.moment = moment;
 window.d3 = d3;
 
-$(function () {
-    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new Tooltip(tooltipTriggerEl)
+$(function() {
+    let tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]'),
+    );
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new Tooltip(tooltipTriggerEl);
     });
 
-    document.getElementById('details').addEventListener('show.bs.modal', event => showBSModal(event) );
+    document
+        .getElementById("details")
+        .addEventListener("show.bs.modal", (event) => showBSModal(event));
 });
 
 function showBSModal(event) {
-        addSpinner();
+    addSpinner();
 
-        $("#history #nav-tabContent #nav-maintenances").removeClass('active').addClass('fade');
-        $("#history #nav-tabContent #nav-applications").removeClass('fade').addClass('active').addClass('show');
-        $('#history nav div#nav-tab button.nav-link').removeClass('active');
-        $('#history nav div#nav-tab button#nav-applications-tab').addClass('active');
-        $('#visavail_graph').empty();
+    $("#history #nav-tabContent #nav-maintenances")
+        .removeClass("active")
+        .addClass("fade");
+    $("#history #nav-tabContent #nav-applications")
+        .removeClass("fade")
+        .addClass("active")
+        .addClass("show");
+    $("#history nav div#nav-tab button.nav-link").removeClass("active");
+    $("#history nav div#nav-tab button#nav-applications-tab").addClass(
+        "active",
+    );
+    $("#visavail_graph").empty();
 
-        let applicationId = event.relatedTarget.attributes['applicationid'].value;
+    let applicationId = event.relatedTarget.attributes["applicationid"].value;
 
-        var details_request = $.ajax({
-            url: '/meteo/api/application/' + applicationId, // renvoie le contenu de la pop-up
-            method: 'GET'
-        });
+    var details_request = $.ajax({
+        url: "/meteo/api/application/" + applicationId, // renvoie le contenu de la pop-up
+        method: "GET",
+    });
 
-        details_request.always( () => removeSpinner() );
-        details_request.done( (response) => showDetail(response) );
-        details_request.fail( (xhr, status, error) => console.error(error) );
+    details_request.always(() => removeSpinner());
+    details_request.done((response) => showDetail(response));
+    details_request.fail((xhr, status, error) => console.error(error));
 }
 
 function addSpinner() {
-    $('#spinner').removeClass('d-none');
-    $(".modal-header").addClass('invisible');
-    $(".modal-body").addClass('invisible');
+    $("#spinner").removeClass("d-none");
+    $(".modal-header").addClass("invisible");
+    $(".modal-body").addClass("invisible");
 }
 
 function removeSpinner() {
-    $("#spinner").addClass('d-none');
-    $(".modal-header").removeClass('invisible');
-    $(".modal-body").removeClass('invisible');
+    $("#spinner").addClass("d-none");
+    $(".modal-header").removeClass("invisible");
+    $(".modal-body").removeClass("invisible");
 }
 
 function formatdtvisavail(datetime) {
@@ -79,59 +90,76 @@ function formatdtvisavail(datetime) {
 }
 
 function generateVisavailability(disponibilites) {
-    window.moment.locale('FR_fr');
+    window.moment.locale("FR_fr");
 
     let cats = {};
-    Object.keys(icones).forEach((elem) => (cats[elem] = {class : icones[elem][1],  tooltip_html: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-brightness-high-fill" viewBox="0 0 20 20">
-                                                                                                  <path d="`+ icones[elem][4] + `"></path></svg>`}));
+    Object.keys(icones).forEach(
+        (elem) =>
+        (cats[elem] = {
+            class: icones[elem][1],
+            tooltip_html:
+                `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-brightness-high-fill" viewBox="0 0 20 20">
+                                                                                                  <path d="` +
+                icones[elem][4] +
+                `"></path></svg>`,
+        }),
+    );
 
     let datas = [];
-    disponibilites.forEach((elem) => (datas.push( [ formatdtvisavail(elem.period.startDate), elem.etat, formatdtvisavail(elem.period.endDate) ] )));
+    disponibilites.forEach((elem) =>
+        datas.push([
+            formatdtvisavail(elem.period.startDate),
+            elem.etat,
+            formatdtvisavail(elem.period.endDate),
+        ]),
+    );
 
-//    console.log(cats);
-    var dataset = [{
-        "measure": "Disponibilités",
-        "categories" : cats,
-        "data": datas
-    }];
+    //    console.log(cats);
+    var dataset = [
+        {
+            measure: "Disponibilités",
+            categories: cats,
+            data: datas,
+        },
+    ];
 
-//    console.log(dataset);
+    //    console.log(dataset);
     // visualisation disponibilités
     var options = {
         id_div_container: "visavail_container",
         id_div_graph: "visavail_graph",
         custom_categories: true,
         date_is_descending: false,
-		responsive:{
-			enabled: true
-		},
+        responsive: {
+            enabled: true,
+        },
         title: {
             enabled: true,
-            text: "Affichage des disponibilités de l'application"
+            text: "Affichage des disponibilités de l'application",
         },
         sub_title: {
             enabled: true,
             from_text: "Depuis le",
-            to_text: "jusqu'au"
+            to_text: "jusqu'au",
         },
         tooltip: {
             height: 20,
-            left_spacing: 100
+            left_spacing: 100,
         },
-        zoom:{
-            enabled:true
+        zoom: {
+            enabled: true,
         },
-        graph:{
+        graph: {
             type: "bar",
-            width:20,
-            height:20
+            width: 20,
+            height: 20,
         },
         sub_chart: {
-            enabled:true,
+            enabled: true,
             height: 90,
-            graph: {enabled:""}
-        }
-/* donnée suivantes par défaut au cas où il est nécéssaire de faire des changements
+            graph: { enabled: "" },
+        },
+        /* donnée suivantes par défaut au cas où il est nécéssaire de faire des changements
         custom_time_format: {
             format_millisecond : ".%L",
             format_second : ":%S",
@@ -144,8 +172,8 @@ function generateVisavailability(disponibilites) {
         } */
     };
 
-    if (typeof chart == 'undefined') {
-	    var chart = visavail.generate(options, dataset);
+    if (typeof chart == "undefined") {
+        var chart = visavail.generate(options, dataset);
     }
 }
 
@@ -156,44 +184,58 @@ function showDetail(response) {
     let icone = response.icone;
     let title = response.application.title;
 
-    $('#details #details-title').html(title);
+    $("#details #details-title").html(title);
 
-    let meteoIcon = $('#details #meteo-icon');
-    meteoIcon.attr('class', 'm-auto me-3 rounded-circle d-flex align-items-center justify-content-center ' + 'bg-' + icone[2]);
+    let meteoIcon = $("#details #meteo-icon");
+    meteoIcon.attr(
+        "class",
+        "m-auto me-3 rounded-circle d-flex align-items-center justify-content-center " +
+        "bg-" +
+        icone[2],
+    );
 
     let svg = meteoIcon.children();
-    svg.attr('width', size);
-    svg.attr('height', size);
-    svg.attr('viewBox', "0 0 " + size + ' ' + size);
+    svg.attr("width", size);
+    svg.attr("height", size);
+    svg.attr("viewBox", "0 0 " + size + " " + size);
 
     let pathd = svg.children();
-    pathd.attr('d', icone[4]);
+    pathd.attr("d", icone[4]);
 
-    $('#details #detail-app-msg').html(application.message);
+    $("#details #detail-app-msg").html(application.message);
 
-    $('#details #lastUpdate').html(application.lastUpdate ? formatDateDetails(application.lastUpdate) : '');
+    $("#details #lastUpdate").html(
+        application.lastUpdate ? formatDateDetails(application.lastUpdate) : "",
+    );
 
     if (response.application.isInMaintenance) {
-        $("#maintenance-en-cours").removeClass('d-none');
+        $("#maintenance-en-cours").removeClass("d-none");
 
         let fields = [
-            { field: 'startingDate', func: formatDateMtncHisto },
-            { field: 'totalTime' },
+            { field: "startingDate", func: formatDateMtncHisto },
+            { field: "totalTime" },
             [
              { field: 'state', func: (state) => globalThis.icones[state][0] },
              { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#maintenance-en-cours tr td:last-child' } }
             ],
 	    { field: 'message' }
         ];
-        buildTablesContent(fields, [application.nextMaintenance], '#maintenance-en-cours table');
+        buildTablesContent(
+            fields,
+            [application.nextMaintenance],
+            "#maintenance-en-cours table",
+        );
 
         for (let i = 0; i < application.nextMaintenances.length; i++) {
-            if (application.nextMaintenances[i].id == application.nextMaintenance.id) {
+            if (
+                application.nextMaintenances[i].id ==
+                application.nextMaintenance.id
+            ) {
                 application.nextMaintenances.splice(i, 1);
             }
         }
     } else {
-        $("#maintenance-en-cours").addClass('d-none');
+        $("#maintenance-en-cours").addClass("d-none");
     }
 
     buildProchaineMaintenances(application.nextMaintenances);
@@ -206,104 +248,164 @@ function showDetail(response) {
     }
 
     if (application.orderedHistosAndMtncs.length > 0) {
-        $("#details #history").removeClass('d-none');
-        let fields = [{ field: 'date', func: formatDateMtncHisto },
-                      [
-                        { field: 'state', func: (state) => globalThis.icones[state][0] },
-                        { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#history #nav-tabContent #nav-applications table tbody td:last-child' } }
-                      ],
-                      { field: 'message' },
-                      { field: 'author' },
-                      { field: 'maintenance_id', func: function (id) { return typeof id == 'undefined' ? 'Hors Maintenance' : 'Maintenance';}} ];
-        buildTablesContent(fields, application.orderedHistosAndMtncs, '#history #nav-tabContent #nav-applications table tbody');
+        $("#details #history").removeClass("d-none");
+        let fields = [
+            { field: "date", func: formatDateMtncHisto },
+            [
+                {
+                    field: "state",
+                    func: (state) => globalThis.icones[state][0],
+                },
+                {
+                    field: "state",
+                    func: getEtatapplicationClassAndText,
+                    args: {
+                        to: "classList.value",
+                        jq: "#history #nav-tabContent #nav-applications table tbody td:last-child",
+                    },
+                },
+            ],
+            { field: "message" },
+            { field: "author" },
+            {
+                field: "maintenance_id",
+                func: function(id) {
+                    return typeof id == "undefined"
+                        ? "Hors Maintenance"
+                        : "Maintenance";
+                },
+            },
+        ];
+        buildTablesContent(
+            fields,
+            application.orderedHistosAndMtncs,
+            "#history #nav-tabContent #nav-applications table tbody",
+        );
 
         if (application.orderedHistoriqueMtncs.length > 0) {
-            $('#history nav div.nav button.nav-link').removeClass('d-none');
-            fields = [{ field: 'date', func: formatDateMtncHisto },
-                      { field: 'type', func: (data) => (data=='creation' ? 'Création' : (data=='updating') ? 'Mise à jour' : 'Suppression')  },
-                      [{ field: 'state', func: (state) => globalThis.icones[state][0] },
-                       { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#history #nav-tabContent #nav-maintenances table tbody td:last-child' } }
-                      ],
-                      { field: 'author' },
-                      { field: 'message' },
-                      { field: 'startingDate', func: formatDateMtncHisto },
-                      { field: 'endingDate', func: formatDateMtncHisto }];
-            buildTablesContent(fields, application.orderedHistoriqueMtncs, '#history #nav-tabContent #nav-maintenances table tbody');
+            $("#history nav div.nav button.nav-link").removeClass("d-none");
+            fields = [
+                { field: "date", func: formatDateMtncHisto },
+                {
+                    field: "type",
+                    func: (data) =>
+                        data == "creation"
+                            ? "Création"
+                            : data == "updating"
+                                ? "Mise à jour"
+                                : "Suppression",
+                },
+                [
+                    {
+                        field: "state",
+                        func: (state) => globalThis.icones[state][0],
+                    },
+                    {
+                        field: "state",
+                        func: getEtatapplicationClassAndText,
+                        args: {
+                            to: "classList.value",
+                            jq: "#history #nav-tabContent #nav-maintenances table tbody td:last-child",
+                        },
+                    },
+                ],
+                { field: "author" },
+                { field: "message" },
+                { field: "startingDate", func: formatDateMtncHisto },
+                { field: "endingDate", func: formatDateMtncHisto },
+            ];
+            buildTablesContent(
+                fields,
+                application.orderedHistoriqueMtncs,
+                "#history #nav-tabContent #nav-maintenances table tbody",
+            );
         } else {
-            $('#history nav div.nav button.nav-link#nav-maintenances-tab').addClass('d-none');
+            $(
+                "#history nav div.nav button.nav-link#nav-maintenances-tab",
+            ).addClass("d-none");
         }
 
         if (application.disponibilites.length > 1) {
-            $('button#nav-availability-tab').removeClass('d-none');
+            $("button#nav-availability-tab").removeClass("d-none");
 
-            const tabEl = document.querySelector('button#nav-availability-tab');
-            tabEl.addEventListener('shown.bs.tab', event => {
-                $('#visavail_graph').empty();
+            const tabEl = document.querySelector("button#nav-availability-tab");
+            tabEl.addEventListener("shown.bs.tab", (event) => {
+                $("#visavail_graph").empty();
                 generateVisavailability(application.disponibilites);
             });
         } else {
-            $('button#nav-availability-tab').addClass('d-none');
+            $("button#nav-availability-tab").addClass("d-none");
         }
     } else {
-        $("#details #history").addClass('d-none');
+        $("#details #history").addClass("d-none");
     }
 }
 
 function formatDateDetails(date) {
-    let dt = DateTime.fromISO(date).setLocale('fr');
+    let dt = DateTime.fromISO(date).setLocale("fr");
     return dt.toFormat("EEEE d MMMM yyyy \'à\' HH\'H'\mm");
 }
 
 function formatDateMtncHisto(date) {
-    let dt = DateTime.fromISO(date).setLocale('fr');
-    return dt.toFormat('dd/MM/y') + ' à ' + dt.toFormat("HH") + 'H' + dt.toFormat('mm');
+    let dt = DateTime.fromISO(date).setLocale("fr");
+    return (
+        dt.toFormat("dd/MM/y") +
+        " à " +
+        dt.toFormat("HH") +
+        "H" +
+        dt.toFormat("mm")
+    );
 }
 
 function getEtatapplicationClassAndText(state, jqselect) {
-    let stateClasses = $(jqselect).attr('class').split(' ');
+    let stateClasses = $(jqselect).attr("class").split(" ");
 
-    if (stateClasses.at(-1).startsWith('text-')) {
+    if (stateClasses.at(-1).startsWith("text-")) {
         stateClasses.pop();
     }
 
     stateClasses.push(globalThis.icones[state][1]);
     stateClasses.push('text-center');
 
-    return stateClasses.join(' ');
+    return stateClasses.join(" ");
 }
 
 function buildProchaineMaintenances(maintenances) {
     let nomaintenances = $("#details #nomaintenances");
-    let tablemtnc = $('#details #nomaintenances + table');
+    let tablemtnc = $("#details #nomaintenances + table");
 
     if (maintenances.length == 0) {
-        nomaintenances.removeClass('d-none');
-        tablemtnc.addClass('d-none');
+        nomaintenances.removeClass("d-none");
+        tablemtnc.addClass("d-none");
     } else {
-        nomaintenances.addClass('d-none');
-        tablemtnc.removeClass('d-none');
+        nomaintenances.addClass("d-none");
+        tablemtnc.removeClass("d-none");
 
         let fields = [
-            { field: 'startingDate', func: formatDateMtncHisto },
-            { field: 'totalTime' },
+            { field: "startingDate", func: formatDateMtncHisto },
+            { field: "totalTime" },
             [
              { field: 'state', func: (state) => globalThis.icones[state][0] },
              { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#details #nomaintenances + table tr td:last-child' } }
             ],
 	    { field: 'message' }
         ];
-        buildTablesContent(fields, maintenances, '#details #nomaintenances + table');
+        buildTablesContent(
+            fields,
+            maintenances,
+            "#details #nomaintenances + table",
+        );
     }
 }
 
 function buildTablesContent(fields, elements, jqbasel) {
-    let trs = $(jqbasel + ' tr');
+    let trs = $(jqbasel + " tr");
 
     for (let i = 2; i < trs.length; i++) {
         trs[i].remove();
     }
 
-    let tds = $(jqbasel + ' td');
+    let tds = $(jqbasel + " td");
     let i = 0;
     do {
         let elem = elements[i];
@@ -314,15 +416,21 @@ function buildTablesContent(fields, elements, jqbasel) {
             if (Array.isArray(prop)) {
                 for (let p of prop) {
                     let valueFromFunc;
-                    if (p.hasOwnProperty('args') && p.args.hasOwnProperty('jq')) {
-                        valueFromFunc = p['func'](elem[p.field], p.args.jq);
+                    if (
+                        p.hasOwnProperty("args") &&
+                        p.args.hasOwnProperty("jq")
+                    ) {
+                        valueFromFunc = p["func"](elem[p.field], p.args.jq);
                     } else {
-                        valueFromFunc = p['func'](elem[p.field]);
+                        valueFromFunc = p["func"](elem[p.field]);
                     }
 
-                    if (p.hasOwnProperty('args') && p.args.hasOwnProperty('to')) {
-                        if (p.args.to.includes('.')) {
-                            let tos = p.args.to.split('.');
+                    if (
+                        p.hasOwnProperty("args") &&
+                        p.args.hasOwnProperty("to")
+                    ) {
+                        if (p.args.to.includes(".")) {
+                            let tos = p.args.to.split(".");
                             tds[j][tos[0]][tos[1]] = valueFromFunc;
                         } else {
                             tds[j][p.args.to] = valueFromFunc;
@@ -331,10 +439,9 @@ function buildTablesContent(fields, elements, jqbasel) {
                         tds[j].textContent = valueFromFunc;
                     }
                 }
-            }
-            else {
-                if (prop.hasOwnProperty('func')) {
-                    tds[j].textContent = prop['func'](elem[prop.field]);
+            } else {
+                if (prop.hasOwnProperty("func")) {
+                    tds[j].textContent = prop["func"](elem[prop.field]);
                 } else {
                     tds[j].textContent = elem[prop.field];
                 }
