@@ -164,6 +164,7 @@ function getEtatapplicationClassAndText(state, jqselect) {
     }
 
     stateClasses.push(globalThis.icones[state][1]);
+    stateClasses.push('text-center');
 
     return stateClasses.join(' ');
 }
@@ -185,7 +186,8 @@ function buildProchaineMaintenances(maintenances) {
             [
              { field: 'state', func: (state) => globalThis.icones[state][0] },
              { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#details #nomaintenances + table tr td:last-child' } }
-            ]
+            ],
+	    { field: 'message' }
         ];
         buildTablesContent(fields, maintenances, '#details #nomaintenances + table');
     }
