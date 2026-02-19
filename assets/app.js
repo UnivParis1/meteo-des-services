@@ -92,7 +92,8 @@ function showDetail(response) {
             [
              { field: 'state', func: (state) => globalThis.icones[state][0] },
              { field: 'state', func: getEtatapplicationClassAndText, args: {to:'classList.value', jq: '#maintenance-en-cours tr td:last-child' } }
-            ]
+            ],
+	    { field: 'message' }
         ];
         buildTablesContent(fields, [application.nextMaintenance], '#maintenance-en-cours table');
 
