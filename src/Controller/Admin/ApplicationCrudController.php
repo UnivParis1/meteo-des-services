@@ -62,6 +62,9 @@ class ApplicationCrudController extends AbstractCrudController
         yield TextField::new('title')->setLabel("Titre de l'application")
               ->setRequired(true);
 
+        yield TextField::new('fname')
+              ->setRequired(true);
+
         yield ChoiceField::new('state')
                                   ->setChoices([
                                       'default' => 'default',
