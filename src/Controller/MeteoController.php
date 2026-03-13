@@ -11,7 +11,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class MeteoController extends AbstractController
 {
@@ -54,6 +54,8 @@ class MeteoController extends AbstractController
         // supprime l'historique de l'objet DTO si l'utilisateur n'est pas superviseur
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             $applicationDTO->setHistories([]);
+            $applicationDTO->setOrderedHistoriqueMtncs([]);
+            $applicationDTO->setOrderedHistosAndMtncs([]);
         }
 
         $data = ['application' => $applicationDTO,
