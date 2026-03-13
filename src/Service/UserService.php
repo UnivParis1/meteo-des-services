@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Model\UserRoles;
 use App\Repository\UserRepository;
+use \stdClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class UserService
@@ -43,17 +44,38 @@ class UserService
 
         $user->setEduPersonAffiliations($infos->eduPersonAffiliation);
 
+        $choicesIndexedArray = array_values(UserRoles::$choix);
+        $affiliationIndexedArray = array_values(UserRoles::$easyAdminEduAffiliations);
+
+        $maxPermissionIndex = 0;
         foreach ($infos->eduPersonAffiliation as $affiliation) {
-            if (!isset(UserRoles::$choix[$affiliation])) {
+            if (!isset(UserRoles::$easyAdminEduAffiliations[$affiliation])) {
                 continue;
             }
 
-            if (!$this->securizer->isGranted($user, UserRoles::$choix[$affiliation])) {
-                $user->setRoles([UserRoles::$choix[$affiliation]]);
+            $indexPermission = array_search($affiliation, $affiliationIndexedArray);
+
+            // incrémente l'index car les permissions commencent en anonmyme avec l'index 0
+            ++$indexPermission;
+
+            if ($indexPermission > $maxPermissionIndex) {
+                $maxPermissionIndex = $indexPermission;
+            }
+            else {
+                continue;
+            }
+
+            $isGranted = $choicesIndexedArray[$indexPermission];
+
+            if (!$this->securizer->isGranted($user, $isGranted)) {
+                $user->setRoles([$isGranted]);
                 break;
             }
         }
 
+        if ($maxPermissionIndex > 0) {
+            $this->userRepository->updateUser($user);
+        }
         return $user;
     }
 
@@ -73,10 +95,18 @@ class UserService
 
         $arrayReturn = json_decode($ajaxReturn);
 
-        if (count($arrayReturn) > 0) {
+        if (is_array($arrayReturn) && count($arrayReturn) > 0) {
             foreach ($arrayReturn as $stdObj) {
                 if ($stdObj->uid == $uid) {
                     return $stdObj;
+                }
+            }
+        } elseif (is_object($arrayReturn) && $arrayReturn instanceof stdClass) {
+            if (is_array($arrayReturn->users) && count($arrayReturn->users) > 0) {
+                foreach($arrayReturn->users as $user) {
+                    if ($user->uid == $uid) {
+                        return $user;
+                    }
                 }
             }
         }
