@@ -60,4 +60,21 @@ return [
         'version' => '2.5.21',
         'type' => 'css',
     ],
+    'tom-select' => [
+        'version' => '2.5.2',
+    ],
+    '@orchidjs/sifter' => [
+        'version' => '1.1.0',
+    ],
+    '@orchidjs/unicode-variants' => [
+        'version' => '1.1.2',
+    ],
+    'tom-select/dist/css/tom-select.default.min.css' => [
+        'version' => '2.5.2',
+        'type' => 'css',
+    ],
+    'tom-select/dist/css/tom-select.bootstrap4.css' => [
+        'version' => '2.5.2',
+        'type' => 'css',
+    ],
 ];

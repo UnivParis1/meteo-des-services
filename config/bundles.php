@@ -19,4 +19,5 @@ return [
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
     Ajgl\Twig\Extension\SymfonyBundle\AjglBreakpointTwigExtensionBundle::class => ['dev' => true],
     Symfonycasts\SassBundle\SymfonycastsSassBundle::class => ['all' => true],
+    Ambta\DoctrineEncryptBundle\AmbtaDoctrineEncryptBundle::class => ['all' => true],
 ];

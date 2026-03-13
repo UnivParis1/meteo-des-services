@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Ambta\DoctrineEncryptBundle\Configuration\Encrypted;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['uid'])]
@@ -19,7 +20,7 @@ class User implements UserInterface
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $uid;
 
     /**
@@ -29,9 +30,11 @@ class User implements UserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Encrypted]
     private ?string $displayName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Encrypted]
     private ?string $mail = null;
 
     #[ORM\Column]
