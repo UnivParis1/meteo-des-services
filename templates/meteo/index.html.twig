@@ -4,7 +4,7 @@
             <div class="row mt-lg-3">
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <div class="d-inline">
-                    <a class="link-primary" href="{{ path('admin_user_index') }}">Backoffice gestion de l'application météo </a>
+                    <a class="link-primary" href="{{ path('admin_user_index') }}">Accès superviseur de l'application</a>
                 </div>
                 {% endif %}
                 {% if is_granted('ROLE_TEACHER') %}
