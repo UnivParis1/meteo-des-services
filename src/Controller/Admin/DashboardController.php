@@ -2,9 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Application;
-use App\Entity\Tags;
-use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -27,10 +24,10 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToCrud('Gestion des Utilisateurs', 'fas fa-list', User::class);
+        yield MenuItem::linkTo(UserCrudController::class, 'Gestion des Utilisateurs', 'fas fa-list');
         yield MenuItem::subMenu('Gestion des Applications', 'fas fa-list')->setSubItems([
-            MenuItem::linkToCrud('Applications', 'fas fa-list', Application::class),
-            MenuItem::linkToCrud('Gestion des Tags', 'fas fa-list', Tags::class),
+            MenuItem::linkTo(ApplicationCrudController::class, 'Applications', 'fas fa-list'),
+            MenuItem::linkTo(TagsCrudController::class, 'Gestion des Tags', 'fas fa-list'),
         ]);
     }
 }
