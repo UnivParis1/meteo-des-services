@@ -55,13 +55,8 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('uid');
-        yield ChoiceField::new('roles')->setLabel("Autorisation d'accès")
-                                       ->setFormType(ChoiceType::class)
-                                       ->setFormTypeOption('expanded', false)
-                                       ->setFormTypeOption('multiple', false)
-                                       ->setFormTypeOption('mapped', true)
-                                       ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // ajout pour que l'extension ChoiceTypeExtensions s'execute (à la drupal)
-                                       ->setChoices(UserRoles::$choix);
+        yield BooleanField::new('estAdmin');
+        yield BooleanField::new('estSuperviseur');
         yield TextField::new('displayName')->setLabel('Nom complet');
         yield TextField::new('mail')->setLabel('Courriel');
         yield BooleanField::new('recevoirMail')->hideOnIndex()->hideOnDetail()->hideOnForm();

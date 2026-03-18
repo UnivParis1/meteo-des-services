@@ -51,15 +51,6 @@ class UpdateUserWsgroupsCommand extends Command
         foreach ($users as $user) {
             $roles = $user->getRoles();
 
-            // Si un ancien role ROLE_USER est affécté, le changer par ROLE_STAFF
-            $idxRoleUser = array_search('ROLE_USER', $roles);
-
-            if (false !== $idxRoleUser) {
-                $roles[$idxRoleUser] = 'ROLE_STAFF';
-                $user->setRoles($roles);
-                $this->userRepository->updateUser($user);
-            }
-
             // assigne un role unique (celui le plus élevé)
             if (count($roles) > 1) {
                 $keyroles = array_keys(UserRoles::$choix);

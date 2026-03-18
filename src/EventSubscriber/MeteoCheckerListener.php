@@ -47,7 +47,6 @@ class MeteoCheckerListener implements EventSubscriberInterface
             $user = $this->userService->createUser($uid);
         }
         $this->userChecker->checkPreAuth($user);
-
         $this->userService->updateUserRequestInfos($user);
     }
 

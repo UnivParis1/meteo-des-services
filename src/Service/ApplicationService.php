@@ -110,7 +110,7 @@ class ApplicationService
         return self::sortDateHistoriesDTO($histories);
     }
 
-    public function convertToDTO(Application $application, ?string $title, bool $setHistory = true, $addMaintenancesToHistories = true): ApplicationDTO
+    public function convertToDTO(Application $application, ?string $title, bool $setHistory = false, $addMaintenancesToHistories = false): ApplicationDTO
     {
         $appLastUpdate = $application->getLastUpdate();
 
@@ -124,25 +124,30 @@ class ApplicationService
         // Ajout des maintenances
         $dto = $this->maintenanceService->setNextMaintenancesOfApplication($dto);
 
-        if ($setHistory) {
+        if ($setHistory || $this->security->isGranted('ROLE_SUPER_ADMIN')) {
             $histories = $application->getHistories();
 
             $dtoHistories = [];
             foreach ($histories as $history) {
+                $author = $history->getAuthor();
+                $user = $this->userRepository->findOneByUid($author);
+
+                $displayName = $user ? ($user->getDisplayName() ?? $user->getUid()) : $author;
+
                 $dtoHistories[] = new HistoryApplicationDTO(
                     $history->getId(),
                     $application->getId(),
                     $history->getType(),
                     $history->getState(),
                     $history->getDate(),
-                    $this->userRepository->findOneByUid($history->getAuthor())->getDisplayName(),
+                    $displayName,
                     $history->getMessage(),
                 );
             }
             $dto->setHistories(self::sortDateHistoriesDTO($dtoHistories));
         }
 
-        if ($addMaintenancesToHistories) {
+        if ($addMaintenancesToHistories || $this->security->isGranted('ROLE_SUPER_ADMIN')) {
 
             $nextMaintenances = $dto->getNextMaintenances();
 
@@ -168,13 +173,18 @@ class ApplicationService
                     $dtoMntcHistories = [];
 
                     foreach ($maintenanceHistories as $maintenanceHistory) {
+                        $author = $maintenanceHistory->getAuthor();
+                        $user = $this->userRepository->findOneByUid($author);
+
+                        $displayName = $user ? ($user->getDisplayName() ?? $user->getUid()) : $author;
+
                         $historyMaintenanceDTO = new HistoryMaintenanceDTO(
                             $maintenanceHistory->getId(),
                             $maintenanceHistory->getMaintenance()->getId(),
                             $maintenanceHistory->getType(),
                             $maintenanceHistory->getApplicationState(),
                             $maintenanceHistory->getDate(),
-                            $this->userRepository->findOneByUid($maintenanceHistory->getAuthor())->getDisplayName(),
+                            $displayName,
                             $maintenanceHistory->getMessage(),
                             $maintenanceHistory->getStartingDate(),
                             $maintenanceHistory->getEndingDate() );
