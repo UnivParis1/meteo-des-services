@@ -46,8 +46,8 @@ class MeteoCheckerListener implements EventSubscriberInterface
             $uid = array_values($passport->getBadges())[0]->getUserIdentifier();
             $user = $this->userService->createUser($uid);
         }
-        $this->userChecker->checkPreAuth($user);
         $this->userService->updateUserRequestInfos($user);
+        $this->userChecker->checkPreAuth($user);
     }
 
     public static function getSubscribedEvents(): array

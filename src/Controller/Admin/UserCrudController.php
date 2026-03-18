@@ -65,6 +65,6 @@ class UserCrudController extends AbstractCrudController
                                        ->setFormTypeOption('expanded', false)
                                        ->setFormTypeOption('multiple', true)
                                        ->setFormTypeOption('mapped', true)
-                                       ->setChoices(UserRoles::$easyAdminEduAffiliations);
+                                       ->setChoices(UserRoles::$choicesEduAffiliations);
     }
 }

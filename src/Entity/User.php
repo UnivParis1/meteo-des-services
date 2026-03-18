@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Model\UserRoles;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +10,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['uid'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_uid', fields: ['uid'])]
 class User implements UserInterface
@@ -52,10 +50,10 @@ class User implements UserInterface
     private array $eduPersonAffiliations = ['student'];
 
     #[ORM\Column]
-    private bool $estAdmin = false;
+    public bool $estAdmin = false;
 
     #[ORM\Column]
-    private bool $estSuperviseur = false;
+    public bool $estSuperviseur = false;
 
     public function __construct()
     {
@@ -82,43 +80,6 @@ class User implements UserInterface
         $this->uid = $uid;
 
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function prePersist($event)
-    {
-        ! ($roles = $this->testAjouterDroitsAdmins($this->getRoles())) ?: $this->roles = $roles;
-        $event->getObjectManager()->getRepository(User::class)->updateUserRequestInfos($this);
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdate($event): void
-    {
-        ! ($rolesa = $this->testAjouterDroitsAdmins($this->roles)) ?: $this->roles = $rolesa;
-        ! ($rolesd = $this->testEnleverDroitsAdmins($this->roles)) ?: $this->roles = $rolesd;
-
-        $event->getObjectManager()->getRepository(User::class)->updateUserRequestInfos($this);
-    }
-
-    private function testAjouterDroitsAdmins($roles): ?array
-    {
-        foreach (array_flip(UserRoles::$droitsAdminEtSuperviseur) as $is => $role)
-            if (isset($this->$is) && $this->$is && !in_array($role, $roles))
-                return [$role];
-
-        return null;
-    }
-
-    private function testEnleverDroitsAdmins($roles): ?array
-    {
-        $oldroles = $roles;
-        foreach (UserRoles::$droitsAdminEtSuperviseur as $is => $role)
-            if (isset($this->$is) && $this->$is === false && in_array($role, $roles))
-                array_splice($roles, array_search($role, $roles), 1);
-
-        if ($role <> $oldroles)
-            return $roles;
-        return null;
     }
 
     /**

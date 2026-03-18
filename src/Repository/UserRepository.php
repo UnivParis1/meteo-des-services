@@ -14,8 +14,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public $isCalled = false;
-
     public function __construct(
         private ManagerRegistry $registry,
         private EntityManagerInterface $em,
@@ -26,25 +24,13 @@ class UserRepository extends ServiceEntityRepository
 
     public function createUser($uid): User
     {
-        $infos = $this->requestUidInfo($uid);
-
-        if (! ($infos && $infos->eduPersonAffiliation)) {
-            throw new Exception('Appel wsgroups erreur requestUidInfo');
-        } else {
-            $user = $this->createUserEntity($uid, $infos->displayName ?? null, $infos->mail ?? null, $infos->eduPersonAffiliation);
-        }
-
-        return $user;
+        return $this->createUserEntity($uid);
     }
 
-    public function createUserEntity(string $uid, ?string $displayName, ?string $mail, ?array $eduPersonAffiliations): User
+    public function createUserEntity(string $uid): User
     {
         $u = new User;
         $u->setUid($uid);
-
-        $u->setMail($mail);
-        $u->setDisplayName($displayName);
-        $u->setEduPersonAffiliations($eduPersonAffiliations);
 
         $em = $this->getEntityManager();
         $em->persist($u);
@@ -78,66 +64,56 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function updateUserRequestInfos(User $user): User
+    public function updateUserRequestInfos(User $user): void
     {
-        $infos = $this->requestUidInfo($user->getUid());
 
-        if (!$infos) {
+        $s1 = serialize($user);
+        $user = self::_updateUserRequestInfos($user, $this->params->get('urlwsgroup_user_infos'));
+        $s2 = serialize($user);
+        // compare les 2 string sérialisés pour vérifier des changements
+        if ($s1 <> $s2)
+            $this->updateUser($user);
+    }
+
+    private static function _updateUserRequestInfos(User $user, $urlwsgroup): User
+    {
+        // test si un role superviseur ou admin est trouvé, si oui, assignation d'un seul role au user (les roles étant hierarchiques)
+        // stop la mise à jour et la recherche des roles
+        if ($suOrAdminRole = self::roleAjouterDroitsAdmins($user)) {
+            $user->setRoles([$suOrAdminRole]);
             return $user;
         }
+        $infos = self::requestUidInfo($user->getUid(), $urlwsgroup);
+
+        if (!$infos)
+            return $user;
 
         null == $infos->displayName ?: $user->setDisplayName($infos->displayName);
         !(isset($infos->mail) && null !== $infos->mail) ?: $user->setMail($infos->mail);
 
-        if (!(isset($infos->eduPersonAffiliation) && null !== $infos->eduPersonAffiliation)) {
+        if (!(isset($infos->eduPersonAffiliation) && null !== $infos->eduPersonAffiliation))
             return $user;
-        }
 
-        $user->setEduPersonAffiliations($infos->eduPersonAffiliation);
+        if ($user->getEduPersonAffiliations() <> $infos->eduPersonAffiliation)
+            $user->setEduPersonAffiliations($infos->eduPersonAffiliation);
 
-        $choicesIndexedArray = array_values(UserRoles::$choix);
-        $affiliationIndexedArray = array_values(UserRoles::$easyAdminEduAffiliations);
-
-        $maxPermissionIndex = 0;
-        foreach ($infos->eduPersonAffiliation as $affiliation) {
-            if (!isset(UserRoles::$easyAdminEduAffiliations[$affiliation])) {
-                continue;
-            }
-
-            $indexPermission = array_search($affiliation, $affiliationIndexedArray);
-
-            assert($indexPermission, "Erreur droits inconnus $affiliation");
-
-            // incrémente l'index car les permissions commencent en anonmyme avec l'index 0
-            ++$indexPermission;
-
-            if ($indexPermission > $maxPermissionIndex) {
-                $maxPermissionIndex = $indexPermission;
-            } else {
-                continue;
-            }
-        }
-
-        if ($maxPermissionIndex > 0) {
-            $isGranted = $choicesIndexedArray[$maxPermissionIndex];
-            $roles = $user->getRoles();
-
-            if (!in_array($isGranted, $roles)) {
-                $roles[] = $isGranted;
-                $user->setRoles($roles);
-                $this->updateUser($user);
-            }
-        }
-
-
+        if ($role = UserRoles::roleMaxHorsAdmins($infos->eduPersonAffiliation))
+            $user->setRoles([$role]);
 
         return $user;
     }
 
-    public function requestUidInfo(string $uid, $attrs = ['uid', 'displayName', 'mail', 'eduPersonAffiliation']): ?\stdClass
+    private static function roleAjouterDroitsAdmins($user): ?string
     {
-        $urlwsgroup = $this->params->get('urlwsgroup_user_infos');
+        $roles = $user->getRoles();
+        foreach (array_reverse(UserRoles::$droitsAdminEtSuperviseur) as $is => $role)
+            if (isset($user->$is) && $user->$is && !in_array($role, $roles))
+                return $role;
+        return null;
+    }
 
+    private static function requestUidInfo(string $uid, string $urlwsgroup, $attrs = ['uid', 'displayName', 'mail', 'eduPersonAffiliation']): ?\stdClass
+    {
         $url = "$urlwsgroup?token=$uid&maxRows=1&attrs=" . implode(',', $attrs);
 
         $fd = fopen($url, 'r');
