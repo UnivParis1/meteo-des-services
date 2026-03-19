@@ -66,7 +66,6 @@ class UserRepository extends ServiceEntityRepository
 
     public function updateUserRequestInfos(User $user): void
     {
-
         $s1 = serialize($user);
         $user = self::_updateUserRequestInfos($user, $this->params->get('urlwsgroup_user_infos'));
         $s2 = serialize($user);
@@ -106,7 +105,6 @@ class UserRepository extends ServiceEntityRepository
 
     private static function testDroitSuperviseurOuAdmin(User $user): ?string
     {
-        $roles = $user->getRoles();
         foreach (array_reverse(UserRoles::$droitsAdminEtSuperviseur) as $is => $role)
             if (isset($user->$is) && $user->$is)
                 return $role;
