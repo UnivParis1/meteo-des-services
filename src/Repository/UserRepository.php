@@ -79,8 +79,9 @@ class UserRepository extends ServiceEntityRepository
     {
         // test si un role superviseur ou admin est trouvé, si oui, assignation d'un seul role au user (les roles étant hierarchiques)
         // stop la mise à jour et la recherche des roles
-        if ($suOrAdminRole = self::roleAjouterDroitsAdmins($user)) {
-            $user->setRoles([$suOrAdminRole]);
+        if ($suOrAdminRole = self::testDroitSuperviseurOuAdmin($user)) {
+            if (!in_array($suOrAdminRole, $user->getRoles()))
+                $user->setRoles([$suOrAdminRole]);
             return $user;
         }
         $infos = self::requestUidInfo($user->getUid(), $urlwsgroup);
@@ -88,7 +89,7 @@ class UserRepository extends ServiceEntityRepository
         if (!$infos)
             return $user;
 
-        null == $infos->displayName ?: $user->setDisplayName($infos->displayName);
+        !(isset($infos->displayName) && null !== $infos->displayName) ?: $user->setDisplayName($infos->displayName);
         !(isset($infos->mail) && null !== $infos->mail) ?: $user->setMail($infos->mail);
 
         if (!(isset($infos->eduPersonAffiliation) && null !== $infos->eduPersonAffiliation))
@@ -103,11 +104,11 @@ class UserRepository extends ServiceEntityRepository
         return $user;
     }
 
-    private static function roleAjouterDroitsAdmins($user): ?string
+    private static function testDroitSuperviseurOuAdmin(User $user): ?string
     {
         $roles = $user->getRoles();
         foreach (array_reverse(UserRoles::$droitsAdminEtSuperviseur) as $is => $role)
-            if (isset($user->$is) && $user->$is && !in_array($role, $roles))
+            if (isset($user->$is) && $user->$is)
                 return $role;
         return null;
     }
