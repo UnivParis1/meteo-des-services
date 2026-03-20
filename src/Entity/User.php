@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Validator\Uid;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,8 +21,10 @@ class User implements UserInterface
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(length: 180, unique: true)]
-    private string $uid;
+    #[Assert\NotBlank]
+    #[Uid]
+    #[ORM\Column(length: 255, unique: true)]
+    protected string $uid;
 
     /**
      * @var list<string> The user roles

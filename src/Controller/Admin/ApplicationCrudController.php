@@ -110,7 +110,7 @@ class ApplicationCrudController extends AbstractCrudController
                                        ->setFormTypeOption('expanded', false)
                                        ->setFormTypeOption('multiple', false)
                                        ->setFormTypeOption('mapped', true)
-                                       ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // identique à UserCrudController
+                                       ->setFormTypeOption('extra_options', ['meteoAdminChoiceExtension' => true]) // necessaire (hack?) pour la conversion Array -> chaine de caractère, à voir si il est possible de faire plus "propre" qu'une extension globale
                                        ->setChoices(UserRoles::$choix)
                                        ->setHelp("définis les autorisations d'accès à l'application de manière hiérarchique (ex: un enseignant a accès aux applications étudiantes, un biatssp aux applications enseignantes...)");
 

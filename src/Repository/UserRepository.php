@@ -64,24 +64,26 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function updateUserRequestInfos(User $user): void
+    public function updateUserRequestInfos(User $user, $isUpdate = true): void
     {
+        $urlwsgroup = $this->params->get('urlwsgroup_user_infos');
         $s1 = serialize($user);
-        $user = self::_updateUserRequestInfos($user, $this->params->get('urlwsgroup_user_infos'));
+        $user = self::_updateUserRequestInfos($user, $urlwsgroup, $isUpdate);
         $s2 = serialize($user);
         // compare les 2 string sérialisés pour vérifier des changements
         if ($s1 <> $s2)
             $this->updateUser($user);
     }
 
-    private static function _updateUserRequestInfos(User $user, $urlwsgroup): User
+    private static function _updateUserRequestInfos(User $user, $urlwsgroup, $isUpdate = true): User
     {
         // test si un role superviseur ou admin est trouvé, si oui, assignation d'un seul role au user (les roles étant hierarchiques)
         // stop la mise à jour et la recherche des roles
         if ($suOrAdminRole = self::testDroitSuperviseurOuAdmin($user)) {
             if (!in_array($suOrAdminRole, $user->getRoles()))
                 $user->setRoles([$suOrAdminRole]);
-            return $user;
+            if ($isUpdate)
+                return $user;
         }
         $infos = self::requestUidInfo($user->getUid(), $urlwsgroup);
 
@@ -111,7 +113,7 @@ class UserRepository extends ServiceEntityRepository
         return null;
     }
 
-    private static function requestUidInfo(string $uid, string $urlwsgroup, $attrs = ['uid', 'displayName', 'mail', 'eduPersonAffiliation']): ?\stdClass
+    public static function requestUidInfo(string $uid, string $urlwsgroup, $attrs = ['uid', 'displayName', 'mail', 'eduPersonAffiliation']): ?\stdClass
     {
         $url = "$urlwsgroup?token=$uid&maxRows=1&attrs=" . implode(',', $attrs);
 
@@ -136,42 +138,6 @@ class UserRepository extends ServiceEntityRepository
                 foreach ($arrayReturn->users as $user) {
                     if ($user->uid == $uid) {
                         return $user;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public function searchUserOrGroup(string $search, $attrs = ['uid', 'mail', 'displayName', 'cn', 'employeeType', 'departmentNumber', 'eduPersonPrimaryAffiliation', 'supannEntiteAffectation-ou', 'supannRoleGenerique', 'supannEtablissement']): ?array
-    {
-        $urlwsgroup = $this->params->get('urlwsgroup_user_infos');
-
-        // recopié depuis creneaux (recherche utilisateur ou groupes)
-        $url = 'https://wsgroups.univ-paris1.fr/search?maxRows=10&user_attrs=' . implode(',', $attrs) . "&filter_category=groups&filter_group_cn=employees.*&filter_eduPersonAffiliation=teacher|researcher|staff|emeritus&token=$search";
-
-        $fd = fopen($url, 'r');
-        $ajaxReturn = stream_get_contents($fd);
-        fclose($fd);
-
-        $stdResponse = json_decode($ajaxReturn);
-
-        if (is_array($stdResponse->users) && count($stdResponse->users) > 0) {
-            // vérifier uid,displayName et mail présent
-            return $stdResponse->users; // $stdResponse->users;
-        } elseif (is_array($stdResponse->groups) && count($stdResponse->groups) > 0) {
-            foreach ($stdResponse->groups as $group) {
-                if ('groups_structures' == $group->category) {
-                    $groupSearch = $group->key;
-                    $urlRecuperationsMails = "https://wsgroups.univ-paris1.fr/searchUser?key=$groupSearch&filter_member_of_group=$groupSearch&filter_mail=*&maxRows=100&attrs=uid%2CdisplayName%2Cmail";
-                    $fd = fopen($urlRecuperationsMails, 'r');
-                    $mailsjson = stream_get_contents($fd);
-                    fclose($fd);
-
-                    $users = json_decode($mailsjson);
-                    if (count($users) > 0) {
-                        return $users;
                     }
                 }
             }

@@ -75,8 +75,6 @@ class UpdateUserWsgroupsCommand extends Command
             $output->writeln("Mise à jour de {$user->getUid()}");
 
             $user = $this->userService->updateUserRequestInfos($user);
-
-            $this->userRepository->updateUser($user);
         }
 
         $io->success('Utilisateurs mis à jours pour roles et eduPrincipalAffiliation');

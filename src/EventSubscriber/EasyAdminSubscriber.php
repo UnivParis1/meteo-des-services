@@ -12,7 +12,7 @@ class EasyAdminSubscriber implements EventSubscriberInterface
 {
     public function __construct(private UserRepository $userRepository) {}
 
-    public function onBeforeEntityUpdatedOrPersistEvent($event): void
+    public function onBeforeEntityUpdatedEvent($event): void
     {
         if (! ($user = $event->getEntityInstance()) instanceof User)
             return;
@@ -20,11 +20,18 @@ class EasyAdminSubscriber implements EventSubscriberInterface
         $this->userRepository->updateUserRequestInfos($user);
     }
 
+    public function onBeforeEntityPersistedEvent($event): void {
+        if (! ($user = $event->getEntityInstance()) instanceof User)
+            return;
+
+        $this->userRepository->updateUserRequestInfos(user: $user, isUpdate: false);
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
-            BeforeEntityUpdatedEvent::class => ['onBeforeEntityUpdatedOrPersistEvent', 2000],
-            BeforeEntityPersistedEvent::class => ['onBeforeEntityUpdatedOrPersistEvent', 2000],
+            BeforeEntityUpdatedEvent::class => ['onBeforeEntityUpdatedEvent', 0],
+            BeforeEntityPersistedEvent::class => ['onBeforeEntityPersistedEvent', 0],
         ];
     }
 }

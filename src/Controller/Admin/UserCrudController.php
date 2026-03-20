@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -54,17 +55,23 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('uid');
-        yield BooleanField::new('estAdmin');
-        yield BooleanField::new('estSuperviseur');
-        yield TextField::new('displayName')->setLabel('Nom complet');
-        yield TextField::new('mail')->setLabel('Courriel');
-        yield BooleanField::new('recevoirMail')->hideOnIndex()->hideOnDetail()->hideOnForm();
-        yield ChoiceField::new('eduPersonAffiliations')->setLabel('Affiliations')
+        $id = IntegerField::new('id')->onlyOnIndex();
+        $uid = TextField::new('uid')->setDisabled();
+        $estAdmin = BooleanField::new('estAdmin');
+        $estSuperviseur = BooleanField::new('estSuperviseur');
+        $displayName = TextField::new('displayName')->setLabel('Nom complet')->setDisabled();
+        $mail =  TextField::new('mail')->setLabel('Courriel')->setDisabled();
+        $recevoirMail = BooleanField::new('recevoirMail')->hideOnIndex()->hideOnDetail()->hideOnForm();
+        $eduPersonAffiliations = ChoiceField::new('eduPersonAffiliations')->setLabel('Affiliations')->setDisabled()
                                        ->setFormType(ChoiceType::class)
                                        ->setFormTypeOption('expanded', false)
                                        ->setFormTypeOption('multiple', true)
                                        ->setFormTypeOption('mapped', true)
                                        ->setChoices(UserRoles::$choicesEduAffiliations);
+
+        if ($pageName == Crud::PAGE_NEW)
+            $uid->setDisabled(false);
+
+        return [$id, $uid, $estAdmin, $estSuperviseur, $displayName, $mail, $recevoirMail, $eduPersonAffiliations];
     }
 }
