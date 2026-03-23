@@ -71,7 +71,7 @@ class ApplicationRepository extends ServiceEntityRepository
     {
         $query = $this->getEntityManager()->createQueryBuilder()->select('a')
             ->from('App\Entity\Application', 'a')
-            ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::WITH, 'a.id = m.application')
+            ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::ON, 'a.id = m.application')
             ->where('a.isArchived = 0');
 
         if (null != $stateFilter && 'all' != $stateFilter && '' != $stateFilter) {
