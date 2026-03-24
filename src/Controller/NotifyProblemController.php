@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class NotifyProblemController extends AbstractController
 {
@@ -33,7 +33,7 @@ class NotifyProblemController extends AbstractController
             $application = $this->applicationRepository->findOneBy(['title' => $problem->title]);
 
             if (null == $application) {
-                throw new \Exception("Veuillez contacter la DSIUN-PAS, l'application n'existe pas en Base de données");
+                throw new TransportExceptionInterface("Veuillez contacter la DSIUN-PAS, l'application n'existe pas en Base de données");
             }
 
             $notifyUser = false; // $application->getUser();
