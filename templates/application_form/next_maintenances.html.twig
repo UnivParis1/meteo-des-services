@@ -8,7 +8,7 @@
     </div>
     <div>
         <a>
-            <a class="btn btn-light" href="{{ path('app_add_maintenance', { 'application' : applicationId}) }}">
+            <a class="btn btn-light" href="{{ path('maintenance_add', { 'application' : applicationId}) }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus"
                      viewBox="0 0 16 16">
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
@@ -87,7 +87,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a class="action" href="{{ path('app_edit_maintenance', { 'id' : maintenance.id} ) }}"
+                    <a class="action" href="{{ path('maintenance_edit', { 'id' : maintenance.id} ) }}"
                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Modifier">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                              class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -96,7 +96,7 @@
                     </a>
                 </td>
                 <td>
-                    <a class="action" href="{{ path('app_delete_maintenance', { 'id' : maintenance.id} ) }}"
+                    <a class="action" href="{{ path('maintenance_delete', { 'id' : maintenance.id} ) }}"
                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Supprimer"
                        onclick="$.fn.confirmDeletion(event, this.href, 'maintenance')">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"

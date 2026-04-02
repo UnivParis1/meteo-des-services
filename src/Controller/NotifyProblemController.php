@@ -15,9 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class NotifyProblemController extends AbstractController
 {
-    public function __construct(private ApplicationRepository $applicationRepository)
-    {
-    }
+    public function __construct(private ApplicationRepository $applicationRepository) {}
 
     /**
      * @throws TransportExceptionInterface
@@ -38,10 +36,10 @@ class NotifyProblemController extends AbstractController
 
             $notifyUser = false; // $application->getUser();
 
-            $text = "L'utilisateur ayant pour identifiant: ".$this->getUser()->getUserIdentifier()." a signalé un disfonctionnement sur l'application : ".$problem->title.PHP_EOL.PHP_EOL;
-            $text .= "Description renseignée par l'utilisateur : ".PHP_EOL.$problem->message.PHP_EOL;
+            $text = "L'utilisateur ayant pour identifiant: " . $this->getUser()->getUserIdentifier() . " a signalé un disfonctionnement sur l'application : " . $problem->title . PHP_EOL . PHP_EOL;
+            $text .= "Description renseignée par l'utilisateur : " . PHP_EOL . $problem->message . PHP_EOL;
 
-            $subject = 'Méteo des services - équipe PAS - '.$problem->title;
+            $subject = 'Méteo des services - équipe PAS - ' . $problem->title;
 
             $email = (new TemplatedEmail())
                 ->from('no-reply@univ-paris1.fr')
@@ -55,7 +53,8 @@ class NotifyProblemController extends AbstractController
             if ($notifyUser && $notifyUser->isRecevoirMail()) {
                 $email->cc($notifyUser->getMail());
             }
-            $email->to('assistance-dsiun@univ-paris1.fr');
+            $email->to('ebohm@univ-paris1.fr'); //DEV
+            //            $email->to('assistance-dsiun@univ-paris1.fr');
 
             $mailer->send($email);
             $this->addFlash('success', 'Problème signalé avec succès');

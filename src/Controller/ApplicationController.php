@@ -11,14 +11,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/application', name: 'application_')]
 class ApplicationController extends AbstractController
 {
-    public function __construct(public ApplicationService $applicationService,
-        public MaintenanceService $maintenanceService)
-    {
-    }
+    public function __construct(
+        public ApplicationService $applicationService,
+        public MaintenanceService $maintenanceService
+    ) {}
 
-    #[Route('/application/add', name: 'app_add_application')]
+    #[Route('/add', name: 'add')]
     public function add(Request $request): Response
     {
         $application = new Application();
@@ -36,7 +37,7 @@ class ApplicationController extends AbstractController
         ]);
     }
 
-    #[Route('/application/edit/{id}', name: 'app_edit_application')]
+    #[Route('/edit/{id}', name: 'edit')]
     public function edit(Request $request, int $id): Response
     {
         $application = $this->applicationService->getApplicationById($id);
@@ -58,7 +59,7 @@ class ApplicationController extends AbstractController
         ]);
     }
 
-    #[Route('/application/delete/{id}', name: 'app_delete_application')]
+    #[Route('/delete/{id}', name: 'delete')]
     public function delete(int $id, Request $request): Response
     {
         $application = $this->applicationService->getApplicationById($id);

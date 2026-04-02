@@ -11,14 +11,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/maintenance', name: 'maintenance_')]
 class MaintenanceController extends AbstractController
 {
-    public function __construct(public ApplicationService $applicationService,
-        public MaintenanceService $maintenanceService)
-    {
-    }
+    public function __construct(
+        public ApplicationService $applicationService,
+        public MaintenanceService $maintenanceService
+    ) {}
 
-    #[Route('/maintenance/add/{application}', name: 'app_add_maintenance')]
+    #[Route('/add/{application}', name: 'add')]
     public function index(Request $request, Application $application): Response
     {
         $maintenance = $this->maintenanceService->initMaintenance($application);
@@ -28,7 +29,7 @@ class MaintenanceController extends AbstractController
             $this->maintenanceService->createMaintenance($maintenance);
             $this->addFlash('success', 'Maintenance ajoutée avec succès');
 
-            return $this->redirectToRoute('app_edit_application', ['id' => $application->getId()]);
+            return $this->redirectToRoute('application_edit', ['id' => $application->getId()]);
         }
 
         return $this->render('maintenance_form\index.html.twig', [
@@ -36,7 +37,7 @@ class MaintenanceController extends AbstractController
         ]);
     }
 
-    #[Route('/maintenance/edit/{id}', name: 'app_edit_maintenance')]
+    #[Route('/edit/{id}', name: 'edit')]
     public function edit(Request $request, int $id): Response
     {
         $maintenance = $this->maintenanceService->getMaintenanceById($id);
@@ -46,7 +47,7 @@ class MaintenanceController extends AbstractController
             $this->maintenanceService->updateMaintenance($maintenance);
             $this->addFlash('success', 'Modification effectuée avec succès');
 
-            return $this->redirectToRoute('app_edit_application', ['id' => $maintenance->getApplication()->getId()]);
+            return $this->redirectToRoute('application_edit', ['id' => $maintenance->getApplication()->getId()]);
         }
 
         return $this->render('maintenance_form/index.html.twig', [
@@ -54,7 +55,7 @@ class MaintenanceController extends AbstractController
         ]);
     }
 
-    #[Route('/maintenance/delete/{id}', name: 'app_delete_maintenance')]
+    #[Route('/delete/{id}', name: 'delete')]
     public function delete(Request $request, int $id): Response
     {
         $maintenance = $this->maintenanceService->getMaintenanceById($id);
@@ -66,6 +67,6 @@ class MaintenanceController extends AbstractController
             $this->addFlash('error', 'Maintenance non trouvée');
         }
 
-        return $this->redirectToRoute('app_edit_application', ['id' => $appId]);
+        return $this->redirectToRoute('application_edit', ['id' => $appId]);
     }
 }

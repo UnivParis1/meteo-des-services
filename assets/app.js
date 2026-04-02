@@ -38,7 +38,7 @@ function showBSModal(event) {
         let applicationId = event.relatedTarget.attributes['applicationid'].value;
 
         var details_request = $.ajax({
-            url: '/meteo/api/application/' + applicationId, // renvoie le contenu de la pop-up
+            url: '/api/application/' + applicationId, // renvoie le contenu de la pop-up
             method: 'GET'
         });
 
