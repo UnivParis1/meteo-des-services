@@ -20,7 +20,7 @@ class CasAuthenticatorEntryPoint implements AuthenticationEntryPointInterface
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         $currentUrl = $request->getUri();
-        $redirectUrl = sprintf('%s?service=%s', $this->casUrl, urlencode($currentUrl));
+        $redirectUrl = sprintf('%slogin?service=%s', $this->casUrl, urlencode($currentUrl));
 
         return new RedirectResponse($redirectUrl);
     }
