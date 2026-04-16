@@ -20,6 +20,32 @@ class MeteoController extends AbstractController
         public ApplicationsSorter $applicationsSorter,
     ) {}
 
+    #[Route('/{slug}', name: 'search', requirements: ['slug' => '^[\p{L}\-]+$'], methods: ['GET'])]
+    public function search(string $slug, Request $request) : Response
+    {
+        $searchApplication = new SearchApplication();
+        $searchApplication->limit = null;
+        $searchApplication->searchTerm = $slug;
+
+        $form = $this->createForm(SearchFormType::class, $searchApplication, [
+            'action' => $this->generateUrl('app_meteo'),
+            'method' => 'POST'
+        ]);
+
+        $applications = $this->applicationService->getApplicationByTag($slug);
+        $applications += $this->applicationService->getApplicationByFilters($slug, 'all');
+
+        $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
+
+        return $this->render('meteo/index.html.twig', [
+            'applications' => $applications,
+            'form' => $form->createView(),
+            'page' => 1,
+            'nbPage' => 1,
+            'iconsName' => IconsName::$iconsName,
+        ]);
+
+    }
 
     #[Route('/{page<\d+>?1}', name: 'meteo')]
     public function index(int $page, Request $request): Response
