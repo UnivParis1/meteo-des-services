@@ -10,13 +10,11 @@ import './styles/font-import-google-2.css';
 
 import './vendor/bootstrap/bootstrap.index.js';
 import "./vendor/luxon/luxon.index.js";
-import "./vendor/jquery/jquery.index.js";
+
+import './provide_jquery.js';
 
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
-
-import $ from 'jquery';
-window.jQuery = $;
 
 $(function () {
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
