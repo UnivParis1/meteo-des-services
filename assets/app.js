@@ -7,11 +7,14 @@
 import './styles/app.css';
 import './styles/font-import-google.css';
 import './styles/font-import-google-2.css';
+import './styles/glyphicons.css';
+import './vendor/bootstrap-icons/font/bootstrap-icons.min.css';
 
 import './vendor/bootstrap/bootstrap.index.js';
 import "./vendor/luxon/luxon.index.js";
 
 import './provide_jquery.js';
+import './bootstrap-add-clear.js';
 
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
@@ -23,6 +26,8 @@ $(function () {
     });
 
     document.getElementById('details').addEventListener('show.bs.modal', event => showBSModal(event) );
+
+    $('#search_form_searchTerm').addClear({top: '-27px', left: '160px'});
 });
 
 function showBSModal(event) {

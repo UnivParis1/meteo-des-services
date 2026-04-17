@@ -77,4 +77,12 @@ return [
         'version' => '2.5.2',
         'type' => 'css',
     ],
+    'bootstrap-icons/font/bootstrap-icons.min.css' => [
+        'version' => '1.13.1',
+        'type' => 'css',
+    ],
+    'bootstrap-add-clear' => [
+	'version' => '1.0.7',
+	'type' => 'js'
+    ]
 ];
