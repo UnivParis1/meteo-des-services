@@ -33,12 +33,14 @@
         'text-decoration': 'none',
         'display': 'none',
         'overflow': 'hidden',
-        'position': 'relative',
+        'position': 'absolute',
         'pointer-events': 'auto',
         'left': options.left,
         'right': options.right,
-        'top': options.top,
-        'z-index': options.zindex
+        'top': '50%',
+        'z-index': options.zindex,
+        transform: 'translateY(-50%)',
+
       }, this);
 
       if ($this.val().length >= 1 && options.showOnLoad === true) {

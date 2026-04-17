@@ -27,7 +27,7 @@ $(function () {
 
     document.getElementById('details').addEventListener('show.bs.modal', event => showBSModal(event) );
 
-    $('#search_form_searchTerm').addClear({top: '-27px', left: '160px'});
+    $('#search_form_searchTerm').addClear({left: '160px'});
 });
 
 function showBSModal(event) {
