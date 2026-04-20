@@ -1,6 +1,5 @@
 import './styles/app.css';
-import './styles/font-import-google.css';
-import './styles/font-import-google-2.css';
+import './styles/font-import-gfonts.css';
 import './vendor/jquery-datetimepicker/build/jquery.datetimepicker.min.css';
 
 import "./provide_jquery.js";
