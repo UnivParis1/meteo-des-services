@@ -8,6 +8,7 @@ use App\Model\SearchApplication;
 use App\Model\IconsName;
 use App\Service\ApplicationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,6 +20,14 @@ class MeteoController extends AbstractController
         public ApplicationService $applicationService,
         public ApplicationsSorter $applicationsSorter,
     ) {}
+
+    #[Route('/reset', name:'reset')]
+    public function reset(Request $request): RedirectResponse
+    {
+        $request->getSession()->set('searchApplication', new SearchApplication());
+
+        return $this->redirectToRoute('app_meteo');
+    }
 
     #[Route('/{slug}', name: 'search', requirements: ['slug' => '^[\p{L}\-]+$'], methods: ['GET'])]
     public function search(string $slug, Request $request) : Response
