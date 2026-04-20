@@ -14,7 +14,6 @@ import './vendor/bootstrap/bootstrap.index.js';
 import "./vendor/luxon/luxon.index.js";
 
 import './provide_jquery.js';
-import './bootstrap-add-clear.js';
 
 import { Tooltip } from 'bootstrap';
 import { DateTime } from 'luxon';
@@ -26,8 +25,6 @@ $(function () {
     });
 
     document.getElementById('details').addEventListener('show.bs.modal', event => showBSModal(event) );
-
-    $('#search_form_searchTerm').addClear({left: '160px'});
 });
 
 function showBSModal(event) {

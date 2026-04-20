@@ -14,6 +14,26 @@ $enable-negative-margins: true;
 @import "../../vendor/twbs/bootstrap/scss/mixins";
 @import "../../vendor/twbs/bootstrap/scss/root";
 
+// Fonction pour générer les valeurs de position
+@function generate-position-values($max: 100, $step: 5) {
+  $values: ();
+
+  $intervals: calc($max / $step);
+  @for $i from 1 through $intervals {
+    $values: map-merge($values, (calc($i * $step): #{calc($i * $step)+'%'}));
+  }
+
+  @return $values;
+}
+
+// Utilisation
+$position-values: map-merge(
+  $position-values,
+  generate-position-values(100, 5)
+);
+
+@debug $position-values;
+
 // 6. Include any other optional stylesheet partials as desired; list below is not inclusive of all available stylesheets
 @import "../../vendor/twbs/bootstrap/scss/utilities";
 @import "../../vendor/twbs/bootstrap/scss/reboot";
