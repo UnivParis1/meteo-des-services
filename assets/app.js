@@ -5,8 +5,7 @@
  * (and its CSS file) in your base layout (base.html.twig).
  */
 import './styles/app.css';
-import './styles/font-import-google.css';
-import './styles/font-import-google-2.css';
+import './styles/font-import-gfonts.css';
 import './styles/glyphicons.css';
 import './vendor/bootstrap-icons/font/bootstrap-icons.min.css';
 
