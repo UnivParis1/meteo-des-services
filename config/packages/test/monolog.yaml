@@ -1,12 +1,9 @@
 # config/packages/prod/monolog.yaml
 monolog:
     handlers:
-        file_log:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
-            enabled: false
-
-        syslog_handler:
-            type: syslog
-            priority: 10 # called first
+        main:
+            type: error_log
+            priority: 10
             level: error
+            formatter: monolog.formatter.logstash
+            enabled: true
