@@ -1,9 +1,13 @@
 # config/packages/prod/monolog.yaml
 monolog:
     handlers:
-        main:
+        error_log:
             type: error_log
             priority: 10
             level: error
             formatter: monolog.formatter.logstash
+        main:
+            type: fingers_crossed
+            handler: error_log
+            excluded_http_codes: [403, 404]
             enabled: true
