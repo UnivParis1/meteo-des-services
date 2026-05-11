@@ -26,14 +26,8 @@ final class OverlapValidator extends ConstraintValidator
         $startingDate = $mtncAjout->getStartingDate();
         $endingDate = $mtncAjout->getEndingDate();
 
-        if ($startingDate && $endingDate) {
-            if ($endingDate <= $startingDate) {
-                $context->buildViolation('La date de fin ne peut pas être antérieure ou égale à la date de début.' . ' TESTMSG 44242')
-                    ->atPath('endingDate')
-                    ->addViolation();
-                return;
-            }
-        }
+        if ($startingDate && $endingDate && $endingDate <= $startingDate)
+            return;
 
         $periodAjout = Period::fromDate($startingDate, $endingDate);
 
