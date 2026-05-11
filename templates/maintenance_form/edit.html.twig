@@ -25,7 +25,7 @@
                 </div>
                 <div class="col-7 col-xl-3 pe-md-5">
                     <div class="text-danger meteo-maintenance-errors">
-                        {{ form_errors(maintenanceForm.startingDate) }}
+                        {{ form_errors(maintenanceForm.application) }}
                     </div>
                     {{ form_widget(maintenanceForm.startingDate, {'attr': {'class': 'd-inline form-control rounded text-center pe-5'}}) }}
                     {#{ ajout d'une icone avec des marges négatives pour cliquer sur le calendrier (idem pour endingDate mais je remet pas ce commentaire) }#}
@@ -56,11 +56,7 @@
                 </div>
             </div>
             <div class="row mt-1">
-                <div class="col-6 offset-3 offset-lg-0">
-                    <div class="d-flex justify-content-end">Les champs marqués d'un astérisque rouge sont
-                        obligatoires.
-                    </div>
-                </div>
+                <p class="col-3 offset-3 offset-lg-3 ps-3 fst-italic">Les dates ne sont pas éditables pour les maintenances existantes, si nécessaire, veuillez supprimer puis recréer une maintenance</p>
             </div>
             <div class="row mt-5">
                 <div class="col-3"></div>

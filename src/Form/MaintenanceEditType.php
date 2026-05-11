@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 // Pour importer toutes les contraintes sous le namespace Assert
 
-class MaintenanceType extends AbstractType
+class MaintenanceEditType extends AbstractType
 {
     private static string $format = 'dd/MM/yyyy HH:mm';
 
@@ -41,6 +41,7 @@ class MaintenanceType extends AbstractType
                 'html5' => false,
                 'format' => self::$format,
                 'required' => true,
+                'disabled' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\GreaterThanOrEqual([
@@ -58,6 +59,7 @@ class MaintenanceType extends AbstractType
                 'html5' => false,
                 'format' => self::$format,
                 'required' => true,
+                'disabled' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Callback([$this, 'validateDates']),

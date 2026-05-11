@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Validator as AppAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MaintenanceRepository::class)]
 class Maintenance
@@ -16,6 +18,7 @@ class Maintenance
     #[ORM\Column]
     private ?int $id = null;
 
+    #[AppAssert\Overlap]
     #[ORM\ManyToOne(inversedBy: 'maintenances')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Application $application = null;

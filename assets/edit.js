@@ -29,12 +29,12 @@ $(function () {
         minDate: minDate
     };
 
-    $('input#maintenance_startingDate').datetimepicker({
+    $('input#maintenance_add_startingDate').datetimepicker({
         ...optionsDtpicker,
         onSelectTime: function (ct) {
             $(this).datetimepicker("hide");
 
-            let jqEnding = $('input#maintenance_endingDate');
+            let jqEnding = $('input#maintenance_add_endingDate');
 
             let ctstep = new Date(ct);
             ctstep.setMinutes(ct.getMinutes() + optionsDtpicker.step);
@@ -45,7 +45,7 @@ $(function () {
         }
     });
 
-    $('input#maintenance_endingDate').datetimepicker({
+    $('input#maintenance_add_endingDate').datetimepicker({
         ...optionsDtpicker,
         onSelectTime: (ct, target) => $(target).blur()
     });

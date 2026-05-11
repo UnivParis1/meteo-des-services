@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Application;
-use App\Form\MaintenanceType;
+use App\Form\MaintenanceAddType;
+use App\Form\MaintenanceEditType;
 use App\Service\ApplicationService;
 use App\Service\MaintenanceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,7 @@ class MaintenanceController extends AbstractController
     public function index(Request $request, Application $application): Response
     {
         $maintenance = $this->maintenanceService->initMaintenance($application);
-        $form = $this->createForm(MaintenanceType::class, $maintenance);
+        $form = $this->createForm(MaintenanceAddType::class, $maintenance);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->maintenanceService->createMaintenance($maintenance);
@@ -32,7 +33,7 @@ class MaintenanceController extends AbstractController
             return $this->redirectToRoute('application_edit', ['id' => $application->getId()]);
         }
 
-        return $this->render('maintenance_form\index.html.twig', [
+        return $this->render('maintenance_form\add.html.twig', [
             'maintenanceForm' => $form->createView(),
         ]);
     }
@@ -41,7 +42,7 @@ class MaintenanceController extends AbstractController
     public function edit(Request $request, int $id): Response
     {
         $maintenance = $this->maintenanceService->getMaintenanceById($id);
-        $form = $this->createForm(MaintenanceType::class, $maintenance);
+        $form = $this->createForm(MaintenanceEditType::class, $maintenance);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->maintenanceService->updateMaintenance($maintenance);
@@ -50,7 +51,7 @@ class MaintenanceController extends AbstractController
             return $this->redirectToRoute('application_edit', ['id' => $maintenance->getApplication()->getId()]);
         }
 
-        return $this->render('maintenance_form/index.html.twig', [
+        return $this->render('maintenance_form/edit.html.twig', [
             'maintenanceForm' => $form->createView(),
         ]);
     }
