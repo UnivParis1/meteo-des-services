@@ -58,7 +58,8 @@ VIEW view_maintenance_encours AS
     FROM
         maintenance
     WHERE
-        maintenance.starting_date <= CURRENT_TIMESTAMP()
+        maintenance.is_archived=0
+        AND maintenance.starting_date <= CURRENT_TIMESTAMP()
             AND maintenance.ending_date >= CURRENT_TIMESTAMP()
 ```
 

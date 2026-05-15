@@ -21,6 +21,15 @@ class MeteoController extends AbstractController
         public ApplicationsSorter $applicationsSorter,
     ) {}
 
+    private function _getApplications(SearchApplication $searchApplication): array {
+        $applications = array_merge($this->applicationService->getApplicationByTag($searchApplication),
+                                    $this->applicationService->getApplicationByFilters($searchApplication));
+
+        $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
+
+        return $applications;
+    }
+
     #[Route('/reset', name:'reset')]
     public function reset(Request $request): RedirectResponse
     {
@@ -41,13 +50,8 @@ class MeteoController extends AbstractController
             'method' => 'POST'
         ]);
 
-        $applications = $this->applicationService->getApplicationByTag($slug);
-        $applications += $this->applicationService->getApplicationByFilters($slug, 'all');
-
-        $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
-
         return $this->render('meteo/index.html.twig', [
-            'applications' => $applications,
+            'applications' => $this->_getApplications($searchApplication),
             'form' => $form->createView(),
             'page' => 1,
             'nbPage' => 1,
@@ -73,10 +77,7 @@ class MeteoController extends AbstractController
             }
         }
 
-        $applications = $this->applicationService->getApplicationByTag($searchApplication->searchTerm);
-        $applications += $this->applicationService->getApplicationByFilters($searchApplication->searchTerm, $searchApplication->selectedState);
-
-        $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
+        $applications = $this->_getApplications($searchApplication);
 
         $nbApplications = count($applications);
 

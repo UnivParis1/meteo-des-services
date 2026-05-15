@@ -7,6 +7,8 @@ use App\Entity\ApplicationHistory;
 use App\Entity\Tags;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\QueryException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -69,34 +71,44 @@ class ApplicationRepository extends ServiceEntityRepository
     //     */
     public function findBySearchAndState(string $searchTerm, string $stateFilter): array
     {
-        $query = $this->getEntityManager()->createQueryBuilder()->select('a')
-            ->from('App\Entity\Application', 'a')
-            ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::ON, 'a.id = m.application')
-            ->where('a.isArchived = 0');
+        $query = $this->createQueryBuilder('a')
+                      ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::ON, 'a.id = m.application')
+                      ->where('a.isArchived = 0');
 
-        if (null != $stateFilter && 'all' != $stateFilter && '' != $stateFilter) {
-            $query->andWhere("a.state = '$stateFilter'")->orWhere("m.applicationState = '$stateFilter'");
-        }
+        if (null != $stateFilter && 'all' != $stateFilter && '' != $stateFilter)
+            $query->andWhere("m.applicationState = '$stateFilter' OR (a.state = '$stateFilter' AND m.id IS NULL)");
 
-        if (strlen($searchTerm) > 0) {
+        if (strlen($searchTerm) > 0)
             $query->andWhere("a.title LIKE '%$searchTerm%'");
-        }
 
-        $dql = $query->orderBy('a.title', 'ASC')
-            ->getQuery();
-
-        $results = $dql->getResult();
-
-        return $results;
+         return $query->orderBy('a.title', 'ASC')
+                      ->getQuery()
+                      ->getResult();
     }
 
     public function findAllNotArchived(): array
     {
-        return $this->createQueryBuilder('a')->where('a.isArchived = 0')->orderBy('a.title', 'ASC')->getQuery()->getResult();
+        return $this->createQueryBuilder('a')
+                    ->where('a.isArchived = 0')
+                    ->orderBy('a.title', 'ASC')
+                    ->getQuery()
+                    ->getResult();
     }
 
-    public function findAllByTags(Tags $tags): array
+    public function findByTagsAndState(Tags $tag, string $stateFilter): array
     {
-        return $this->createQueryBuilder('a')->join('a.tags', 't')->where('t = :tags')->setParameter('tags', $tags)->getQuery()->getResult();
+        $query = $this->createQueryBuilder('a')
+                      ->join('a.tags', 't')
+                      ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::ON, 'a.id = m.application')
+                      ->where('t = :tags')
+                      ->andWhere('a.isArchived = 0')
+                      ->setParameter('tags', $tag);
+
+        if (null != $stateFilter && 'all' != $stateFilter && '' != $stateFilter)
+            $query->andWhere("m.applicationState = '$stateFilter' OR (a.state = '$stateFilter' AND m.id IS NULL)");
+
+        return $query->orderBy('a.title', 'ASC')
+                     ->getQuery()
+                     ->getResult();
     }
 }

@@ -7,6 +7,7 @@ use App\DTO\HistoryApplicationDTO;
 use App\DTO\HistoryMaintenanceDTO;
 use App\DTO\HistoryDTO;
 use App\DTO\MaintenanceDTO;
+use App\Model\SearchApplication;
 use App\Entity\Application;
 use App\Entity\ApplicationHistory;
 use App\Repository\ApplicationHistoryRepository;
@@ -224,26 +225,31 @@ class ApplicationService
         return $dto;
     }
 
-    public function getApplicationByTag(string $searchTerm): array
+    public function getApplicationByTag(SearchApplication $searchApplication): array
     {
+        $searchTerm = $searchApplication->searchTerm;
+        $selectedState = $searchApplication->selectedState;
+
         $dtos = new ArrayCollection();
-        $tags = $this->tagsRepository->findOneBy(['name' => $searchTerm]);
+        $tag = $this->tagsRepository->findOneBy(['name' => $searchTerm]);
 
-        if ($tags) {
-            foreach ($this->applicationRepository->findAllByTags($tags) as $application) {
-                if ($this->security->isGranted(current($application->getRoles()))) {
+        if ($tag) {
+            $applications = $this->applicationRepository->findByTagsAndState(tag: $tag, stateFilter: $selectedState);
+
+            foreach ($applications as $application)
+                if ($this->security->isGranted(current($application->getRoles())))
                     $dtos->add($this->convertToDTO($application, null));
-                }
-            }
         }
-
         return $dtos->toArray();
     }
 
-    public function getApplicationByFilters(string $searchTerm, string $stateFilter): array
+    public function getApplicationByFilters(SearchApplication $searchApplication): array
     {
+        $searchTerm= $searchApplication->searchTerm;
+        $selectedState = $searchApplication->selectedState;
+
         $dtos = new ArrayCollection();
-        foreach ($this->applicationRepository->findBySearchAndState($searchTerm, $stateFilter) as $application) {
+        foreach ($this->applicationRepository->findBySearchAndState($searchTerm, $selectedState) as $application) {
             // vérifie que les droit de l'utilisateur pour chaque programmes
             if ($this->security->isGranted(current($application->getRoles()))) {
                 $dtos->add($this->convertToDTO($application, null));
