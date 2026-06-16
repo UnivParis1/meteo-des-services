@@ -25,6 +25,7 @@
                 </div>
                 <div class="col-7 col-xl-3 pe-md-5">
                     <div class="text-danger meteo-maintenance-errors">
+                        {{ form_errors(maintenanceForm.startingDate) }}
                         {{ form_errors(maintenanceForm.application) }}
                     </div>
                     {{ form_widget(maintenanceForm.startingDate, {'attr': {'class': 'd-inline form-control rounded text-center pe-5'}}) }}
