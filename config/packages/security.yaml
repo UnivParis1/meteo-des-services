@@ -41,6 +41,7 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
+         - { path: ^/api, roles: 'ROLE_STUDENT' }
          - { path: ^/meteo, roles: 'ROLE_STUDENT' }
          - { path: ^/signaler, roles: 'ROLE_STUDENT' }
          - { path: ^/application, roles: 'ROLE_ADMIN' }
