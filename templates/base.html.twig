@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <title>{% block title %}Metéo des services{% endblock %}</title>
@@ -8,6 +9,13 @@
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
     {% endblock %}
+
+    {% set frankenphp_hot_reload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
+    {% if frankenphp_hot_reload %}
+        <meta name="frankenphp-hot-reload:url" content="{{ frankenphp_hot_reload }}">
+        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
+        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
+    {% endif %}
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}

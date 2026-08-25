@@ -5,7 +5,7 @@
 # to each configured DirectoryIndex file (e.g. index.php, index.html, index.pl).
 DirectoryIndex index.php
 
-php_value date.timezone Europe/Paris
+#php_value date.timezone Europe/Paris
 
 
 # By default, Apache does not evaluate symbolic links if you did not enable this

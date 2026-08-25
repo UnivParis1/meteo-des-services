@@ -5,6 +5,7 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    trusted_hosts: ['^(.+\.)?univ-paris1\.fr$', '^(.+\.)?pantheonsorbonne\.fr$']
     #esi: true
     #fragments: true
 
