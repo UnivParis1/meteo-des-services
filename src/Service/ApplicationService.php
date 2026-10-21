@@ -111,7 +111,7 @@ class ApplicationService
         return self::sortDateHistoriesDTO($histories);
     }
 
-    public function convertToDTO(Application $application, ?string $title, bool $setHistory = false, $addMaintenancesToHistories = false): ApplicationDTO
+    public function convertToDTO(Application $application, ?string $title, bool $setHistory = false, $addMaintenancesToHistories = true): ApplicationDTO
     {
         $appLastUpdate = $application->getLastUpdate();
 
@@ -158,10 +158,10 @@ class ApplicationService
 
             foreach ($maintenances as $maintenance) {
                 // ne met pas les prochaines maintenances
-                $isLast = true;
+                $isLast = false;
                 foreach ($nextMaintenances as $nextMaintenance)
                     if ($maintenance->getId() == $nextMaintenance->getId())
-                        $isLast = false;
+                        $isLast = true;
 
                 if ( ! $isLast)
                     continue;
