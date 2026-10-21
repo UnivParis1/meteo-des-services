@@ -27,7 +27,7 @@ class ApplicationChangerNotifier extends AbstractController
         $application = $event->getObject();
         $changes = $event->getEntityChangeSet();
 
-        $subject = 'Méteo des services - équipe PAS - Changements sur : '.$application->getTitle();
+        $subject = 'Méteo des services - équipe SAS - Changements sur : '.$application->getTitle();
         $text = 'Application : '.$application->getTitle().PHP_EOL.PHP_EOL;
 
         foreach ($changes as $field => $value) {

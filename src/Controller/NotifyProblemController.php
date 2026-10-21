@@ -39,7 +39,7 @@ class NotifyProblemController extends AbstractController
             $text = "L'utilisateur ayant pour identifiant: " . $this->getUser()->getUserIdentifier() . " a signalé un disfonctionnement sur l'application : " . $problem->title . PHP_EOL . PHP_EOL;
             $text .= "Description renseignée par l'utilisateur : " . PHP_EOL . $problem->message . PHP_EOL;
 
-            $subject = 'Méteo des services - équipe PAS - ' . $problem->title;
+            $subject = 'Méteo des services - ' . $problem->title;
 
             $email = (new TemplatedEmail())
                 ->from('no-reply@univ-paris1.fr')
