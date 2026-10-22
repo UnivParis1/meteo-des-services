@@ -36,7 +36,21 @@ class ApplicationsSorter
         // fait ensuite une comparaison sur le statut (pour mettre les apps en maintenance en premier)
         usort(
             $applications,
-            fn ($app1, $app2): int => self::getOrderRankFromState($app2->getState()) <=> self::getOrderRankFromState($app1->getState())
+            function ($app1, $app2): int {
+                $state1 = $app1->getState();
+                $state2 = $app2->getState();
+
+                $ord1 = self::getOrderRankFromState($state1);
+                $ord2 = self::getOrderRankFromState($state2);
+
+                if ($ord1 === $ord2 && !($ord1 === 0 || $ord2 === 1)) {
+                    $d1 = $app1->getLastupdate();
+                    $d2 = $app2->getLastupdate();
+
+                    return $d2 <=> $d1;
+                }
+                return $ord2 <=> $ord1;
+            }
         );
         return $applications;
     }
