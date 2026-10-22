@@ -2,9 +2,9 @@
 
 /backups/
 
-/composer.lock
+#/composer.lock
 /symfony.lock
-/*.lock
+#/*.lock
 /*-lock.json
 
 # UP1 : protections csrf ignorés
