@@ -21,12 +21,6 @@ class ApplicationsSorter
             fn ($app1, $app2): int => strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT', $app1->getTitle())) <=> strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT', $app2->getTitle()))
         );
 
-        // fait ensuite une comparaison sur le statut (pour mettre les apps en maintenance en premier)
-        usort(
-            $applications,
-            fn ($app1, $app2): int => self::getOrderRankFromState($app2->getState()) <=> self::getOrderRankFromState($app1->getState())
-        );
-
         // ajoute une comparaison pour avoir les applications qui seront en maintenance en premier
         usort(
             $applications,
@@ -39,6 +33,11 @@ class ApplicationsSorter
             }
         );
 
+        // fait ensuite une comparaison sur le statut (pour mettre les apps en maintenance en premier)
+        usort(
+            $applications,
+            fn ($app1, $app2): int => self::getOrderRankFromState($app2->getState()) <=> self::getOrderRankFromState($app1->getState())
+        );
         return $applications;
     }
 
