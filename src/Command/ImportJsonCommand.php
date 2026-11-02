@@ -4,6 +4,9 @@ namespace App\Command;
 
 use App\Entity\Application;
 use App\Entity\Tags;
+use App\Entity\AppsEntGroupsRoles;
+use App\Model\UserRoles;
+use App\Repository\AppsEntGroupsRolesRepository;
 use App\Repository\ApplicationRepository;
 use App\Repository\TagsRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -15,10 +18,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'app:import-json', description: 'Importation des applications depuis le json ent')]
 class ImportJsonCommand extends Command
 {
+    protected array $rolesValues;
+
     public function __construct(private ApplicationRepository $applicationRepository,
-        private TagsRepository $tagsRepository)
+        private TagsRepository $tagsRepository,
+        private AppsEntGroupsRolesRepository $appsEntGroupsRolesRepository)
     {
         parent::__construct();
+
+        $this->rolesValues = array_flip(array_values(UserRoles::$choix));
     }
 
     protected function configure(): void
@@ -27,7 +35,7 @@ class ImportJsonCommand extends Command
              ->addOption(name: 'fromENT')
              ->addOption('creerApp')
              ->addArgument('uri', InputArgument::REQUIRED, 'Localisation de la ressource web/filesystem')
-             ->addArgument('bearerFile', InputArgument::REQUIRED);
+             ->addArgument('bearerFile', InputArgument::OPTIONAL);
     }
 
     public function __invoke(InputInterface $input, OutputInterface $output): int
@@ -113,6 +121,12 @@ class ImportJsonCommand extends Command
             $application->setCategorie($categorie);
             $application->setFname($fname);
 
+            if (array_key_exists('groups', $appArray)) {
+                $groups = $appArray['groups'];
+
+                if ($roleInt = $this->roleDroitApp($groups))
+                    $application->setRoles([array_keys($this->rolesValues)[$roleInt]]);
+            }
             // maj uniquement en création pour éviter de remplacer des saisies
             if (!$isUpdate) {
                 $application->setIsFromJson(true);
@@ -169,6 +183,25 @@ class ImportJsonCommand extends Command
 
         return Command::SUCCESS;
     }
+
+    private function roleDroitApp(array $groups): ?int {
+            $maxDroit = null;
+            foreach ($groups as $group) {
+                if (! $appsEntGroupsRoles =  $this->appsEntGroupsRolesRepository->findOneBy(['groupname' => $group]))
+                    return null;
+
+                $role = $appsEntGroupsRoles->getRole();
+
+                $droitInt = $this->rolesValues[$role];
+
+                $maxDroit ??= $droitInt;
+
+                $maxDroit = ($droitInt > $maxDroit) ? $droitInt : $maxDroit;
+            }
+
+            return $maxDroit;
+    }
+
 
     private static function trouverCategorieApp($fname, $layoutArray)
     {

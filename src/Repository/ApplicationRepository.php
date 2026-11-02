@@ -60,8 +60,8 @@ class ApplicationRepository extends ServiceEntityRepository
 
     public function removeApplicationTags(Application $application): void
     {
-        foreach ($application->getTags() as $tags) {
-            $application->removeTag($tags);
+        foreach ($application->getTags() as $tag) {
+            $application->removeTag($tag);
         }
         $this->em->flush();
     }

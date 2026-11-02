@@ -16,6 +16,7 @@ class ApplicationChangerNotifier extends AbstractController
     #[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: Application::class)]
     public function preUpdate(Application $application, PreUpdateEventArgs $event): void
     {
+        return;
         $transport = Transport::fromDsn('native://default');
         $mailer = new Mailer($transport);
 

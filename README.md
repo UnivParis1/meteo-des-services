@@ -9,7 +9,7 @@ Javascript a été utilisé pour l'affichage de la pop-up de Détail dans la pag
 
 ### Gestion utilisateurs et permission/droits ACL
 
-Pour la gestion utilisateur, Le projet distingue 6 rôles avec héritage:
+Pour la gestion utilisateur, Le projet distingue 6 rôles avec héritage définit dans config/package/security.yaml :
 
 - <b>niveau 0</b> : <b>PUBLIC_ACCESS</b> : anonyme
 - <b>niveau 1</b> : <b>ROLE_STUDENT</b> : rôle de base, assigné automatiquement si aucun rôle associé à l'utilisateur
