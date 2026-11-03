@@ -60,14 +60,14 @@ class ImportJsonCommand extends Command
 
                 return Command::FAILURE;
             }
-            $bearerContent = file_get_contents($bearerFile);
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $fichier);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['User-Agent: Météo-service application',
-                "Authorization: Bearer $bearerContent"]);
+
+            // le fichier doit être au format NETSCAPE .txt
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $bearerFile);
 
             if (!curl_exec($ch)) {
                 exit('Error: "'.curl_error($ch).'" - Code: '.curl_errno($ch));
