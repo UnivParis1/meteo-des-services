@@ -115,7 +115,7 @@ class ApplicationCrudController extends AbstractCrudController
                                        ->setHelp("définis les autorisations d'accès à l'application de manière hiérarchique (ex: un enseignant a accès aux applications étudiantes, un biatssp aux applications enseignantes...)");
 
         yield AssociationField::new('tags')
-                                           ->hideOnIndex()
-                                           ->setFormTypeOption('disabled', 'disabled');
+                                           ->hideOnIndex();
+                                           //->setFormTypeOption('disabled', 'disabled');
     }
 }

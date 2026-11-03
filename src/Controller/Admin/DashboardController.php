@@ -29,5 +29,8 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkTo(ApplicationCrudController::class, 'Applications', 'fas fa-list'),
             MenuItem::linkTo(TagsCrudController::class, 'Gestion des Tags', 'fas fa-list'),
         ]);
+        yield MenuItem::subMenu('Relation avec EsupUserApps', 'fas fa-list')->setSubItems([
+            MenuItem::linkTo(AppsEntGroupsRolesCrudController::class, 'ENT Groupes et permission', 'fas fa-list'),
+        ]);
     }
 }
