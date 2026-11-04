@@ -47,8 +47,8 @@ class ApplicationService
      * @return Application[]
      */
     public function getApplicationsSearch(SearchApplication $searchApplication): array {
-         $applications = array_merge($this->getApplicationByTag($searchApplication),
-                                    $this->getApplicationByFilters($searchApplication));
+         $applications = [...$this->getApplicationByTag($searchApplication),
+                          ...$this->getApplicationByFilters($searchApplication)];
 
         $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
 
