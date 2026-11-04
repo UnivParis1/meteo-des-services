@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
+use Symfony\Bundle\FrameworkBundle\Console\Application as HackAppGlobal;
 use App\Entity\Application;
 use App\Entity\Tags;
-use App\Entity\AppsEntGroupsRoles;
 use App\Model\UserRoles;
 use App\Repository\AppsEntGroupsRolesRepository;
 use App\Repository\ApplicationRepository;
@@ -20,6 +20,13 @@ class ImportJsonCommand extends Command
 {
     protected array $rolesValues;
 
+   /**
+    * Permet d'avoir l'environnement de développement, hack car on passe par une globale
+    *
+    * @var HackAppGlobal
+    */
+    private HackAppGlobal $app;
+
     public function __construct(private ApplicationRepository $applicationRepository,
         private TagsRepository $tagsRepository,
         private AppsEntGroupsRolesRepository $appsEntGroupsRolesRepository)
@@ -27,6 +34,8 @@ class ImportJsonCommand extends Command
         parent::__construct();
 
         $this->rolesValues = array_flip(array_values(UserRoles::$choix));
+
+        $this->app = $GLOBALS['app'];
     }
 
     protected function configure(): void
@@ -45,6 +54,17 @@ class ImportJsonCommand extends Command
         // creer les applications inexistantes
         $creerApp = $input->getOption('creerApp');
         $fichier = $input->getArgument('uri');
+
+        if ($creerApp) {
+            $appenv = $this->app->getKernel()->getContainer()->getParameter('kernel.environment');
+
+            if (str_contains('prod', $appenv) === true) {
+                $output->writeln("Aucune création d'application n'est autorisé en production, uniquement les mises à jour");
+
+                return Command::FAILURE;
+            }
+        }
+
 
         if ($fromENT) {
             if (stream_is_local($fichier)) {
@@ -196,7 +216,7 @@ class ImportJsonCommand extends Command
 
                 $maxDroit ??= $droitInt;
 
-                $maxDroit = ($droitInt > $maxDroit) ? $droitInt : $maxDroit;
+                $maxDroit = ($maxDroit > $droitInt) ?: $droitInt;
             }
 
             return $maxDroit;
