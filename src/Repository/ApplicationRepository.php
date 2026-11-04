@@ -66,17 +66,29 @@ class ApplicationRepository extends ServiceEntityRepository
         $this->em->flush();
     }
 
+    private function queryBasic(): QueryBuilder
+    {
+       return $this->createQueryBuilder('a')
+                      ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::ON, 'a.id = m.application')
+                      ->where('a.isArchived = 0');
+    }
+
+    private function queryWithState(string $stateFilter): QueryBuilder
+    {
+        $query = $this->queryBasic();
+
+        if (null != $stateFilter && 'all' != $stateFilter && '' != $stateFilter)
+            $query->andWhere("m.applicationState = '$stateFilter' OR (a.state = '$stateFilter' AND m.id IS NULL)");
+
+         return $query;
+    }
+
     //    /**
     //     * @return Application[] Returns an array of Application objects
     //     */
     public function findBySearchAndState(string $searchTerm, string $stateFilter): array
     {
-        $query = $this->createQueryBuilder('a')
-                      ->leftJoin('App\Entity\ViewMaintenanceEnCours', 'm', \Doctrine\ORM\Query\Expr\Join::ON, 'a.id = m.application')
-                      ->where('a.isArchived = 0');
-
-        if (null != $stateFilter && 'all' != $stateFilter && '' != $stateFilter)
-            $query->andWhere("m.applicationState = '$stateFilter' OR (a.state = '$stateFilter' AND m.id IS NULL)");
+        $query = $this->queryWithState($stateFilter);
 
         if (strlen($searchTerm) > 0)
             $query->andWhere("a.title LIKE '%$searchTerm%'");
