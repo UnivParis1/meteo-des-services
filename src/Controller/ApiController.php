@@ -4,39 +4,46 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Front\ApplicationsSorter;
 use App\Service\ApplicationService;
 use App\Model\IconsName;
+use App\Model\SearchApplication;
+use App\Repository\ApplicationRepository;
 
 #[Route('/api', name: 'api_')]
 final class ApiController extends AbstractController
 {
     public function __construct(
-        public ApplicationService $applicationService,
-        public ApplicationsSorter $applicationsSorter,
+        private ApplicationService $applicationService,
+        private ApplicationRepository $applicationRepository,
     ) {}
 
-    #[Route('/', name: 'api')]
-    public function index(): Response
+    #[Route('/', name: 'meteo', format: 'json')]
+    public function api_index(): JsonResponse
     {
-        return $this->render('api/index.html.twig', [
-            'controller_name' => 'ApiController',
-        ]);
-    }
+        $searchApplication = new SearchApplication();
 
-    #[Route('/api', name: 'meteo', format: 'json')]
-    public function api_index(Request $request): JsonResponse
-    {
-        $fname = $request->get('fname', '');
-        $selectedState = $request->get('state', '');
-
-        $applications = $this->applicationService->getApplicationByFilters($fname, $selectedState);
-        $applications = $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
+        $applications = $this->applicationService->getApplicationsSearch($searchApplication);
 
         return new JsonResponse($applications);
     }
+
+    #[Route('/stats', name: 'stats', format: 'json')]
+    public function api_stats(): JsonResponse
+    {
+        $etats = SearchApplication::$etats;
+        $etatkeys = array_keys($etats);
+        // enleve Non renseigné
+        $dispos = array_slice($etatkeys, 0,  -1);
+
+        $json = [];
+        foreach ($dispos as $dispo) {
+            $apps = $this->applicationRepository->findBySearchAndState('',$dispo);
+            $json[$dispo] = count($apps);
+        }
+        return new JsonResponse($json);
+    }
+
 
     #[Route('/application/{id}', name: 'application_details')]
     public function api_application_details(int $id): JsonResponse
