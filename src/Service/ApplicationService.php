@@ -10,6 +10,7 @@ use App\DTO\MaintenanceDTO;
 use App\Model\SearchApplication;
 use App\Entity\Application;
 use App\Entity\ApplicationHistory;
+use App\Front\ApplicationsSorter;
 use App\Repository\ApplicationHistoryRepository;
 use App\Repository\ApplicationRepository;
 use App\Repository\TagsRepository;
@@ -25,6 +26,7 @@ class ApplicationService
         public ApplicationHistoryRepository $applicationHistoryRepository,
         public MaintenanceService $maintenanceService,
         private UserRepository $userRepository,
+        private ApplicationsSorter $applicationsSorter,
         private Security $security,
     ) {
     }
@@ -33,6 +35,24 @@ class ApplicationService
     {
         $this->applicationRepository->createApplication($application);
         $this->updateHistory($application, 'creation');
+    }
+
+    /**
+     * getApplicationsSearch
+     *
+     * agrège les résultats de recherche par filtres ainsi que par tag (s'il y'en a)
+     * en utilisant l'objet SearchApplication ayant les paramètres de la recherche
+     *
+     * @param SearchApplication $searchApplication
+     * @return Application[]
+     */
+    public function getApplicationsSearch(SearchApplication $searchApplication): array {
+         $applications = array_merge($this->getApplicationByTag($searchApplication),
+                                    $this->getApplicationByFilters($searchApplication));
+
+        $this->applicationsSorter->sortApplicationsByStateAndLastUpdate($applications);
+
+        return $applications;
     }
 
     public function getAllApplications(bool $archived = false): array
