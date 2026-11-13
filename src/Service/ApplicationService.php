@@ -287,7 +287,7 @@ class ApplicationService
     /*
      * historise une nouvelle modification (création, modif, supp) sur une app
      */
-    private function updateHistory(Application $application, string $historyType): void
+    public function updateHistory(Application $application, string $historyType): void
     {
         $history = new ApplicationHistory();
         $history->setApplication($application);
