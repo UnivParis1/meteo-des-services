@@ -26,7 +26,7 @@ class ApplicationController extends AbstractController
         $form = $this->createForm(AddApplicationFormType::class, $application);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->applicationService->createApplicationFromMeteoDesServices($application);
+            $this->applicationService->createApplication($application);
             $this->addFlash('success', 'Application ajoutée avec succès');
 
             return $this->redirectToRoute('app_meteo');

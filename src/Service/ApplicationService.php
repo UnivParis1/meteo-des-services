@@ -31,12 +31,6 @@ class ApplicationService
     ) {
     }
 
-    public function createApplicationFromMeteoDesServices(Application $application): void
-    {
-        $this->applicationRepository->createApplication($application);
-        $this->updateHistory($application, 'creation');
-    }
-
     /**
      * getApplicationsSearch
      *
@@ -284,10 +278,7 @@ class ApplicationService
         return $this->applicationRepository->findOneBy(['id' => $id]);
     }
 
-    /*
-     * historise une nouvelle modification (création, modif, supp) sur une app
-     */
-    public function updateHistory(Application $application, string $historyType): void
+    public function updateHistoryObj(Application $application, string $historyType): ApplicationHistory
     {
         $history = new ApplicationHistory();
         $history->setApplication($application);
@@ -296,20 +287,37 @@ class ApplicationService
             $history->setMessage($application->getMessage());
         }
         $history->setType($historyType);
+
+        return $history;
+    }
+
+    /*
+     * historise une nouvelle modification (création, modif, supp) sur une app
+     */
+    public function updateHistory(Application $application, string $historyType, $uid = null): void
+    {
+        $history = $this->updateHistoryObj($application, $historyType);
         // Date créée automatiquement par le constructeur
-        $history->setAuthor($this->security->getUser()->getUserIdentifier());
+        $uid ??= $this->security->getUser()->getUserIdentifier();
+        $history->setAuthor($uid);
         $this->applicationRepository->createHistory($history);
     }
 
-    public function updateApplication(Application $application): void
+    public function createApplication(Application $application, $uid = null): void
     {
-        $this->applicationRepository->updateApplication($application);
-        $this->updateHistory($application, 'updating');
+        $this->applicationRepository->createApplication($application);
+        $this->updateHistory($application, 'creation', $uid);
     }
 
-    public function deleteApplication(Application $application)
+    public function updateApplication(Application $application, $uid = null): void
     {
-        $this->updateHistory($application, 'deletion');
+        $this->applicationRepository->updateApplication($application);
+        $this->updateHistory($application, 'updating', $uid);
+    }
+
+    public function deleteApplication(Application $application, $uid = null)
+    {
+        $this->updateHistory($application, 'deletion', $uid);
         $this->applicationRepository->deleteApplication($application);
     }
 }

@@ -9,6 +9,8 @@ use App\Model\UserRoles;
 use App\Repository\AppsEntGroupsRolesRepository;
 use App\Repository\ApplicationRepository;
 use App\Repository\TagsRepository;
+use App\Service\ApplicationService;
+use App\Repository\UserRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,7 +29,10 @@ class ImportJsonCommand extends Command
     */
     private HackAppGlobal $app;
 
-    public function __construct(private ApplicationRepository $applicationRepository,
+    public function __construct(
+        private UserRepository $userRepository,
+        private ApplicationService $applicationService,
+        private ApplicationRepository $applicationRepository,
         private TagsRepository $tagsRepository,
         private AppsEntGroupsRolesRepository $appsEntGroupsRolesRepository)
     {
@@ -43,6 +48,7 @@ class ImportJsonCommand extends Command
         $this->setDescription('Importation des applications depuis le json ent')
              ->addOption(name: 'fromENT')
              ->addOption('creerApp')
+             ->addArgument('uid', InputArgument::REQUIRED, 'createur de l\'historique de l\'application')
              ->addArgument('uri', InputArgument::REQUIRED, 'Localisation de la ressource web/filesystem')
              ->addArgument('bearerFile', InputArgument::OPTIONAL);
     }
@@ -51,8 +57,15 @@ class ImportJsonCommand extends Command
     {
         $fromENT = $input->getOption('fromENT');
 
+        $uid = $input->getArgument('uid');
         // creer les applications inexistantes
         $creerApp = $input->getOption('creerApp');
+
+        if (is_null($this->userRepository->findOneByUid($uid))) {
+            $output->writeln("Pas d'utilisateur trouvé pour $uid");
+            return Command::FAILURE;
+        }
+
         $fichier = $input->getArgument('uri');
 
         if ($creerApp) {
@@ -183,14 +196,14 @@ class ImportJsonCommand extends Command
             $msg = $isUpdate ? 'Mise à jour' : ($creerApp ? 'Création' : 'Sans création');
             $msg .= "  Application : $fname ";
 
-            $output->writeln($msg);
-
             if (!$isUpdate && $creerApp) {
-                $this->applicationRepository->createApplication($application);
+                $this->applicationService->createApplication($application, $uid);
             } elseif ($isUpdate) {
                 $this->applicationRepository->updateApplication($application);
             }
             $isUpdate ? $nbApplicationMaj++ : $nbApplicationCrees++;
+
+            $output->writeln($msg);
         }
 
         $output->writeln([
